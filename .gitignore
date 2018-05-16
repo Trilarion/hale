@@ -1,3 +1,8 @@
-/bin/
-.classpath
-.project
+# gradle
+/build
+/.gradle
+
+# idea
+/.idea
+/*.iml
+/out

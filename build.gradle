@@ -1,0 +1,30 @@
+group 'hale'
+version '0.7.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files('lib/lwjgl.jar', 'lib/twl.jar', 'lib/xpp3-1.1.4c.jar', 'lib/json-smart-1.0.9.jar')
+    compile 'org.jetbrains:annotations:16.0.1'
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = 'net.sf.hale.Game'
+
+jar {
+    manifest {
+        attributes(
+                 'Main-Class': mainClassName
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
