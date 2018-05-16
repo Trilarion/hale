@@ -21,6 +21,9 @@ package net.sf.hale.view;
 
 import java.util.LinkedList;
 
+import de.matthiasmann.twl.EditField.Callback;
+import de.matthiasmann.twl.Event.Type;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.util.JSEngine;
 
@@ -62,7 +65,7 @@ public class ScriptConsole extends GameSubWindow {
 	 */
 	
 	public ScriptConsole() {
-		previousCommands = new LinkedList<String>();
+		previousCommands = new LinkedList<>();
 		
 		setTitle("Script Console");
 		
@@ -81,7 +84,7 @@ public class ScriptConsole extends GameSubWindow {
 		textArea = new TextArea(textAreaModel);
 		scrollPane = new ScrollPane(textArea);
 		scrollPane.setTheme("scriptpane");
-		scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		scrollPane.setFixed(Fixed.HORIZONTAL);
 		
 		add(editField);
 		add(scrollPane);
@@ -156,7 +159,7 @@ public class ScriptConsole extends GameSubWindow {
 	}
 	
 	private void evaluateScriptForHelp(String script) {
-		if (script == null || script.length() == 0) return;
+		if (script == null || script.isEmpty()) return;
 		
 		putScriptObjects();
 		
@@ -262,11 +265,11 @@ public class ScriptConsole extends GameSubWindow {
 		if (visible) editField.requestKeyboardFocus();
 	}
 	
-	private class ScriptEntryField extends EditField implements EditField.Callback {
+	private class ScriptEntryField extends EditField implements Callback {
 		// values to override the default click behavior
 		private int clickCount = 0;
-		private long lastClickMillis = 0l;
-		private final long clickTime = 500l;
+		private long lastClickMillis = 0L;
+		private final long clickTime = 500L;
 		
 		// values to override the default selection behavior
 		private int wordSelectionStart, wordSelectionEnd;
@@ -277,8 +280,8 @@ public class ScriptConsole extends GameSubWindow {
 			super(null, editBuffer);
 			
 			this.editBuffer = editBuffer;
-			
-			this.addCallback(this);
+
+            addCallback(this);
 		}
 		
 		@Override public void callback(int key) {
@@ -292,10 +295,10 @@ public class ScriptConsole extends GameSubWindow {
 		}
 		
 		@Override public boolean handleEvent(Event evt) {
-			if (evt.getType() == Event.Type.MOUSE_CLICKED)
+			if (evt.getType() == Type.MOUSE_CLICKED)
 				return false;
 			
-			if (evt.getType() == Event.Type.KEY_PRESSED) {
+			if (evt.getType() == Type.KEY_PRESSED) {
 				if (Game.mainViewer.getKeyBindings().checkToggleScriptConsole(evt.getKeyCode())) {
 					return true;
 				}
@@ -430,11 +433,11 @@ public class ScriptConsole extends GameSubWindow {
 					sb.append('}');
 				}
 				
-				super.insertText(sb.toString());
+				insertText(sb.toString());
 				
 				// move the cursor back to the correct line if we added more text
 				// to end a block
-				super.setCursorPos(destPos);
+				setCursorPos(destPos);
 			}
 		}
 		

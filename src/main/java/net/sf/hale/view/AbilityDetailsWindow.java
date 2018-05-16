@@ -20,8 +20,10 @@
 package net.sf.hale.view;
 
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.DialogLayout.Group;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import net.sf.hale.ability.Ability;
@@ -46,11 +48,11 @@ public class AbilityDetailsWindow extends GameSubWindow {
 	 */
 	
 	public AbilityDetailsWindow(Ability ability, Creature parent, boolean upgrade) {
-		this.setTitle( "Details for " + (upgrade ? ability.getUpgradedName(parent) : ability.getName()) );
+        setTitle( "Details for " + (upgrade ? ability.getUpgradedName(parent) : ability.getName()) );
 		
 		DialogLayout layout = new DialogLayout();
 		layout.setTheme("content");
-		this.add(layout);
+        add(layout);
 		
 		// set up the widgets for the top row
 		IconViewer iconViewer = new IconViewer(upgrade ? ability.getUpgradedIcon(parent) : ability.getIcon());
@@ -59,9 +61,9 @@ public class AbilityDetailsWindow extends GameSubWindow {
 		Label title = new Label(upgrade ? ability.getUpgradedName(parent) : ability.getName());
 		title.setTheme("titlelabel");
 		
-		DialogLayout.Group topV = layout.createParallelGroup(iconViewer, title);
+		Group topV = layout.createParallelGroup(iconViewer, title);
 		
-		DialogLayout.Group topH = layout.createSequentialGroup(iconViewer);
+		Group topH = layout.createSequentialGroup(iconViewer);
 		topH.addGap(10);
 		topH.addWidget(title);
 		topH.addGap(10);
@@ -70,13 +72,13 @@ public class AbilityDetailsWindow extends GameSubWindow {
 		HTMLTextAreaModel textAreaModel = new HTMLTextAreaModel();
         TextArea textArea = new TextArea(textAreaModel);
         ScrollPane textPane = new ScrollPane(textArea);
-        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+        textPane.setFixed(Fixed.HORIZONTAL);
 		
         // set up the main layout
-		DialogLayout.Group mainH = layout.createParallelGroup(topH);
+		Group mainH = layout.createParallelGroup(topH);
 		mainH.addWidget(textPane);
 		
-		DialogLayout.Group mainV = layout.createSequentialGroup(topV);
+		Group mainV = layout.createSequentialGroup(topV);
 		mainV.addGap(5);
 		mainV.addWidget(textPane);
 		

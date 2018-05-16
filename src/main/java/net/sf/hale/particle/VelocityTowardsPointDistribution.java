@@ -38,7 +38,7 @@ public class VelocityTowardsPointDistribution implements DistributionTwoValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("destX", dest.x);
 		data.put("destY", dest.y);
 		data.put("time", time);

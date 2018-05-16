@@ -45,7 +45,7 @@ public class LoadingTaskList extends Thread {
 	 */
 	
 	public LoadingTaskList() {
-		tasks = new ArrayList<LoadingTask>();
+		tasks = new ArrayList<>();
 	}
 	
 	/**

@@ -72,7 +72,7 @@ public class SkillSet implements Saveable {
 	 */
 	
 	public SkillSet(Creature parent) {
-		this.skills = new LinkedHashMap<String, Integer>();
+        skills = new LinkedHashMap<>();
 		this.parent = parent;
 	}
 	
@@ -86,7 +86,7 @@ public class SkillSet implements Saveable {
 	public SkillSet(SkillSet other, Creature parent) {
 		this(parent);
 		for (String skillID : other.skills.keySet()) {
-			this.skills.put(skillID, other.skills.get(skillID));
+            skills.put(skillID, other.skills.get(skillID));
 		}
 	}
 	
@@ -147,7 +147,7 @@ public class SkillSet implements Saveable {
 		} else {
 			int curRanks = getRanks(skillID);
 			
-			skills.put(skillID, Integer.valueOf(curRanks + ranks));
+			skills.put(skillID, curRanks + ranks);
 			
 			parent.updateListeners();
 		}
@@ -187,10 +187,10 @@ public class SkillSet implements Saveable {
 	 */
 	
 	public boolean hasRanks(String skillID) {
-		Integer ranks = this.skills.get(skillID);
+		Integer ranks = skills.get(skillID);
 		if (ranks == null) return false;
 		
-		return (ranks.intValue() != 0);
+		return (ranks != 0);
 	}
 	
 	/**
@@ -202,10 +202,10 @@ public class SkillSet implements Saveable {
 	 */
 	
 	public int getRanks(String skillID) {
-		Integer ranks = this.skills.get(skillID);
+		Integer ranks = skills.get(skillID);
 		if (ranks == null) return 0;
 		
-		return ranks.intValue();
+		return ranks;
 	}
 	
 	/**

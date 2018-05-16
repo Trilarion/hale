@@ -43,12 +43,12 @@ public class SimpleIcon implements Icon {
 	 */
 	
 	public SimpleIcon(SimpleJSONObject data) {
-		this.spriteResourceID = data.get("sprite", null);
+        spriteResourceID = data.get("sprite", null);
 		
 		if (data.containsKey("color")) {
-			this.color = Color.parserColor(data.get("color", null));
+            color = Color.parserColor(data.get("color", null));
 		} else {
-			this.color = Color.WHITE;
+            color = Color.WHITE;
 		}
 	}
 	
@@ -58,8 +58,8 @@ public class SimpleIcon implements Icon {
 	 */
 	
 	protected SimpleIcon(String spriteID) {
-		this.spriteResourceID = spriteID;
-		this.color = Color.WHITE;
+        spriteResourceID = spriteID;
+        color = Color.WHITE;
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class SimpleIcon implements Icon {
 	@Override public SimpleIcon multiplyByColor(Color color) {
 		Color newColor = this.color.multiply(color);
 		
-		return new SimpleIcon(this.spriteResourceID, newColor);
+		return new SimpleIcon(spriteResourceID, newColor);
 	}
 
 	@Override public void draw(int x, int y) {
@@ -129,7 +129,7 @@ public class SimpleIcon implements Icon {
 	@Override public boolean equals(Object other) {
 		if (! (other instanceof SimpleIcon) ) return false;
 		
-		return ((SimpleIcon)other).spriteResourceID.equals(this.spriteResourceID);
+		return ((SimpleIcon)other).spriteResourceID.equals(spriteResourceID);
 	}
 	
 	@Override public int hashCode() {

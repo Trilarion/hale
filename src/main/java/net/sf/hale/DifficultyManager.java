@@ -47,7 +47,7 @@ public class DifficultyManager {
 	public DifficultyManager() {
 		SimpleJSONParser parser = new SimpleJSONParser("difficultyLevels", ResourceType.JSON);
 		
-		levels = new LinkedHashMap<String, DifficultyLevel>();
+		levels = new LinkedHashMap<>();
 		
 		for (SimpleJSONArrayEntry entry : parser.getArray("difficultyLevels")) {
 			SimpleJSONObject levelData = entry.getObject();
@@ -167,7 +167,7 @@ public class DifficultyManager {
 		return levels.get(currentDifficulty).friendlyFireOnPCs;
 	}
 	
-	private class DifficultyLevel {
+	private static class DifficultyLevel {
 		private final boolean criticalHitsOnPCs;
 		private final boolean friendlyFireOnPCs;
 		private final int damageFactorOnPCs;

@@ -61,42 +61,42 @@ public class ItemTemplate extends EntityTemplate {
 		
 		if (data.containsKey("defaultQuality")) {
 			String qualityID = data.get("defaultQuality", null);
-			
-			this.defaultQuality = Game.ruleset.getItemQuality(qualityID);
+
+            defaultQuality = Game.ruleset.getItemQuality(qualityID);
 		} else {
 			// item has no quality
-			this.defaultQuality = null;
+            defaultQuality = null;
 		}
-		
-		this.valueInCPOver100 = data.get("value", 0);
-		
-		this.weightInGrams = data.get("weight", 0);
+
+        valueInCPOver100 = data.get("value", 0);
+
+        weightInGrams = data.get("weight", 0);
 		
 		if (data.containsKey("isIngredient")) {
-			this.isIngredient = data.get("isIngredient", false);
+            isIngredient = data.get("isIngredient", false);
 		} else {
-			this.isIngredient = false;
+            isIngredient = false;
 		}
 		
 		if (data.containsKey("isQuest")) {
-			this.isQuest = data.get("isQuest", false);
+            isQuest = data.get("isQuest", false);
 		} else {
-			this.isQuest = false;
+            isQuest = false;
 		}
 		
 		if (!data.containsKey("script")) {
-			this.useText = null;
-			this.useAP = 0;
+            useText = null;
+            useAP = 0;
 		} else {
 			if (data.containsKey("useText"))
-				this.useText = data.get("useText", null);
+                useText = data.get("useText", null);
 			else
-				this.useText = null;
+                useText = null;
 			
 			if (data.containsKey("useAP"))
-				this.useAP = data.get("useAP", 0);
+                useAP = data.get("useAP", 0);
 			else
-				this.useAP = 0;
+                useAP = 0;
 		}
 	}
 	
@@ -110,14 +110,14 @@ public class ItemTemplate extends EntityTemplate {
 	
 	protected ItemTemplate(String id, ItemTemplate other, CreatedItem createdItem) {
 		super(id, other, createdItem);
-		
-		this.defaultQuality = other.defaultQuality;
-		this.valueInCPOver100 = createdItem.getModifiedValue(other.valueInCPOver100);
-		this.weightInGrams = other.weightInGrams;
-		this.isIngredient = other.isIngredient;
-		this.isQuest = other.isQuest;
-		this.useText = other.useText;
-		this.useAP = other.useAP;
+
+        defaultQuality = other.defaultQuality;
+        valueInCPOver100 = createdItem.getModifiedValue(other.valueInCPOver100);
+        weightInGrams = other.weightInGrams;
+        isIngredient = other.isIngredient;
+        isQuest = other.isQuest;
+        useText = other.useText;
+        useAP = other.useAP;
 	}
 	
 	@Override public Item createInstance() {

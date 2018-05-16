@@ -47,14 +47,14 @@ public class ErrorPopup extends PopupWindow {
 	
 	public ErrorPopup(Widget parent, List<String> messages) {
 		super(parent);
-		this.setCloseOnClickedOutside(false);
-		this.setCloseOnEscape(false);
+        setCloseOnClickedOutside(false);
+        setCloseOnEscape(false);
 
-		this.messages = new ArrayList<String>();
+		this.messages = new ArrayList<>();
 		this.messages.addAll(messages);
 		
 		content = new Content();
-		this.add(content);
+        add(content);
 	}
 	
 	/**

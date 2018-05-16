@@ -48,17 +48,17 @@ public class XP {
 		int levelExpBaseInv = Game.ruleset.getValue("XPLevelExpBaseInv");
 		double levelExpBase = 1.0 + 1.0 / ((double)levelExpBaseInv);
 		
-		XP.pointsForLevel = new int[MAX_LEVEL + 2];
+		pointsForLevel = new int[MAX_LEVEL + 2];
 		
-		XP.pointsForLevel[0] = 0;
-		XP.pointsForLevel[1] = 0;
+		pointsForLevel[0] = 0;
+		pointsForLevel[1] = 0;
 		
 		double curPoints = 0.0;
 		
 		for (int prevLevel = 1; prevLevel <= MAX_LEVEL; prevLevel++) {
 			curPoints += prevLevel * levelMultFactor * Math.pow(levelExpBase, prevLevel);
 			
-			XP.pointsForLevel[prevLevel + 1] = (int)((curPoints + 50) / 100) * 100;
+			pointsForLevel[prevLevel + 1] = (int)((curPoints + 50) / 100) * 100;
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class XP {
 	 */
 	
 	public static int getPointsForLevel(int level) {
-		return XP.pointsForLevel[level];
+		return pointsForLevel[level];
 	}
 	
 	/**

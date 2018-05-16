@@ -52,7 +52,7 @@ public class Path implements Iterable<Location> {
 		
 		xCoords = new int[0];
 		yCoords = new int[0];
-		this.aoOs = new Creature[0];
+        aoOs = new Creature[0];
 	}
 	
 	/**
@@ -61,14 +61,14 @@ public class Path implements Iterable<Location> {
 	 */
 	
 	public Path(Location location) {
-		this.area = location.getArea();
+        area = location.getArea();
 		
 		xCoords = new int[1];
 		yCoords = new int[1];
 		
 		xCoords[0] = location.getX();
 		yCoords[0] = location.getY();
-		this.aoOs = new Creature[0];
+        aoOs = new Creature[0];
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class Path implements Iterable<Location> {
 		this.area = area;
 		this.xCoords = xCoords;
 		this.yCoords = yCoords;
-		this.aoOs = new Creature[0];
+        aoOs = new Creature[0];
 	}
 	
 	/**
@@ -178,7 +178,7 @@ public class Path implements Iterable<Location> {
 			yCoords[i - offset] = this.yCoords[i];
 		}
 		
-		return new Path(this.area, xCoords, yCoords);
+		return new Path(area, xCoords, yCoords);
 	}
 	
 	/**
@@ -203,7 +203,7 @@ public class Path implements Iterable<Location> {
 		xCoords[length()] = x;
 		yCoords[length()] = y;
 		
-		return new Path(this.area, xCoords, yCoords);
+		return new Path(area, xCoords, yCoords);
 	}
 
 	@Override public Iterator<Location> iterator() {

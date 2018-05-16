@@ -98,11 +98,11 @@ public class QuestEntry implements Iterable<QuestSubEntry>, Saveable {
 	
 	public QuestEntry(String title) {
 		this.title = title;
-		this.completed = false;
-		this.showLogNotifications = true;
-		
-		this.subEntries = new HashMap<String, QuestSubEntry>();
-		this.subEntriesList = new LinkedList<QuestSubEntry>();
+        completed = false;
+        showLogNotifications = true;
+
+        subEntries = new HashMap<>();
+        subEntriesList = new LinkedList<>();
 	}
 	
 	/**
@@ -122,7 +122,7 @@ public class QuestEntry implements Iterable<QuestSubEntry>, Saveable {
 	 */
 	
 	public void setShowLogNotifications(boolean show) {
-		this.showLogNotifications = show;
+        showLogNotifications = show;
 	}
 	
 	/**
@@ -132,7 +132,7 @@ public class QuestEntry implements Iterable<QuestSubEntry>, Saveable {
 	 */
 	
 	public void setCompleted() {
-		this.completed = true;
+        completed = true;
 		Game.curCampaign.questEntries.setCompleted(this);
 	}
 	

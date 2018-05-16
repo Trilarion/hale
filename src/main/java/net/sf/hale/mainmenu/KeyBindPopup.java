@@ -74,8 +74,8 @@ public class KeyBindPopup extends PopupWindow {
 			label.setSize(label.getPreferredWidth(), label.getPreferredHeight());
 			label.setPosition(getInnerX() + getInnerWidth() / 2 - label.getWidth() / 2,
 					getInnerY() + getInnerHeight() / 2 - label.getHeight());
-			
-			this.requestKeyboardFocus();
+
+            requestKeyboardFocus();
 		}
 		
 		@Override public int getPreferredInnerWidth() {
@@ -92,7 +92,7 @@ public class KeyBindPopup extends PopupWindow {
 				int key = evt.getKeyCode();
 				
 				callback.keyBound(key);
-				KeyBindPopup.this.closePopup();
+                closePopup();
 				break;
 			case MOUSE_ENTERED:
 				return true;
@@ -115,14 +115,14 @@ public class KeyBindPopup extends PopupWindow {
 		 * Called whenever a key is pressed to be bound
 		 * @param keyCode
 		 */
-		
-		public void keyBound(int keyCode);
+
+        void keyBound(int keyCode);
 		
 		/**
 		 * Returns the action name for the key that is currently being bound
 		 * @return the action name
 		 */
-		
-		public String getActionName();
+
+        String getActionName();
 	}
 }

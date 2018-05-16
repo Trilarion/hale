@@ -38,16 +38,16 @@ public interface Icon extends IconRenderer {
 	 * if it is empty
 	 * @return the width of this icon
 	 */
-	
-	public int getWidth();
+
+    int getWidth();
 	
 	/**
 	 * Returns the height of the sprite drawn by this icon, or 0
 	 * if it is empty
 	 * @return the height of this icon
 	 */
-	
-	public int getHeight();
+
+    int getHeight();
 	
 	/**
 	 * Gets an Icon that is a copy of this Icon, except multiplied
@@ -55,13 +55,13 @@ public interface Icon extends IconRenderer {
 	 * @param color
 	 * @return a copy of this Icon with the new Color
 	 */
-	
-	public Icon multiplyByColor(Color color);
+
+    Icon multiplyByColor(Color color);
 	
 	/**
 	 * Stores a representation of this Icon as JSON
 	 * @return the JSON object containing the Icon data
 	 */
-	
-	public JSONOrderedObject save();
+
+    JSONOrderedObject save();
 }

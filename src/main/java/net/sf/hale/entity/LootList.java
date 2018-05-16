@@ -51,16 +51,16 @@ public class LootList {
 		PerItem,
 		
 		/** One item is drawn from the entire list with the specified probability */
-		PerList;
-	};
-	
-	/**
+		PerList
+    }
+
+    /**
 	 * Generates a LootList from the specified JSON data
 	 * @param data the JSON to parse
 	 */
 	
 	public LootList(SimpleJSONArray data) {
-		entries = new ArrayList<Entry>();
+		entries = new ArrayList<>();
 		
 		for (SimpleJSONArrayEntry entry : data) {
 			SimpleJSONObject lootObject = entry.getObject();
@@ -132,7 +132,7 @@ public class LootList {
 		
 		// if the item is equippable, check for a random enchantment
 		List<String> usableRecipes = getUsableRecipes(entry, enchantmentChance);
-		if (usableRecipes.size() > 0) {
+		if (!usableRecipes.isEmpty()) {
 			int index = usableRecipes.size() == 1 ? 0 : Game.dice.rand(0, usableRecipes.size() - 1);
 			Recipe recipe = Game.curCampaign.getRecipe(usableRecipes.get(index));
 			Item newItem = recipe.createItem(entry.getID(), entry.getQuality(), enchantmentSkillModifier);
@@ -153,7 +153,7 @@ public class LootList {
 		EquippableItemTemplate equippableTemplate = (EquippableItemTemplate)itemTemplate;
 		
 		// only items without a current enchantment can be enchanted
-		if (equippableTemplate.getEnchantments().size() > 0) return Collections.emptyList();
+		if (!equippableTemplate.getEnchantments().isEmpty()) return Collections.emptyList();
 		
 		if (Game.dice.rand(1, 100) <= enchantmentChance) {
 			return Game.curCampaign.getEnchantmentsForItemType(equippableTemplate.getType());
@@ -168,7 +168,7 @@ public class LootList {
 	 *
 	 */
 	
-	private class Entry {
+	private static class Entry {
 		/** The itemList that this LootEntry will draw items from */
 		private final String itemListID;
 		

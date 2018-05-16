@@ -41,7 +41,7 @@ public class Currency {
 	 */
 	
 	public Currency() {
-		this.value = 0;
+        value = 0;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class Currency {
 	 */
 	
 	public Currency(Currency other) {
-		this.value = other.value;
+        value = other.value;
 	}
 	
 	/**
@@ -92,35 +92,40 @@ public class Currency {
 	 * @param cp the amount of value to add in Copper Pieces
 	 */
 	
-	public void addCP(int cp) { this.value += cp * 100; }
+	public void addCP(int cp) {
+        value += cp * 100; }
 	
 	/**
 	 * Adds the specified amount of value to this currency
 	 * @param sp the amount of value to add in Silver Pieces
 	 */
 	
-	public void addSP(int sp) { this.value += sp * 1000; }
+	public void addSP(int sp) {
+        value += sp * 1000; }
 	
 	/**
 	 * Adds the specified amount of value to this currency
 	 * @param gp the amount of value to add in Gold Pieces
 	 */
 	
-	public void addGP(int gp) { this.value += gp * 10000; }
+	public void addGP(int gp) {
+        value += gp * 10000; }
 	
 	/**
 	 * Adds the specified amount of value to this currency
 	 * @param pp the amount of value to add in Platinum Pieces
 	 */
 	
-	public void addPP(int pp) { this.value += pp * 100000; }
+	public void addPP(int pp) {
+        value += pp * 100000; }
 	
 	/**
 	 * Adds the amount of value from the other currency to this currency
 	 * @param other
 	 */
 	
-	public void add(Currency other) { this.value += other.value; }
+	public void add(Currency other) {
+        value += other.value; }
 	
 	@Override public String toString() {
 		return getPP() + " PP " + getGP() + " GP " + getSP() + " SP " + getCP() + " CP";
@@ -186,9 +191,9 @@ public class Currency {
 	 */
 	
 	public String shortString(int percentage) {
-		int oldValue = this.value;
-		
-		this.value = this.value * percentage / 100;
+		int oldValue = value;
+
+        value = value * percentage / 100;
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -198,8 +203,8 @@ public class Currency {
 		if (getCP() != 0) builder.append(getCP() + " CP ");
 		
 		if (builder.length() == 0) builder.append("0 CP ");
-		
-		this.value = oldValue;
+
+        value = oldValue;
 		
 		return builder.toString().trim();
 	}
@@ -222,16 +227,21 @@ public class Currency {
 				int value = parser.nextInt();
 				if (parser.hasNext()) {
 					String type = parser.next().toLowerCase();
-					
-					if (type.equals("cp")) {
-						addCP(value);
-					} else if (type.equals("sp")) {
-						addSP(value);
-					} else if (type.equals("gp")) {
-						addGP(value);
-					} else if (type.equals("pp")) {
-						addPP(value);
-					}
+
+                    switch (type) {
+                        case "cp":
+                            addCP(value);
+                            break;
+                        case "sp":
+                            addSP(value);
+                            break;
+                        case "gp":
+                            addGP(value);
+                            break;
+                        case "pp":
+                            addPP(value);
+                            break;
+                    }
 				} else {
 					Logger.appendToWarningLog("Warning.  Extra token in currency string " + s);
 				}
@@ -253,7 +263,7 @@ public class Currency {
 		int cost = item.getQualityValue() * markup / 100;
 		if (cost == 0) return Integer.MAX_VALUE;
 		
-		return (this.value / cost);
+		return (value / cost);
 	}
 	
 	/**

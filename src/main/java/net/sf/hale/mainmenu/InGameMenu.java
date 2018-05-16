@@ -22,6 +22,8 @@ package net.sf.hale.mainmenu;
 import java.io.File;
 
 import net.sf.hale.Game;
+import net.sf.hale.mainmenu.ConfirmQuitPopup.QuitMode;
+import net.sf.hale.mainmenu.SaveGamePopup.Callback;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SaveGameUtil;
 
@@ -38,7 +40,7 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, SaveGamePopup.Callback {
+public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, Callback {
 	private final Widget content;
 	
 	/**
@@ -48,11 +50,11 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 	
 	public InGameMenu(Widget parent) {
 		super(parent);
-		this.setCloseOnClickedOutside(false);
-		this.setCloseOnEscape(true);
+        setCloseOnClickedOutside(false);
+        setCloseOnEscape(true);
 		
 		content = new Content();
-		this.add(content);
+        add(content);
 	}
 	
 	@Override public void loadGameAccepted(String saveGame) {
@@ -90,7 +92,7 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 			back.addCallback(new Runnable() {
 				@Override
 				public void run() {
-					InGameMenu.this.closePopup();
+                    closePopup();
 				}
 			});
 			back.setEnabled(!Game.curCampaign.party.isDefeated());
@@ -120,7 +122,7 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 	        		popup.openPopupCentered();
 				}
 			});
-			load.setEnabled(SaveGameUtil.getSaveGames().size() > 0);
+			load.setEnabled(!SaveGameUtil.getSaveGames().isEmpty());
 			
 			options = new Button();
 			options.setTheme("optionsbutton");
@@ -135,7 +137,7 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 			quit.addCallback(new Runnable() {
 				@Override public void run() {
 					new ConfirmQuitPopup(InGameMenu.this,
-							ConfirmQuitPopup.QuitMode.QuitToMenu).openPopupCentered();
+							QuitMode.QuitToMenu).openPopupCentered();
 				}
 			});
 			
@@ -144,7 +146,7 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 			exit.addCallback(new Runnable() {
 				@Override public void run() {
 					new ConfirmQuitPopup(InGameMenu.this,
-							ConfirmQuitPopup.QuitMode.ExitGame).openPopupCentered();
+							QuitMode.ExitGame).openPopupCentered();
 				}
 			});
 			

@@ -27,6 +27,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ScrollPane;
 
 import net.sf.hale.Game;
+import net.sf.hale.characterbuilder.PointAllocatorModel.Listener;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
@@ -38,7 +39,7 @@ import net.sf.hale.util.Logger;
  *
  */
 
-public class BuilderPaneSkills extends BuilderPane implements PointAllocatorModel.Listener {
+public class BuilderPaneSkills extends BuilderPane implements Listener {
 	private PointAllocatorModel points;
 	
 	private List<SkillSelector> selectors;
@@ -59,7 +60,7 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
         points = new PointAllocatorModel(1);
         points.addListener(this);
         
-        selectors = new ArrayList<SkillSelector>();
+        selectors = new ArrayList<>();
         
         resetButton = new Button("Reset Selections");
         resetButton.setTheme("resetbutton");
@@ -92,7 +93,7 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	private void setRoleValues() {
 		resetValues();
 		
-		List<SkillSelector> selectorsSorted = new ArrayList<SkillSelector>(selectors);
+		List<SkillSelector> selectorsSorted = new ArrayList<>(selectors);
 		selectorsSorted.sort(new Comparator<SkillSelector>() {
 			@Override public int compare(SkillSelector s1, SkillSelector s2) {
 				int s1Ranks = getCharacter().getSkillSet().getRanks(s1.skill);

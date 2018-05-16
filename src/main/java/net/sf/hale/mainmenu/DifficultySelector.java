@@ -57,7 +57,7 @@ public class DifficultySelector extends Widget {
 		difficultyLabel.setTheme("difficultylabel");
 		add(difficultyLabel);
 		
-		buttons = new ArrayList<ToggleButton>();
+		buttons = new ArrayList<>();
 		manager = Game.ruleset.getDifficultyManager();
 		for (String level : manager.getDifficultyLevels()) {
 			ToggleButton button = new SelectorButton(level);

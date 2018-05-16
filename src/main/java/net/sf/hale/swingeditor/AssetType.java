@@ -35,11 +35,11 @@ import net.sf.hale.entity.EntityManager;
 public enum AssetType {
 	Creatures(new CreatureCallback(), "creatures");
 	
-	private String containingDirectory;
-	private Callback callback;
+	private final String containingDirectory;
+	private final Callback callback;
 	
 	AssetType(Callback modeSetCallback, String containingDirectory) {
-		this.callback = modeSetCallback;
+		callback = modeSetCallback;
 		this.containingDirectory = containingDirectory;
 	}
 	
@@ -97,10 +97,10 @@ public enum AssetType {
 	}
 	
 	private interface Callback {
-		public void setMode(AssetEditor editor);
+		void setMode(AssetEditor editor);
 		
-		public Object getAsset(String assetID);
+		Object getAsset(String assetID);
 		
-		public JPanel getSubEditor(JFrame parent, String assetID);
+		JPanel getSubEditor(JFrame parent, String assetID);
 	}
 }

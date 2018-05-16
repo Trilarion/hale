@@ -73,7 +73,7 @@ public class ScriptState implements Saveable {
 		this();
 		
 		for (String key : other.state.keySet()) {
-			this.state.put(key, other.state.get(key));
+            state.put(key, other.state.get(key));
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class ScriptState implements Saveable {
 	 */
 	
 	public ScriptState() {
-		this.state = new HashMap<String, Object>();
+        state = new HashMap<>();
 	}
 	
 	/**

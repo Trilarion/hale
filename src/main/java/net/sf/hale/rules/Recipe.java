@@ -31,10 +31,13 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.EquippableItemTemplate.Type;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.icon.IconFactory;
+import net.sf.hale.rules.Recipe.Ingredient;
 import net.sf.hale.util.SimpleJSONArray;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
@@ -48,14 +51,14 @@ import net.sf.hale.util.SimpleJSONParser;
  *
  */
 
-public class Recipe implements Iterable<Recipe.Ingredient> {
+public class Recipe implements Iterable<Ingredient> {
 	/**
 	 * A single type of ingredient for a recipe
 	 * @author Jared
 	 *
 	 */
 	
-	public class Ingredient {
+	public static class Ingredient {
 		private final String itemID;
 		private final int quantity;
 		
@@ -83,7 +86,7 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 		}
 	}
 	
-	private class LevelModifier {
+	private static class LevelModifier {
 		private final Quality quality;
 		private final int skillRankRequirement;
 		private final String enchantment;
@@ -91,24 +94,24 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 		
 		private LevelModifier(SimpleJSONObject data) {
 			if (data.containsKey("quality")) {
-				this.quality = Game.ruleset.getItemQuality(data.get("quality", null));
+				quality = Game.ruleset.getItemQuality(data.get("quality", null));
 			} else {
-				this.quality = null;
+				quality = null;
 			}
-			
-			
-			this.skillRankRequirement = data.get("skillRankRequirement", 0);
+
+
+			skillRankRequirement = data.get("skillRankRequirement", 0);
 			
 			if (data.containsKey("enchantment")) {
-				this.enchantment = data.get("enchantment", null);
+				enchantment = data.get("enchantment", null);
 			} else {
-				this.enchantment = null;
+				enchantment = null;
 			}
 			
 			if (data.containsKey("valueModifier")) {
-				this.valueModifier = data.get("valueModifier", 100);
+				valueModifier = data.get("valueModifier", 100);
 			} else {
-				this.valueModifier = 100;
+				valueModifier = 100;
 			}
 		}
 		
@@ -118,10 +121,10 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 		 */
 		
 		private LevelModifier() {
-			this.quality = null;
-			this.skillRankRequirement = 0;
-			this.enchantment = null;
-			this.valueModifier = 100;
+			quality = null;
+			skillRankRequirement = 0;
+			enchantment = null;
+			valueModifier = 100;
 		}
 	}
 	
@@ -131,7 +134,7 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 	
 	private final List<Ingredient> ingredients;
 	
-	private final List<EquippableItemTemplate.Type> ingredientItemTypes;
+	private final List<Type> ingredientItemTypes;
 	private final String result;
 	private final int resultQuantity;
 	
@@ -147,12 +150,12 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 	
 	public Recipe(String id, SimpleJSONParser parser) {
 		this.id = id;
-		this.name = parser.get("name", id);
-		this.description = parser.get("description", null);
-		this.skill = Game.ruleset.getSkill(parser.get("skill", null));
-		this.skillRankRequirement = parser.get("skillRankRequirement", 0);
-		
-		this.ingredients = new ArrayList<Ingredient>();
+		name = parser.get("name", id);
+		description = parser.get("description", null);
+		skill = Game.ruleset.getSkill(parser.get("skill", null));
+		skillRankRequirement = parser.get("skillRankRequirement", 0);
+
+		ingredients = new ArrayList<>();
 		SimpleJSONObject ingredientsIn = parser.getObject("ingredients");
 		for (String itemID : ingredientsIn.keySet()) {
 			int quantity = ingredientsIn.get(itemID, 0);
@@ -163,50 +166,50 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 		SimpleJSONObject resultIn = parser.getObject("result");
 		
 		if (resultIn.containsKey("id")) {
-			this.result = resultIn.get("id", null);
-			this.resultQuantity = resultIn.get("quantity", 0);
-			this.ingredientItemTypes = Collections.emptyList();
-			
-			this.resultPostfix = null;
-			this.resultPrefix = null;
-			this.resultOverlayIcon = null;
+			result = resultIn.get("id", null);
+			resultQuantity = resultIn.get("quantity", 0);
+			ingredientItemTypes = Collections.emptyList();
+
+			resultPostfix = null;
+			resultPrefix = null;
+			resultOverlayIcon = null;
 		} else {
-			this.result = null;
-			this.resultQuantity = 0;
+			result = null;
+			resultQuantity = 0;
 			
 			if (resultIn.containsKey("postfix")) {
-				this.resultPostfix = resultIn.get("postfix", null);
+				resultPostfix = resultIn.get("postfix", null);
 			} else {
-				this.resultPostfix = "";
+				resultPostfix = "";
 			}
 			
 			if (resultIn.containsKey("prefix")) {
-				this.resultPrefix = resultIn.get("prefix", null);
+				resultPrefix = resultIn.get("prefix", null);
 			} else {
-				this.resultPrefix = "";
+				resultPrefix = "";
 			}
 			
 			if (resultIn.containsKey("overlayIcon")) {
-				this.resultOverlayIcon = IconFactory.createIcon(resultIn.getObject("overlayIcon"));
+				resultOverlayIcon = IconFactory.createIcon(resultIn.getObject("overlayIcon"));
 			} else {
-				this.resultOverlayIcon = IconFactory.emptyIcon;
+				resultOverlayIcon = IconFactory.emptyIcon;
 			}
 			
-			List<EquippableItemTemplate.Type> itemTypes = new ArrayList<EquippableItemTemplate.Type>();
+			List<Type> itemTypes = new ArrayList<>();
 			
 			SimpleJSONArray itemTypesIn = resultIn.getArray("ingredientItemTypes");
 			for (SimpleJSONArrayEntry entry : itemTypesIn) {
 				String typeString = entry.getString();
 				
-				EquippableItemTemplate.Type type = EquippableItemTemplate.Type.valueOf(typeString);
+				Type type = Type.valueOf(typeString);
 				itemTypes.add(type);
 			}
-			
-			this.ingredientItemTypes = Collections.unmodifiableList(itemTypes);
+
+			ingredientItemTypes = Collections.unmodifiableList(itemTypes);
 		}
 		
 		if (resultIn.containsKey("levels")) {
-			levelModifiers = new ArrayList<LevelModifier>();
+			levelModifiers = new ArrayList<>();
 			
 			SimpleJSONArray qualitiesIn = resultIn.getArray("levels");
 			
@@ -284,7 +287,7 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 	 * @return the item types needed
 	 */
 	
-	public List<EquippableItemTemplate.Type> getIngredientItemTypes() { return ingredientItemTypes; }
+	public List<Type> getIngredientItemTypes() { return ingredientItemTypes; }
 	
 	/**
 	 * Returns true if this recipe modifies an existing item (of a specified type,
@@ -333,7 +336,7 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 	}
 	
 	private LevelModifier findLevelModifier(int skillModifier) {
-		if (this.levelModifiers.size() == 0) {
+		if (levelModifiers.isEmpty()) {
 			return new LevelModifier();
 		}
 		
@@ -408,10 +411,10 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 			if (qualityModifier.enchantment != null) {
 				model.addEnchantment(qualityModifier.enchantment);
 			}
-			model.setNamePostfix(this.resultPostfix);
-			model.setNamePrefix(this.resultPrefix);
+			model.setNamePostfix(resultPostfix);
+			model.setNamePrefix(resultPrefix);
 			model.setValueModifier(qualityModifier.valueModifier);
-			model.setOverlayIcon(this.resultOverlayIcon);
+			model.setOverlayIcon(resultOverlayIcon);
 
 			CreatedItem createdItem = model.getCreatedItem();
 
@@ -430,7 +433,7 @@ public class Recipe implements Iterable<Recipe.Ingredient> {
 	 * @param slot the inventory slot the item is equipped in, or null if the item is not equipped
 	 */
 	
-	public void craft(Item selectedItem, Creature owner, Inventory.Slot slot) {
+	public void craft(Item selectedItem, Creature owner, Slot slot) {
 		if (!isResultIngredient())
 			throw new IllegalArgumentException("Must not call craft with a specified item for recipe " + getID());
 		

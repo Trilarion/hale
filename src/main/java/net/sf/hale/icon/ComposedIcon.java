@@ -44,13 +44,13 @@ public class ComposedIcon implements Icon {
 	 */
 	
 	public ComposedIcon(SimpleJSONObject data) {
-		this.icons = new ArrayList<Icon>();
+        icons = new ArrayList<>();
 		
 		for (SimpleJSONArrayEntry entry : data.getArray("composed")) {
-			this.icons.add(IconFactory.createIcon(entry.getObject()));
+            icons.add(IconFactory.createIcon(entry.getObject()));
 		}
 		
-		((ArrayList<Icon>)this.icons).trimToSize();
+		((ArrayList<Icon>) icons).trimToSize();
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class ComposedIcon implements Icon {
 	 */
 	
 	public ComposedIcon(Icon... icons) {
-		this.icons = new ArrayList<Icon>(icons.length);
+		this.icons = new ArrayList<>(icons.length);
 		
 		int width = 0;
 		int height = 0;
@@ -98,7 +98,7 @@ public class ComposedIcon implements Icon {
 		Icon[] newIcons = new Icon[icons.size()];
 		
 		for (int i = 0; i < newIcons.length; i++) {
-			newIcons[i] = this.icons.get(i).multiplyByColor(color);
+			newIcons[i] = icons.get(i).multiplyByColor(color);
 		}
 		
 		return new ComposedIcon(newIcons);

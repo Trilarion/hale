@@ -19,30 +19,32 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class BonusTypeList {
 	private int currentTotal;
-	private Map<Bonus.StackType, BonusStackTypeList> bonuses;
+	private Map<StackType, BonusStackTypeList> bonuses;
 	
 	public BonusTypeList() {
-		bonuses = new HashMap<Bonus.StackType, BonusStackTypeList>();
+		bonuses = new HashMap<>();
 		currentTotal = 0;
 	}
 	
 	public BonusTypeList(BonusTypeList other) {
-		this.bonuses = new HashMap<Bonus.StackType, BonusStackTypeList>();
-		for (Bonus.StackType key : other.bonuses.keySet()) {
+        bonuses = new HashMap<>();
+		for (StackType key : other.bonuses.keySet()) {
 			BonusStackTypeList list = new BonusStackTypeList(other.bonuses.get(key));
-			this.bonuses.put(key, list);
+            bonuses.put(key, list);
 		}
-		
-		this.currentTotal = other.currentTotal;
+
+        currentTotal = other.currentTotal;
 	}
 	
 	public void remove(Bonus bonus) {
-		Bonus.StackType stackType = bonus.getStackType();
+		StackType stackType = bonus.getStackType();
 		
 		if (bonuses.containsKey(stackType)) {
 			bonuses.get(stackType).remove(bonus);
@@ -56,14 +58,14 @@ public class BonusTypeList {
 		if (bonus.hasValue()) {
 			currentTotal = 0;
 			
-			for (Bonus.StackType type : bonuses.keySet()) {
+			for (StackType type : bonuses.keySet()) {
 				currentTotal += bonuses.get(type).getCurrentTotal();
 			}
 		}
 	}
 	
 	public void add(Bonus bonus) {
-		Bonus.StackType stackType = bonus.getStackType();
+		StackType stackType = bonus.getStackType();
 		
 		if (bonuses.containsKey(stackType)) {
 			// subtract the old total from this stack type
@@ -83,7 +85,7 @@ public class BonusTypeList {
 		}
 	}
 	
-	public int get(Bonus.StackType stackType) {
+	public int get(StackType stackType) {
 		if (bonuses.containsKey(stackType)) return bonuses.get(stackType).getCurrentTotal();
 		else return 0;
 	}
@@ -91,6 +93,6 @@ public class BonusTypeList {
 	public int getCurrentTotal() { return currentTotal; }
 	
 	public boolean isEmpty() {
-		return bonuses.keySet().size() == 0;
+		return bonuses.keySet().isEmpty();
 	}
 }

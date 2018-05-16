@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.widgets.TextAreaNoInput;
 
 import de.matthiasmann.twl.Button;
@@ -112,7 +114,7 @@ public class ScriptAutocompletePopup extends PopupWindow {
 			sb.append("</span>");
 			
 			sb.append("<div style=\"font-family: orange\">");
-			if (nextToken.length() > 0) {
+			if (!nextToken.isEmpty()) {
 				appendStringFormatted(sb, "Members starting with \"" + nextToken + "\"");
 			} else {
 				appendStringFormatted(sb, "Members:");
@@ -128,12 +130,12 @@ public class ScriptAutocompletePopup extends PopupWindow {
 			paneContent = new DialogLayout();
 			
 			pane = new ScrollPane(paneContent);
-			pane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			pane.setFixed(Fixed.HORIZONTAL);
 			add(pane);
 			
 			// add the selectors for each method entry
-			DialogLayout.Group mainH = paneContent.createParallelGroup();
-			DialogLayout.Group mainV = paneContent.createSequentialGroup();
+			Group mainH = paneContent.createParallelGroup();
+			Group mainV = paneContent.createSequentialGroup();
 			
 			// add selectors for the fields
 			Field[] fields = value.getClass().getFields();
@@ -166,8 +168,8 @@ public class ScriptAutocompletePopup extends PopupWindow {
 				String name = method.getName();
 
 				// don't print the methods inherited from Object
-				if (name.equals("wait") || name.equals("toString") || name.equals("hashCode") || name.equals("getClass") ||
-						name.equals("notify") || name.equals("notifyAll") || name.equals("equals"))
+				if ("wait".equals(name) || "toString".equals(name) || "hashCode".equals(name) || "getClass".equals(name) ||
+                        "notify".equals(name) || "notifyAll".equals(name) || "equals".equals(name))
 					continue;
 				
 				if (!name.startsWith(nextToken)) continue;
@@ -220,8 +222,8 @@ public class ScriptAutocompletePopup extends PopupWindow {
 			textArea = new TextAreaNoInput(model);
 			add(textArea);
 			addCallback(this);
-			
-			this.editFieldText = base + '.' + field.getName() + '.';
+
+            editFieldText = base + '.' + field.getName() + '.';
 		}
 		
 		private EntrySelector(Method method) {
@@ -239,7 +241,7 @@ public class ScriptAutocompletePopup extends PopupWindow {
 			if (returnType instanceof Class) {
 				sb.append( ((Class<?>)returnType).getSimpleName());
 			} else {
-				sb.append(returnType.toString());
+				sb.append(returnType);
 			}
 			sb.append("</span>");
 			sb.append(" <span style=\"font-family: white\">");
@@ -257,8 +259,8 @@ public class ScriptAutocompletePopup extends PopupWindow {
 					sb.append( ((Class<?>)paramTypes[i]).getSimpleName() );
 					editFieldText.append( ((Class<?>)paramTypes[i]).getSimpleName() );
 				} else {
-					sb.append(paramTypes[i].toString());
-					editFieldText.append(paramTypes[i].toString());
+					sb.append(paramTypes[i]);
+					editFieldText.append(paramTypes[i]);
 				}
 				sb.append("</span>");
 

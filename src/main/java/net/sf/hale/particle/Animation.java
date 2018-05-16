@@ -104,8 +104,8 @@ public class Animation extends AnimationBase implements Animated {
 			float texCoordEndX = entryData.get("texCoordEndX", 0.0f);
 			float texCoordEndY = entryData.get("texCoordEndY", 0.0f);
 
-			AnimationFrame frame = animation.new AnimationFrame(texCoordStartX, texCoordStartY,
-					texCoordEndX, texCoordEndY, initialDuration);
+			AnimationFrame frame = new AnimationFrame(texCoordStartX, texCoordStartY,
+                    texCoordEndX, texCoordEndY, initialDuration);
 			frame.duration = entryData.get("duration", 0.0f);
 
 			animation.frames.add(frame);			
@@ -116,22 +116,22 @@ public class Animation extends AnimationBase implements Animated {
 	
 	public Animation(Animation other) {
 		super(other);
-		
-		this.width = other.width;
-		this.height = other.height;
-		this.halfWidth = other.halfWidth;
-		this.halfHeight = other.halfHeight;
-		this.texture = other.texture;
-		this.textureSprite = other.textureSprite;
-		
-		this.frameDuration = other.frameDuration;
-		
-		this.frames = new ArrayList<AnimationFrame>();
+
+        width = other.width;
+        height = other.height;
+        halfWidth = other.halfWidth;
+        halfHeight = other.halfHeight;
+        texture = other.texture;
+        textureSprite = other.textureSprite;
+
+        frameDuration = other.frameDuration;
+
+        frames = new ArrayList<>();
 		for (AnimationFrame frame : other.frames) {
-			this.frames.add(new AnimationFrame(frame));
+            frames.add(new AnimationFrame(frame));
 		}
-		
-		this.drawingMode = other.drawingMode;
+
+        drawingMode = other.drawingMode;
 	}
 	
 	public Animation(String sprite, float duration) {
@@ -149,21 +149,21 @@ public class Animation extends AnimationBase implements Animated {
 	
 	public Animation(Sprite sprite, float defaultFrameDuration, String textureSprite) {
 		super(sprite.getWidth() / 2, sprite.getHeight() / 2);
-		
-		this.drawingMode = DrawingMode.AboveEntities;
+
+        drawingMode = DrawingMode.AboveEntities;
 		
 		this.textureSprite = textureSprite;
-		this.texture = sprite.getTextureReference();
-		this.width = sprite.getWidth();
-		this.height = sprite.getHeight();
-		this.halfWidth = width / 2;
-		this.halfHeight = height / 2;
-		
-		this.frameDuration = defaultFrameDuration;
-		this.frames = new ArrayList<AnimationFrame>();
+        texture = sprite.getTextureReference();
+        width = sprite.getWidth();
+        height = sprite.getHeight();
+        halfWidth = width / 2;
+        halfHeight = height / 2;
+
+        frameDuration = defaultFrameDuration;
+        frames = new ArrayList<>();
 		
 		frames.add(new AnimationFrame(sprite.getTexCoordStartX(), sprite.getTexCoordStartY(),
-				sprite.getTexCoordEndX(), sprite.getTexCoordEndY(), frameDuration));
+                sprite.getTexCoordEndX(), sprite.getTexCoordEndY(), frameDuration));
 		
 		setRed(1.0f);
 		setBlue(1.0f);
@@ -175,11 +175,11 @@ public class Animation extends AnimationBase implements Animated {
 	
 	public void cacheSprite() {
 		Sprite sprite = SpriteManager.getSprite(textureSprite);
-		this.texture = sprite.getTextureReference();
+        texture = sprite.getTextureReference();
 	}
 	
 	public void setLoopInfinite() {
-		this.numLoops = Integer.MAX_VALUE;
+        numLoops = Integer.MAX_VALUE;
 	}
 	
 	public float getLoopLength() {
@@ -203,20 +203,20 @@ public class Animation extends AnimationBase implements Animated {
 		super.setDuration(duration);
 		
 		float loops = duration / getLoopLength();
-		this.numLoops = (int)loops + 1;
+        numLoops = (int)loops + 1;
 	}
 	
 	public void setDurationInfinite() {
 		super.setDuration(Float.MAX_VALUE);
-		
-		this.frameDuration = Float.MAX_VALUE;
+
+        frameDuration = Float.MAX_VALUE;
 		
 		// if there is only one frame, set its duration to infinite
 		if (frames.size() == 1) {
 			frames.get(0).duration = Float.MAX_VALUE;
 		} else {
 			// otherwise, loop endlessly
-			this.numLoops = Integer.MAX_VALUE;
+            numLoops = Integer.MAX_VALUE;
 		}
 	}
 	
@@ -229,7 +229,7 @@ public class Animation extends AnimationBase implements Animated {
 	}
 	
 	@Override public boolean isDrawable() {
-		return frames.size() > 0;
+		return !frames.isEmpty();
 	}
 	
 	public void clearFrames() {
@@ -262,7 +262,7 @@ public class Animation extends AnimationBase implements Animated {
 	// add a frame with a specified frame duration
 	public void addFrame(Sprite sprite, float duration) {
 		frames.add(new AnimationFrame(sprite.getTexCoordStartX(), sprite.getTexCoordStartY(),
-				sprite.getTexCoordEndX(), sprite.getTexCoordEndY(), duration));
+                sprite.getTexCoordEndX(), sprite.getTexCoordEndY(), duration));
 	}
 	
 	public void addFrames(String nameBase, int start, int end) {
@@ -359,7 +359,7 @@ public class Animation extends AnimationBase implements Animated {
 		return new Animation(this);
 	}
 	
-	private class AnimationFrame {
+	private static class AnimationFrame {
 		private final double texCoordStartX, texCoordStartY;
 		private final double texCoordEndX, texCoordEndY;
 		
@@ -374,20 +374,20 @@ public class Animation extends AnimationBase implements Animated {
 			this.texCoordEndY = texCoordEndY;
 			
 			this.duration = duration;
-			this.initialDuration = duration;
+            initialDuration = duration;
 		}
 		
 		private AnimationFrame(AnimationFrame other) {
-			this.texCoordStartX = other.texCoordStartX;
-			this.texCoordStartY = other.texCoordStartY;
-			this.texCoordEndX = other.texCoordEndX;
-			this.texCoordEndY = other.texCoordEndY;
-			this.duration = other.duration;
-			this.initialDuration = other.initialDuration;
+            texCoordStartX = other.texCoordStartX;
+            texCoordStartY = other.texCoordStartY;
+            texCoordEndX = other.texCoordEndX;
+            texCoordEndY = other.texCoordEndY;
+            duration = other.duration;
+            initialDuration = other.initialDuration;
 		}
 		
 		private void resetDuration() {
-			this.duration = this.initialDuration;
+            duration = initialDuration;
 		}
 	}
 }

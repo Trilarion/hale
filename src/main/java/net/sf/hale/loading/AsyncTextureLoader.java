@@ -47,7 +47,7 @@ public class AsyncTextureLoader {
 	 */
 	
 	public AsyncTextureLoader() {
-		loadLists = new ArrayList<TextureSpriteLoadList>();
+		loadLists = new ArrayList<>();
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class AsyncTextureLoader {
 		}
 	}
 	
-	private class TextureSpriteLoadList {
+	private static class TextureSpriteLoadList {
 		private ByteBuffer pixels;
 		private int width;
 		private int height;

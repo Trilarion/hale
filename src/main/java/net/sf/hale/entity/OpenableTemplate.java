@@ -52,24 +52,24 @@ public abstract class OpenableTemplate extends EntityTemplate {
 		super(id, data);
 		
 		if (data.containsKey("openIcon")) {
-			this.openIcon = IconFactory.createIcon(data.getObject("openIcon"));
+            openIcon = IconFactory.createIcon(data.getObject("openIcon"));
 		} else {
-			this.openIcon = IconFactory.emptyIcon;
+            openIcon = IconFactory.emptyIcon;
 		}
 		
 		if (data.containsKey("closedIcon")) {
-			this.closedIcon = IconFactory.createIcon(data.getObject("closedIcon"));
+            closedIcon = IconFactory.createIcon(data.getObject("closedIcon"));
 		} else {
-			this.closedIcon = IconFactory.emptyIcon;
+            closedIcon = IconFactory.emptyIcon;
 		}
-			
-		this.isDefaultLocked = data.get("isLocked", false);
-		this.lockDifficulty = data.get("lockDifficulty", 0);
-		
-		this.keyID = data.get("keyID", null);
-		
-		this.isKeyRequiredToUnlock = data.get("keyRequired", false);
-		this.isRemoveKeyOnUnlock = data.get("removeKeyOnUnlock", false);
+
+        isDefaultLocked = data.get("isLocked", false);
+        lockDifficulty = data.get("lockDifficulty", 0);
+
+        keyID = data.get("keyID", null);
+
+        isKeyRequiredToUnlock = data.get("keyRequired", false);
+        isRemoveKeyOnUnlock = data.get("removeKeyOnUnlock", false);
 	}
 	
 	/**

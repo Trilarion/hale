@@ -38,9 +38,9 @@ import net.sf.hale.util.SimpleJSONObject;
 public class Faction {
 	public enum Relationship {
 		Friendly, Neutral, Hostile
-	};
-	
-	private String name;
+	}
+
+    private String name;
 	private Map<String, Relationship> relationships;
 	
 	/**
@@ -50,7 +50,7 @@ public class Faction {
 	
 	public Faction(String name) {
 		this.name = name;
-		this.relationships = new HashMap<String, Relationship>();
+        relationships = new HashMap<>();
 	}
 	
 	public boolean isFriendly(Entity other) {
@@ -132,7 +132,7 @@ public class Faction {
 			Faction f1 = Game.ruleset.getFaction(faction1);
 			Faction f2 = Game.ruleset.getFaction(faction2);
 			
-			Faction.Relationship relation = Faction.Relationship.valueOf(relationship);
+			Relationship relation = Relationship.valueOf(relationship);
 			
 			f1.setRelationship(f2, relation);
 			f2.setRelationship(f1, relation);

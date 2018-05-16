@@ -53,7 +53,7 @@ public class Cutscene {
 	
 	public Cutscene(String id, String path) {
 		this.id = id;
-		this.frames = Collections.emptyList();
+        frames = Collections.emptyList();
 		
 		SimpleJSONParser parser = new SimpleJSONParser(path);
 		
@@ -64,7 +64,7 @@ public class Cutscene {
 		textAreaHeight = parser.get("textAreaHeight", 0);
 		
 		SimpleJSONArray array = parser.getArray("frames");
-		this.frames = new ArrayList<Frame>(array.size());
+        frames = new ArrayList<>(array.size());
 		
 		// allow missing keys for the individual frames
 		parser.setWarnOnMissingKeys(false);

@@ -4,6 +4,7 @@ import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.DialogLayout.Group;
 import de.matthiasmann.twl.Widget;
@@ -15,6 +16,7 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.EntityListener;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.rules.Role;
 
@@ -37,13 +39,13 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityListen
 	public CreatureDetailsWindow(Creature creature) {
 		this.creature = creature;
 		creature.addViewer(this);
-		
-		this.setSize(280, 300);
-		this.setTitle("Details for " + creature.getTemplate().getName());
+
+        setSize(280, 300);
+        setTitle("Details for " + creature.getTemplate().getName());
         
         DialogLayout layout = new DialogLayout();
 		layout.setTheme("content");
-		this.add(layout);
+        add(layout);
 		
 		// set up the widgets for the top row
 		Widget viewer = new Viewer();
@@ -51,9 +53,9 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityListen
 		Label title = new Label(creature.getTemplate().getName());
 		title.setTheme("titlelabel");
 		
-		DialogLayout.Group topRowV = layout.createParallelGroup(viewer, title);
+		Group topRowV = layout.createParallelGroup(viewer, title);
 		
-		DialogLayout.Group topRowH = layout.createSequentialGroup(viewer);
+		Group topRowH = layout.createSequentialGroup(viewer);
 		topRowH.addGap(10);
 		topRowH.addWidget(title);
 		topRowH.addGap(10);
@@ -62,7 +64,7 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityListen
 		textAreaModel = new HTMLTextAreaModel();
         TextArea textArea = new TextArea(textAreaModel);
         ScrollPane textPane = new ScrollPane(textArea);
-        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+        textPane.setFixed(Fixed.HORIZONTAL);
         textPane.setTheme("detailspane");
         
         // set the main top level layout
@@ -127,7 +129,7 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityListen
 		sb.append("</div>");
 		
 		Item mainHand = creature.getMainHandWeapon();
-		Item offHand = creature.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		Item offHand = creature.inventory.getEquippedItem(Slot.OffHand);
 		
 		sb.append("<div style=\"margin-bottom: 1em; font-family: medium;\"><p>Main hand</p>"); 
 		sb.append("<div style=\"font-family: medium-italic-blue\">");
@@ -159,7 +161,7 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityListen
 			}
 		}
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			Item item = creature.inventory.getEquippedItem(slot);
 			if (item == null) continue;
 			

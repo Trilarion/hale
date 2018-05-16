@@ -55,11 +55,11 @@ public class QuickbarViewer extends Widget {
 	 */
 	
 	public QuickbarViewer() {
-		itemButtons = new ArrayList<QuickbarSlotButton>(Quickbar.ItemSlots);
+		itemButtons = new ArrayList<>(Quickbar.ItemSlots);
 
-		abilityButtons = new LinkedHashMap<QuickbarGroup, List<QuickbarSlotButton>>();
+		abilityButtons = new LinkedHashMap<>();
 		for (QuickbarGroup group : Game.ruleset.getAllQuickbarGroups()) {
-			abilityButtons.put(group, new ArrayList<QuickbarSlotButton>());
+			abilityButtons.put(group, new ArrayList<>());
 		}
 		
 		for (int i = 0; i < Quickbar.ItemSlots; i++) {
@@ -222,10 +222,10 @@ public class QuickbarViewer extends Widget {
 		if (quickbar != selected.quickbar) {
 			setQuickbar(selected.quickbar);
 		}
-		
-		this.removeAllChildren();
+
+        removeAllChildren();
 		for (QuickbarSlotButton itemButton : itemButtons) {
-			this.add(itemButton);
+            add(itemButton);
 		}
 		
 		for (QuickbarGroup group : abilityButtons.keySet()) {
@@ -241,7 +241,7 @@ public class QuickbarViewer extends Widget {
 				slotButton.setShowIndexLabel(false);
 				slotButton.setDisabledExceptActivate(true);
 				buttons.add(slotButton);
-				this.add(slotButton);
+                add(slotButton);
 			}
 		}
 	}

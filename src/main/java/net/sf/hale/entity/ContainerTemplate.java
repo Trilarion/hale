@@ -45,12 +45,12 @@ public class ContainerTemplate extends OpenableTemplate {
 		super(id, data);
 		
 		if (data.containsKey("loot")) {
-			this.loot = new LootList(data.getArray("loot"));
+            loot = new LootList(data.getArray("loot"));
 		} else {
-			this.loot = null;
+            loot = null;
 		}
-		
-		this.isWorkbench = data.get("isWorkbench", false);
+
+        isWorkbench = data.get("isWorkbench", false);
 		
 		if (data.containsKey("defaultItems")) {
 			defaultItems = new ItemList(data.getArray("defaultItems"));

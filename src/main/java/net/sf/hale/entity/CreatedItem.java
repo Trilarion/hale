@@ -61,7 +61,7 @@ public class CreatedItem implements Saveable {
 		this.model = new CreatedItemModel(model);
 		
 		EquippableItemTemplate baseTemplate = (EquippableItemTemplate)EntityManager.getItemTemplate(model.getBaseItemID());
-		this.template = baseTemplate.createModifiedCopy(model.getCreatedItemID(), this);
+        template = baseTemplate.createModifiedCopy(model.getCreatedItemID(), this);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class CreatedItem implements Saveable {
 	 */
 	
 	public List<Enchantment> getEnchantments() {
-		List<Enchantment> enchantments = new ArrayList<Enchantment>();
+		List<Enchantment> enchantments = new ArrayList<>();
 		for (String script : model.getEnchantments()) {
 			enchantments.add(new Enchantment(script, true));
 		}

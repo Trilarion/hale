@@ -28,8 +28,10 @@ import de.matthiasmann.twl.Button;
 
 import net.sf.hale.Game;
 import net.sf.hale.defaultability.MouseActionList;
+import net.sf.hale.defaultability.MouseActionList.Condition;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.Point;
 import net.sf.hale.widgets.RightClickMenu;
 
@@ -45,7 +47,7 @@ import net.sf.hale.widgets.RightClickMenu;
 public abstract class AreaTargeter extends Targeter {
 	private List<Point> affectedPoints;
 	private List<Creature> affectedCreatures;
-	private Faction.Relationship affectedCreatureRelationship;
+	private Relationship affectedCreatureRelationship;
 	
 	private boolean allowAffectedCreaturesEmpty;
 	private boolean allowOccupiedTile;
@@ -62,8 +64,8 @@ public abstract class AreaTargeter extends Targeter {
 	public AreaTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 		
-		affectedPoints = new ArrayList<Point>();
-		affectedCreatures = new ArrayList<Creature>();
+		affectedPoints = new ArrayList<>();
+		affectedCreatures = new ArrayList<>();
 		
 		allowAffectedCreaturesEmpty = true;
 		allowOccupiedTile = true;
@@ -77,7 +79,7 @@ public abstract class AreaTargeter extends Targeter {
 	 */
 	
 	public void setAllowOccupiedTileSelection(boolean allow) {
-		this.allowOccupiedTile = allow;
+		allowOccupiedTile = allow;
 	}
 	
 	/**
@@ -87,7 +89,7 @@ public abstract class AreaTargeter extends Targeter {
 	 */
 	
 	public void setAllowAffectedCreaturesEmpty(boolean allow) {
-		this.allowAffectedCreaturesEmpty = allow;
+		allowAffectedCreaturesEmpty = allow;
 	}
 	
 	/**
@@ -125,7 +127,7 @@ public abstract class AreaTargeter extends Targeter {
 	 */
 	
 	public void setRelationshipCriterion(String relationship) {
-		this.affectedCreatureRelationship = Faction.Relationship.valueOf(relationship);
+		affectedCreatureRelationship = Relationship.valueOf(relationship);
 		
 		affectedCreatures.clear();
 		// recompute affected creatures
@@ -145,7 +147,7 @@ public abstract class AreaTargeter extends Targeter {
 	 */
 	
 	protected boolean meetsRelationshipCriterion(Creature creature) {
-		if (this.affectedCreatureRelationship == null) {
+		if (affectedCreatureRelationship == null) {
 			Faction playerFaction = Game.ruleset.getFaction(Game.ruleset.getString("PlayerFaction"));
 			
 			
@@ -165,7 +167,7 @@ public abstract class AreaTargeter extends Targeter {
 			if (spellIsHostile && playerTargetingPlayer && !friendlyFireOnPCs) return false;
 			else return true;
 		} else {
-			return this.getParent().getFaction().getRelationship(creature) == affectedCreatureRelationship;
+			return getParent().getFaction().getRelationship(creature) == affectedCreatureRelationship;
 		}
 	}
 
@@ -179,16 +181,16 @@ public abstract class AreaTargeter extends Targeter {
 		menu.clear();
 		
 		menu.setPosition(x, y);
-		menu.addMenuLevel(this.getMenuTitle());
+		menu.addMenuLevel(getMenuTitle());
 		
-		if (this.getMouseActionCondition() == MouseActionList.Condition.TargetSelect) {
+		if (getMouseActionCondition() == Condition.TargetSelect) {
 			Button button = new Button("Activate");
 			button.addCallback(getActivateCallback());
 			
 			menu.addButton(button);
 		}
 		
-		if (this.isCancelable()) {
+		if (isCancelable()) {
 			Button button = new Button("Cancel");
 			button.addCallback(getCancelCallback());
 			
@@ -199,7 +201,7 @@ public abstract class AreaTargeter extends Targeter {
 	}
 
 	@Override public void performLeftClickAction() {
-		if (this.getMouseActionCondition() == MouseActionList.Condition.TargetSelect) {
+		if (getMouseActionCondition() == Condition.TargetSelect) {
 			getActivateCallback().run();
 		}
 	}
@@ -232,17 +234,17 @@ public abstract class AreaTargeter extends Targeter {
 		
 		// determine mouse action based on hover state
 		if (mouseHoverValid() && affectedCreaturesEmptyConditionMet() && occupiedTileConditionMet(gridPoint)) {
-			setMouseActionCondition(MouseActionList.Condition.TargetSelect);
+			setMouseActionCondition(Condition.TargetSelect);
 		} else {
 			setMouseHoverValid(false);
-			setMouseActionCondition(MouseActionList.Condition.Cancel);
+			setMouseActionCondition(Condition.Cancel);
 		}
 		
 		return returnValue;
 	}
 	
 	private boolean occupiedTileConditionMet(Point gridPoint) {
-		if (this.allowOccupiedTile) return true;
+		if (allowOccupiedTile) return true;
 		
 		Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(gridPoint);
 		return (c == null);
@@ -250,7 +252,7 @@ public abstract class AreaTargeter extends Targeter {
 	
 	private boolean affectedCreaturesEmptyConditionMet() {
 		if (allowAffectedCreaturesEmpty) return true;
-		else return affectedCreatures.size() > 0;
+		else return !affectedCreatures.isEmpty();
 	}
 	
 	/**
@@ -313,14 +315,14 @@ public abstract class AreaTargeter extends Targeter {
 	private int getTargetCount(boolean desirable) {
 		if (getSlot() == null) return 0;
 		
-		Faction.Relationship targetRelationship;
+		Relationship targetRelationship;
 		
 		switch (getSlot().getAbility().getActionType()) {
 		case Buff: case Heal:
-			targetRelationship = Faction.Relationship.Friendly;
+			targetRelationship = Relationship.Friendly;
 			break;
 		case Debuff: case Damage:
-			targetRelationship = Faction.Relationship.Hostile;
+			targetRelationship = Relationship.Hostile;
 			break;
 		default:
 			return 0;
@@ -328,7 +330,7 @@ public abstract class AreaTargeter extends Targeter {
 		
 		int count = 0;
 		for (Creature creature : affectedCreatures) {
-			Faction.Relationship creatureRelationship = getParent().getFaction().getRelationship(creature);
+			Relationship creatureRelationship = getParent().getFaction().getRelationship(creature);
 			
 			if (desirable && creatureRelationship == targetRelationship) {
 				count++;

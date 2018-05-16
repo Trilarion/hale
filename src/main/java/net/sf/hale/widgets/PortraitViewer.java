@@ -27,6 +27,7 @@ import net.sf.hale.ability.Effect;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.characterbuilder.Buildable;
 import net.sf.hale.characterbuilder.CharacterBuilder;
+import net.sf.hale.characterbuilder.CharacterBuilder.FinishCallback;
 import net.sf.hale.defaultability.Select;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Inventory;
@@ -79,11 +80,11 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 	
 	public PortraitViewer(PC creature, PortraitArea portraitArea) {
 		super(creature);
-		
-		this.pc = creature;
+
+        pc = creature;
 		this.portraitArea = portraitArea;
-		
-		this.effectIcons = new HashSet<Icon>();
+
+        effectIcons = new HashSet<>();
 		
 		name = new Label(creature.getTemplate().getName());
 		name.setTheme("namelabel");
@@ -103,7 +104,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 			@Override public void run() {
 				builder = new CharacterBuilder(new Buildable(pc));
 		        Game.mainViewer.add(builder);
-		        builder.addFinishCallback(new CharacterBuilder.FinishCallback() {
+		        builder.addFinishCallback(new FinishCallback() {
 		        	@Override public void creatureModified(String id) {
 		        		Game.mainViewer.updateInterface();
 		        		builder = null;
@@ -155,9 +156,9 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 		
 		//name.setSize(name.getPreferredWidth(), name.getPreferredHeight());
 		name.setPosition(centerX - name.getPreferredWidth() / 2, getInnerY() + name.getPreferredHeight() / 2);
-		
-		this.setPortraitY(name.getPreferredHeight() - nameOverlap);
-		int spriteHeight = this.getPortraitSpriteHeight();
+
+        setPortraitY(name.getPreferredHeight() - nameOverlap);
+		int spriteHeight = getPortraitSpriteHeight();
 		
 		apBar.setSize(apBar.getPreferredWidth(), apBar.getPreferredHeight());
 		hpBar.setSize(hpBar.getPreferredWidth(), hpBar.getPreferredHeight());

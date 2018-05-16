@@ -51,7 +51,7 @@ public class JSEngine {
 	 */
 	
 	public JSEngine(ScriptEngineManager manager) {
-		this.engine = manager.getEngineByName("JavaScript");
+        engine = manager.getEngineByName("JavaScript");
 	}
 	
 	/**
@@ -146,12 +146,12 @@ public class JSEngine {
 	 */
 	
 	public synchronized void release() {
-		this.inUse = false;
+        inUse = false;
 		
 		engine.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
 	}
 	
 	@Override public String toString() {
-		return engine.toString() + ": " + inUse;
+		return engine + ": " + inUse;
 	}
 }

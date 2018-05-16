@@ -19,6 +19,7 @@
 
 package net.sf.hale.widgets;
 
+import de.matthiasmann.twl.utils.TintAnimator.GUITimeSource;
 import net.sf.hale.Game;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
@@ -54,19 +55,19 @@ public class OverHeadFadeAway extends Widget {
 	 */
 	
 	public OverHeadFadeAway(String text, Point gridPoint, Color color) {
-		this.setSize(50, 20);
+        setSize(50, 20);
 		
 		this.color = color.toARGB();
-		
-		this.tintAnimator = new TintAnimator(new TintAnimator.GUITimeSource(this));
-		this.tintAnimator.setColor(new Color(this.color));
+
+        tintAnimator = new TintAnimator(new GUITimeSource(this));
+        tintAnimator.setColor(new Color(this.color));
 		
 		textLabel = new Label(text);
 		textLabel.setTheme("textlabel");
 		textLabel.setSize(50, 15);
 		textLabel.setPosition(0, 0);
 		textLabel.setTintAnimator(tintAnimator);
-		this.add(textLabel);
+        add(textLabel);
 		
 		this.gridPoint = gridPoint;
 	}
@@ -92,7 +93,7 @@ public class OverHeadFadeAway extends Widget {
 		basePosition = AreaUtil.convertGridToScreen(gridPoint);
 		basePosition.x -= Game.areaViewer.getScrollX() + textLabel.getWidth() / 2 - Game.TILE_SIZE / 2 - Game.areaViewer.getX();
 		basePosition.y -= Game.areaViewer.getScrollY() + 15 - Game.areaViewer.getY();
-		this.setPosition(basePosition.x, basePosition.y);
+        setPosition(basePosition.x, basePosition.y);
 		
 		if (offset == null) offset = new Point();
 	}
@@ -134,8 +135,8 @@ public class OverHeadFadeAway extends Widget {
 		}
 		
 		int yPosition = Math.max(50, basePosition.y + offset.y) - (int)(curTime - startTime) / 20;
-		
-		this.setPosition(basePosition.x + offset.x, yPosition);
+
+        setPosition(basePosition.x + offset.x, yPosition);
 	}
 	
 	/**

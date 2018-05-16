@@ -58,30 +58,30 @@ public class Merchant implements Saveable {
 	}
 	
 	public void load(SimpleJSONObject data) {
-		this.lastRespawnRounds = data.get("lastRespawnRound", 0);
-		
-		this.currentItems = new ItemList();
-		this.currentItems.load(data.getArray("currentItems"));
+        lastRespawnRounds = data.get("lastRespawnRound", 0);
+
+        currentItems = new ItemList();
+        currentItems.load(data.getArray("currentItems"));
 	}
 	
 	public Merchant(String id) {
 		this.id = id;
 		
 		SimpleJSONParser parser = new SimpleJSONParser("merchants/" + id, ResourceType.JSON);
-		
-		this.name = parser.get("name", null);
-		this.sellValuePercentage = parser.get("sellValuePercentage", 0);
-		this.buyValuePercentage = parser.get("buyValuePercentage", 0);
-		this.usesSpeechSkill = parser.get("usesSpeechSkill", false);
-		this.confirmOnExit = parser.get("confirmOnExit", false);
-		this.respawnHours = parser.get("respawnHours", 0);
-		
-		this.baseItems = new LootList(parser.getArray("items"));
+
+        name = parser.get("name", null);
+        sellValuePercentage = parser.get("sellValuePercentage", 0);
+        buyValuePercentage = parser.get("buyValuePercentage", 0);
+        usesSpeechSkill = parser.get("usesSpeechSkill", false);
+        confirmOnExit = parser.get("confirmOnExit", false);
+        respawnHours = parser.get("respawnHours", 0);
+
+        baseItems = new LootList(parser.getArray("items"));
 		
 		parser.warnOnUnusedKeys();
-		
-		this.currentBuyPercentage = buyValuePercentage;
-		this.currentSellPercentage = sellValuePercentage;
+
+        currentBuyPercentage = buyValuePercentage;
+        currentSellPercentage = sellValuePercentage;
 	}
 	
 	public ItemList getCurrentItems() {
@@ -104,7 +104,7 @@ public class Merchant implements Saveable {
 		if (respawnHours == 0) return false;
 		
 		int currentRound = Game.curCampaign.getDate().getTotalRoundsElapsed();
-		int elapsedRounds = currentRound - this.lastRespawnRounds;
+		int elapsedRounds = currentRound - lastRespawnRounds;
 		
 		return elapsedRounds >= respawnHours * Game.curCampaign.getDate().ROUNDS_PER_HOUR;
 	}
@@ -116,8 +116,8 @@ public class Merchant implements Saveable {
 	
 	public ItemList updateCurrentItems() {
 		if (checkRespawn()) {
-			this.lastRespawnRounds = Game.curCampaign.getDate().getTotalRoundsElapsed();
-			this.currentItems = baseItems.generate();
+            lastRespawnRounds = Game.curCampaign.getDate().getTotalRoundsElapsed();
+            currentItems = baseItems.generate();
 		}
 		
 		return currentItems;
@@ -134,10 +134,10 @@ public class Merchant implements Saveable {
 			double base = (double)(sellValuePercentage - buyValuePercentage) / 2.0;
 			
 			int modifier = (int)Math.round(base * (1.0 - gapPercentage));
-			
-			
-			this.currentBuyPercentage = buyValuePercentage + modifier;
-			this.currentSellPercentage = sellValuePercentage - modifier;
+
+
+            currentBuyPercentage = buyValuePercentage + modifier;
+            currentSellPercentage = sellValuePercentage - modifier;
 		}
 	}
 	

@@ -51,7 +51,7 @@ public class SimpleJSONArray implements Iterable<SimpleJSONArrayEntry> {
 	 */
 	
 	public SimpleJSONArray(JSONArray array, String arrayID) {
-		data = new ArrayList<SimpleJSONArrayEntry>(array.size());
+		data = new ArrayList<>(array.size());
 		int index = 0;
 		for (Object object : array) {
 			StringBuilder id = new StringBuilder();

@@ -29,6 +29,7 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.Path;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -50,8 +51,8 @@ public class MovementHandler {
 		Party,
 		
 		/** When not in combat, only the selected party member moves */
-		Single;
-	}
+		Single
+    }
 	
 	private Mode mode;
 	
@@ -64,9 +65,9 @@ public class MovementHandler {
 	 */
 	
 	public MovementHandler() {
-		moves = new ArrayList<Mover>();
+		moves = new ArrayList<>();
 		interrupted = false;
-		this.mode = Mode.Party;
+        mode = Mode.Party;
 	}
 	
 	/**
@@ -132,7 +133,7 @@ public class MovementHandler {
 	 */
 	
 	public boolean isLocked() {
-		return moves.size() > 0;
+		return !moves.isEmpty();
 	}
 	
 	/**
@@ -229,7 +230,7 @@ public class MovementHandler {
 		 */
 		
 		public void setProvokesAoOs(boolean provoke) {
-			this.provokeAoOs = provoke;
+            provokeAoOs = provoke;
 		}
 		
 		/**
@@ -281,33 +282,32 @@ public class MovementHandler {
 		
 		private Mover(Creature creature, Path path, boolean provokeAoOs) {
 			this.provokeAoOs = provokeAoOs;
-			this.callbacks = new ArrayList<Runnable>();
+            callbacks = new ArrayList<>();
 			this.creature = creature;
 			
 			this.path = path;
 			
 			// save the creature's initial position for moving back to it
 			// if needed
-			this.initialPosition = creature.getLocation();
-			
-			this.lastTime = System.currentTimeMillis();
-			this.lastIndex = path.length();
-			
-			this.combatRunner = Game.areaListener.getCombatRunner();
-			this.finished = false;
-			this.pauseCount = 0;
-			this.currentMoveIncrement = Game.config.getCombatDelay();
-			
-			this.unpaused = false;
+            initialPosition = creature.getLocation();
+
+            lastTime = System.currentTimeMillis();
+            lastIndex = path.length();
+
+            combatRunner = Game.areaListener.getCombatRunner();
+            finished = false;
+            pauseCount = 0;
+            currentMoveIncrement = Game.config.getCombatDelay();
+
+            unpaused = false;
 		}
 		
 		private void checkAoOsAndAnimate() {
 			// if an AoO is provoked, pause this movement until the AoO unpauses it
 			if (provokeAoOs && combatRunner.provokeAttacksOfOpportunity(creature, this)) {
 				// if there were any AoOs, don't perform any movement this iteration
-				this.currentMoveIncrement = Game.config.getCombatDelay() * 5;
-				return;
-			} else {
+                currentMoveIncrement = Game.config.getCombatDelay() * 5;
+            } else {
 				// if not finished, add animation for next tile
 				animateMovement(path.get(lastIndex - 1));
 			}
@@ -373,20 +373,20 @@ public class MovementHandler {
 			if (interrupted) {
 				MovementHandler.this.interrupted = true;
 			}
-			
-			this.currentMoveIncrement = Game.config.getCombatDelay();
+
+            currentMoveIncrement = Game.config.getCombatDelay();
 			
 			// if we are finished moving
 			if (lastIndex == 0 || MovementHandler.this.interrupted) {
 				moveBackToEmptyTile();
 				
 				if (!creature.isPlayerFaction()) {
-					this.currentMoveIncrement = Game.config.getCombatDelay() * 5;
+                    currentMoveIncrement = Game.config.getCombatDelay() * 5;
 					
 					// check for hostiles to add to the encounter
 					if (creature.getEncounter() != null) {
 						creature.getEncounter().addHostiles(AreaUtil.getVisibleCreatures(creature,
-								Faction.Relationship.Hostile));
+								Relationship.Hostile));
 					}
 				}
 				
@@ -407,7 +407,7 @@ public class MovementHandler {
 			finished = true;
 			
 			synchronized(this) {
-				this.notifyAll();
+                notifyAll();
 			}
 		}
 		

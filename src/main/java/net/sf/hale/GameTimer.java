@@ -42,7 +42,7 @@ public class GameTimer {
 	 */
 	
 	public GameTimer() {
-		sightAreas = new ArrayList<TemporarySightArea>();
+		sightAreas = new ArrayList<>();
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class GameTimer {
 		int width = Game.curCampaign.curArea.getWidth();
 		int height = Game.curCampaign.curArea.getHeight();
 		
-		area.points = new ArrayList<Point>();
+		area.points = new ArrayList<>();
 		
 		if (position.x >= 0 && position.y >= 0 && position.x < width && position.y < height)
 			area.points.add(position);
@@ -122,13 +122,11 @@ public class GameTimer {
 	 */
 	
 	public void getTemporaryVisibilityAreas(boolean[][] vis) {
-		for (int i = 0; i < sightAreas.size(); i++) {
-			TemporarySightArea area = sightAreas.get(i);
-			
-			for (Point point : area.points) {
-				vis[point.x][point.y] = true;
-			}
-		}
+        for (TemporarySightArea area : sightAreas) {
+            for (Point point : area.points) {
+                vis[point.x][point.y] = true;
+            }
+        }
 	}
 	
 	/**
@@ -139,7 +137,7 @@ public class GameTimer {
 		lastRoundTime = System.currentTimeMillis();
 	}
 	
-	private class TemporarySightArea {
+	private static class TemporarySightArea {
 		private List<Point> points;
 		private int roundsRemaining;
 	}

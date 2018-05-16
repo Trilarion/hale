@@ -48,7 +48,7 @@ public class InterfaceCallbackLock extends InterfaceLock {
 		super(locker, duration);
 		
 		priority = 40;
-		callbacks = new ArrayList<Runnable>();
+		callbacks = new ArrayList<>();
 	}
 	
 	/**

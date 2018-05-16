@@ -108,7 +108,7 @@ public class SaveGameUtil {
 	 */
 	
 	public static List<String> getSaveGames() {
-		List<String> saves = new ArrayList<String>();
+		List<String> saves = new ArrayList<>();
 		
 		File dir = new File(Game.getSaveBaseDirectory());
 		

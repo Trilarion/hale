@@ -26,11 +26,14 @@ import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.rules.Damage;
 import net.sf.hale.rules.DamageType;
@@ -39,9 +42,9 @@ import net.sf.hale.rules.Role;
 public class StatManager {
 	private enum RecomputeMode {
 		Removal, Addition
-	};
-	
-	private final Creature parent;
+	}
+
+    private final Creature parent;
 	
 	private final Map<Stat, Integer> stats;
 	
@@ -49,28 +52,28 @@ public class StatManager {
 	
 	public StatManager(Creature parent) {
 		this.parent = parent;
-		this.bonuses = new BonusManager();
-		this.stats = new HashMap<Stat, Integer>();
+        bonuses = new BonusManager();
+        stats = new HashMap<>();
 	}
 	
 	public StatManager(StatManager other, Creature parent) {
 		this.parent = parent;
-		
-		this.bonuses = new BonusManager(other.bonuses);
-		
-		this.stats = new HashMap<Stat, Integer>(other.stats);
+
+        bonuses = new BonusManager(other.bonuses);
+
+        stats = new HashMap<>(other.stats);
 	}
 	
 	public void removeEffectPenaltiesOfType(String bonusType) {
-		Bonus.Type type = Bonus.parseType(bonusType);
-		
-		this.removeAll(parent.getEffects().getPenaltiesOfType(type));
+		Type type = Bonus.parseType(bonusType);
+
+        removeAll(parent.getEffects().getPenaltiesOfType(type));
 	}
 	
 	public void removeEffectBonusesOfType(String bonusType) {
-		Bonus.Type type = Bonus.parseType(bonusType);
-		
-		this.removeAll(parent.getEffects().getBonusesOfType(type));
+		Type type = Bonus.parseType(bonusType);
+
+        removeAll(parent.getEffects().getBonusesOfType(type));
 	}
 	
 	public int reducePenaltiesOfTypeByAmount(String bonusType, int amount) {
@@ -79,11 +82,11 @@ public class StatManager {
 		BonusList bonusesToRemove = new BonusList();
 		BonusList bonusesToAdd = new BonusList();
 		
-		Bonus.Type type = Bonus.parseType(bonusType);
+		Type type = Bonus.parseType(bonusType);
 		
 		int amountLeft = amount;
 		
-		List<Bonus> bonusesToRemoveFromEffect = new ArrayList<Bonus>();
+		List<Bonus> bonusesToRemoveFromEffect = new ArrayList<>();
 		
 		for (Effect effect : parent.getEffects().getEffectsWithBonusesOfType(type)) {
 			bonusesToRemoveFromEffect.clear();
@@ -117,9 +120,9 @@ public class StatManager {
 			
 			if (amountLeft == 0) break;
 		}
-		
-		this.removeAll(bonusesToRemove);
-		this.addAll(bonusesToAdd);
+
+        removeAll(bonusesToRemove);
+        addAll(bonusesToAdd);
 		
 		return amountLeft;
 	}
@@ -217,7 +220,7 @@ public class StatManager {
 		if (recomputeArmorClass) recomputeArmorClass();
 		if (recomputeAttackBonus) recomputeAttackBonus();
 		
-		int currentConBonus = this.get(Bonus.Type.Con);
+		int currentConBonus = get(Type.Con);
 		
 		if (currentConBonus != oldConBonus) {
 			int oldConHP = (getCon() - currentConBonus + oldConBonus - 10) * get(Stat.CreatureLevel) / 3;
@@ -232,7 +235,7 @@ public class StatManager {
 	}
 	
 	public void removeAll(BonusList bonuses) {
-		int oldConBonus = this.get(Bonus.Type.Con);
+		int oldConBonus = get(Type.Con);
 		
 		this.bonuses.removeAll(bonuses);
 		
@@ -240,7 +243,7 @@ public class StatManager {
 	}
 	
 	public void addAll(BonusList bonuses) {
-		int oldConBonus = this.get(Bonus.Type.Con);
+		int oldConBonus = get(Type.Con);
 		
 		this.bonuses.addAll(bonuses);
 		
@@ -255,11 +258,11 @@ public class StatManager {
 		return has(Bonus.parseType(type));
 	}
 	
-	public boolean has(Bonus.Type type) {
+	public boolean has(Type type) {
 		return bonuses.has(type);
 	}
 	
-	public int get(String superType, Bonus.Type type) {
+	public int get(String superType, Type type) {
 		return bonuses.get(superType, type);
 	}
 	
@@ -279,21 +282,21 @@ public class StatManager {
 		return bonuses.getDamageImmunity(damageType);
 	}
 	
-	public int get(Bonus.Type type, Bonus.StackType stackType) {
+	public int get(Type type, StackType stackType) {
 		return bonuses.get(type, stackType);
 	}
 	
-	public int get(Bonus.Type type, Bonus.StackType... stackTypes) {
+	public int get(Type type, StackType... stackTypes) {
 		int total = 0;
 		
-		for (Bonus.StackType t : stackTypes) {
+		for (StackType t : stackTypes) {
 			total += bonuses.get(type, t);
 		}
 		
 		return total;
 	}
 	
-	public int get(Bonus.Type type) {
+	public int get(Type type) {
 		return bonuses.get(type);
 	}
 	
@@ -339,41 +342,41 @@ public class StatManager {
 	}
 	
 	public void recomputeStr() {
-		stats.put(Stat.Str, getBaseStr() + get(Bonus.Type.Str));
+		stats.put(Stat.Str, getBaseStr() + get(Type.Str));
 		recomputeWeightLimit();
 		recomputeAttackBonus();
 	}
 	
 	// for use when recomputing all stats so we don't compute attackBonus twice - once for str and again for dex
 	private void recomputeStrNoAttackBonus() {
-		stats.put(Stat.Str, getBaseStr() + get(Bonus.Type.Str));
+		stats.put(Stat.Str, getBaseStr() + get(Type.Str));
 		recomputeWeightLimit();
 	}
 	
 	public void recomputeDex() {
-		stats.put(Stat.Dex, getBaseDex() + get(Bonus.Type.Dex));
+		stats.put(Stat.Dex, getBaseDex() + get(Type.Dex));
 		recomputeReflexResistance();
 		recomputeArmorClass();
 		recomputeAttackBonus();
 	}
 	
 	public void recomputeCon() {
-		stats.put(Stat.Con, getBaseCon() + get(Bonus.Type.Con));
+		stats.put(Stat.Con, getBaseCon() + get(Type.Con));
 		recomputeLevelAndMaxHP();
 		recomputePhysicalResistance();
 	}
 	
 	public void recomputeInt() {
-		stats.put(Stat.Int, getBaseInt() + get(Bonus.Type.Int));
+		stats.put(Stat.Int, getBaseInt() + get(Type.Int));
 	}
 	
 	public void recomputeWis() {
-		stats.put(Stat.Wis, getBaseWis() + get(Bonus.Type.Wis));
+		stats.put(Stat.Wis, getBaseWis() + get(Type.Wis));
 		recomputeMentalResistance();
 	}
 	
 	public void recomputeCha() {
-		stats.put(Stat.Cha, getBaseCha() + get(Bonus.Type.Cha));
+		stats.put(Stat.Cha, getBaseCha() + get(Type.Cha));
 	}
 	
 	public void recomputeLevelAndMaxHP() {
@@ -426,18 +429,18 @@ public class StatManager {
 		float itemsMovementPenalty = 0.0f;
 		float itemsShieldAC = 0.0f;
 		
-		EquippableItem offItem = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		EquippableItem offItem = parent.inventory.getEquippedItem(Slot.OffHand);
 		Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
 				(Weapon)offItem : null;
 		
-		List<Armor> armorItems = new ArrayList<Armor>(5);
-		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Armor));
-		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Helmet));
-		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Gloves));
-		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Boots));
+		List<Armor> armorItems = new ArrayList<>(5);
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Slot.Armor));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Slot.Helmet));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Slot.Gloves));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Slot.Boots));
 		
 		if (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Shield)
-			armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.OffHand));
+			armorItems.add((Armor)parent.inventory.getEquippedItem(Slot.OffHand));
 		
 		for (Armor armor : armorItems) {
 			if (armor == null) continue;
@@ -445,44 +448,44 @@ public class StatManager {
 			switch (armor.getTemplate().getType()) {
 			case Shield:
 				itemsShieldAC += armor.getQualityModifiedArmorClass() * 
-					(100.0f + get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
+					(100.0f + get(armor.getTemplate().getArmorType().getName(), Type.ArmorTypeArmorClass)) / 100.0f;
 			default:
 				itemsArmorClass += armor.getQualityModifiedArmorClass() * 
-					(100.0f + get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
+					(100.0f + get(armor.getTemplate().getArmorType().getName(), Type.ArmorTypeArmorClass)) / 100.0f;
 				itemsArmorPenalty += armor.getQualityModifiedArmorPenalty() *
-					(100.0f - get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorPenalty)) / 100.0f;
+					(100.0f - get(armor.getTemplate().getArmorType().getName(), Type.ArmorTypeArmorPenalty)) / 100.0f;
 				itemsMovementPenalty += armor.getQualityModifiedMovementPenalty() *
-					(100.0f - get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeMovementPenalty)) / 100.0f;
+					(100.0f - get(armor.getTemplate().getArmorType().getName(), Type.ArmorTypeMovementPenalty)) / 100.0f;
 			}
 		}
 		// if a shield was present, we double counted shield AC bonus
 		itemsArmorClass -= itemsShieldAC;
 		
-		if (offWeapon != null) itemsShieldAC = get(Bonus.Type.DualWieldArmorClass);
+		if (offWeapon != null) itemsShieldAC = get(Type.DualWieldArmorClass);
 		
 		zeroStats(Stat.ArmorClass, Stat.TouchArmorClass, Stat.ArmorPenalty, Stat.MovementBonus);
 		zeroStats(Stat.MovementCost, Stat.InitiativeBonus);
 		
-		addToStat(Stat.InitiativeBonus, get(Bonus.Type.Initiative));
-		addToStat(Stat.ArmorPenalty, get(Bonus.Type.ArmorPenalty) + (int)itemsArmorPenalty);
+		addToStat(Stat.InitiativeBonus, get(Type.Initiative));
+		addToStat(Stat.ArmorPenalty, get(Type.ArmorPenalty) + (int)itemsArmorPenalty);
 		
 		// immobilization immunity prevents being slowed down as well
-		int baseMovementBonus = get(Bonus.Type.Movement);
-		if (this.has(Bonus.Type.ImmobilizationImmunity) && baseMovementBonus < 0)
+		int baseMovementBonus = get(Type.Movement);
+		if (has(Type.ImmobilizationImmunity) && baseMovementBonus < 0)
 			baseMovementBonus = 0;
 		
 		addToStat(Stat.MovementBonus, Math.min(100, baseMovementBonus - (int)itemsMovementPenalty));
 		
 		addToStat(Stat.MovementCost, parent.getTemplate().getRace().getMovementCost() * (100 - get(Stat.MovementBonus)) / 100);
 		
-		int deflection = this.get(Bonus.Type.ArmorClass, Bonus.StackType.DeflectionBonus, Bonus.StackType.DeflectionPenalty);
-		int naturalArmor = this.get(Bonus.Type.ArmorClass, Bonus.StackType.NaturalArmorBonus, Bonus.StackType.NaturalArmorPenalty);
-		int armor = this.get(Bonus.Type.ArmorClass, Bonus.StackType.ArmorBonus, Bonus.StackType.ArmorPenalty);
-		int shield = this.get(Bonus.Type.ArmorClass, Bonus.StackType.ShieldBonus, Bonus.StackType.ShieldPenalty);
+		int deflection = get(Type.ArmorClass, StackType.DeflectionBonus, StackType.DeflectionPenalty);
+		int naturalArmor = get(Type.ArmorClass, StackType.NaturalArmorBonus, StackType.NaturalArmorPenalty);
+		int armor = get(Type.ArmorClass, StackType.ArmorBonus, StackType.ArmorPenalty);
+		int shield = get(Type.ArmorClass, StackType.ShieldBonus, StackType.ShieldPenalty);
 		
-		int dodgeAC = this.get(Bonus.Type.ArmorClass, Bonus.StackType.StackableBonus, Bonus.StackType.StackablePenalty);
+		int dodgeAC = get(Type.ArmorClass, StackType.StackableBonus, StackType.StackablePenalty);
 		
-		float armorModifier = (100.0f - this.get(Stat.ArmorPenalty)) / 100.0f;
+		float armorModifier = (100.0f - get(Stat.ArmorPenalty)) / 100.0f;
 		
 		// if dex AC value is positive, it is decreased by the armor modifier
 		// if it is negative, apply the full amount
@@ -510,7 +513,7 @@ public class StatManager {
 	public void recomputeAttackBonus() {
 		Weapon mainWeapon = parent.getMainHandWeapon();
 		
-		EquippableItem offItem = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		EquippableItem offItem = parent.inventory.getEquippedItem(Slot.OffHand);
 		Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
 				(Weapon)offItem : null;
 		
@@ -519,15 +522,15 @@ public class StatManager {
 		
 		if (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Shield) {
 			addToStat( Stat.ShieldAttackPenalty,
-					Math.min(0, get(Bonus.Type.ShieldAttack) - ((Armor)offItem).getTemplate().getShieldAttackPenalty()) );
+					Math.min(0, get(Type.ShieldAttack) - ((Armor)offItem).getTemplate().getShieldAttackPenalty()) );
 		}
 		
 		String mainBaseWeapon = mainWeapon.getTemplate().getBaseWeapon().getName();
 		
-		addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.MainHandAttack) + get(Bonus.Type.Attack));
-		addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.MainHandDamage) + get(Bonus.Type.Damage));
-		addToStat(Stat.MainHandAttackBonus, get(mainBaseWeapon, Bonus.Type.BaseWeaponAttack));
-		addToStat(Stat.MainHandDamageBonus, get(mainBaseWeapon, Bonus.Type.BaseWeaponDamage));
+		addToStat(Stat.MainHandAttackBonus, get(Type.MainHandAttack) + get(Type.Attack));
+		addToStat(Stat.MainHandDamageBonus, get(Type.MainHandDamage) + get(Type.Damage));
+		addToStat(Stat.MainHandAttackBonus, get(mainBaseWeapon, Type.BaseWeaponAttack));
+		addToStat(Stat.MainHandDamageBonus, get(mainBaseWeapon, Type.BaseWeaponDamage));
 		addToStat(Stat.MainHandAttackBonus, get(Stat.ShieldAttackPenalty));
 		
 		switch (mainWeapon.getTemplate().getWeaponType()) {
@@ -535,16 +538,16 @@ public class StatManager {
 			switch (mainWeapon.getTemplate().getHanded()) {
 			case Light:
 				addToStat(Stat.MainHandAttackBonus, (Math.max(getDex(), getStr()) - 10) * 2);
-				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.LightMeleeWeaponDamage));
-				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.LightMeleeWeaponAttack));
+				addToStat(Stat.MainHandDamageBonus, get(Type.LightMeleeWeaponDamage));
+				addToStat(Stat.MainHandAttackBonus, get(Type.LightMeleeWeaponAttack));
 				break;
 			case OneHanded:
-				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.OneHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
-				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.OneHandedMeleeWeaponDamage));
+				addToStat(Stat.MainHandAttackBonus, get(Type.OneHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
+				addToStat(Stat.MainHandDamageBonus, get(Type.OneHandedMeleeWeaponDamage));
 				break;
 			case TwoHanded:
-				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.TwoHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
-				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.TwoHandedMeleeWeaponDamage));
+				addToStat(Stat.MainHandAttackBonus, get(Type.TwoHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
+				addToStat(Stat.MainHandDamageBonus, get(Type.TwoHandedMeleeWeaponDamage));
 			}
 			
 			// add extra damage bonus for not dual wielding
@@ -553,54 +556,54 @@ public class StatManager {
 			break;
 		default:
 			addToStat(Stat.MainHandAttackBonus,
-					(getDex() - 10) * 2 + get(Bonus.Type.RangedAttack));
+					(getDex() - 10) * 2 + get(Type.RangedAttack));
 			addToStat( Stat.MainHandDamageBonus,
 					Math.max(mainWeapon.getTemplate().getMinStrengthBonus(),
 							Math.min( (getStr() - 10) * 8, mainWeapon.getTemplate().getMaxStrengthBonus())) );
 			addToStat(Stat.MainHandDamageBonus,
-					get(Bonus.Type.RangedDamage));
+					get(Type.RangedDamage));
 		}
 		
-		int mainWeaponSpeedBonus = get(mainBaseWeapon, Bonus.Type.BaseWeaponSpeed) + get(Bonus.Type.AttackCost);
+		int mainWeaponSpeedBonus = get(mainBaseWeapon, Type.BaseWeaponSpeed) + get(Type.AttackCost);
 		int mainWeaponSpeed = mainWeapon.getTemplate().getAttackCost() * (100 - mainWeaponSpeedBonus) / 100;
 		int offWeaponSpeed = 0;
 		
 		if (offWeapon != null) {
 			String offBaseWeapon = offWeapon.getTemplate().getBaseWeapon().getName();
 			
-			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.OffHandAttack) + get(Bonus.Type.Attack));
-			addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.OffHandDamage) + get(Bonus.Type.Damage));
-			addToStat(Stat.OffHandAttackBonus, get(offBaseWeapon, Bonus.Type.BaseWeaponAttack));
-			addToStat(Stat.OffHandDamageBonus, get(offBaseWeapon, Bonus.Type.BaseWeaponDamage));
+			addToStat(Stat.OffHandAttackBonus, get(Type.OffHandAttack) + get(Type.Attack));
+			addToStat(Stat.OffHandDamageBonus, get(Type.OffHandDamage) + get(Type.Damage));
+			addToStat(Stat.OffHandAttackBonus, get(offBaseWeapon, Type.BaseWeaponAttack));
+			addToStat(Stat.OffHandDamageBonus, get(offBaseWeapon, Type.BaseWeaponDamage));
 			
-			int offWeaponSpeedBonus = get(offBaseWeapon, Bonus.Type.BaseWeaponSpeed) + get(Bonus.Type.AttackCost);
+			int offWeaponSpeedBonus = get(offBaseWeapon, Type.BaseWeaponSpeed) + get(Type.AttackCost);
 			offWeaponSpeed = offWeapon.getTemplate().getAttackCost() * (100 - offWeaponSpeedBonus) / 100;
 			
 			int offWeaponLightBonus = 0;
 			
 			switch (offWeapon.getTemplate().getHanded()) {
 			case Light:
-				addToStat(Stat.OffHandAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.LightMeleeWeaponAttack));
-				addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.LightMeleeWeaponDamage));
+				addToStat(Stat.OffHandAttackBonus, (getDex() - 10) * 2 + get(Type.LightMeleeWeaponAttack));
+				addToStat(Stat.OffHandDamageBonus, get(Type.LightMeleeWeaponDamage));
 				break;
 			case OneHanded:
-				addToStat(Stat.OffHandAttackBonus, (getStr() - 10) * 2 + get(Bonus.Type.OneHandedMeleeWeaponAttack));
-				addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.OneHandedMeleeWeaponDamage));
+				addToStat(Stat.OffHandAttackBonus, (getStr() - 10) * 2 + get(Type.OneHandedMeleeWeaponAttack));
+				addToStat(Stat.OffHandDamageBonus, get(Type.OneHandedMeleeWeaponDamage));
 				offWeaponLightBonus = -10;
 				break;
 			default:
 			}
 			
-			addToStat(Stat.OffHandDamageBonus, (3 + get(Bonus.Type.DualWieldStrDamage)) * (getStr() - 10));
-			addToStat(Stat.MainHandDamageBonus, (5 + get(Bonus.Type.DualWieldStrDamage)) * (getStr() - 10));
+			addToStat(Stat.OffHandDamageBonus, (3 + get(Type.DualWieldStrDamage)) * (getStr() - 10));
+			addToStat(Stat.MainHandDamageBonus, (5 + get(Type.DualWieldStrDamage)) * (getStr() - 10));
 			
-			addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 15 + offWeaponLightBonus);
-			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 25 + offWeaponLightBonus);
+			addToStat(Stat.MainHandAttackBonus, get(Type.DualWieldAttack) - 15 + offWeaponLightBonus);
+			addToStat(Stat.OffHandAttackBonus, get(Type.DualWieldAttack) - 25 + offWeaponLightBonus);
 		}
 		
 		addToStat(Stat.AttackCost, Math.max(mainWeaponSpeed, offWeaponSpeed));
 		
-		addToStat(Stat.TouchAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.Attack));
+		addToStat(Stat.TouchAttackBonus, (getDex() - 10) * 2 + get(Type.Attack));
 	}
 	
 	public void recomputeAllStats() {
@@ -612,7 +615,7 @@ public class StatManager {
 			}
 		}
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = parent.inventory.getEquippedItem(slot);
 			if (item == null) continue;
 			
@@ -672,7 +675,7 @@ public class StatManager {
 		int failure = role.getSpellFailureBase() + role.getSpellFailureSpellLevelFactor() * spellLevel;
 		failure -= (abilityScore - 10) * role.getSpellFailureAbilityScoreFactor();
 		failure -= casterLevel * role.getSpellFailureCasterLevelFactor();
-		failure -= get(Bonus.Type.SpellFailure);
+		failure -= get(Type.SpellFailure);
 		
 		return failure;
 	}
@@ -684,12 +687,12 @@ public class StatManager {
 	public int getMaxHP() { return get(Stat.MaxHP); }
 	public int getSpellCastingAttribute() { return get(parent.roles.getBaseRole().getSpellCastingAttribute()); }
 	
-	public int getBaseStr() { return get(Stat.BaseStr) + get(Bonus.Type.BaseStr); }
-	public int getBaseDex() { return get(Stat.BaseDex) + get(Bonus.Type.BaseDex); }
-	public int getBaseCon() { return get(Stat.BaseCon) + get(Bonus.Type.BaseCon); }
-	public int getBaseInt() { return get(Stat.BaseInt) + get(Bonus.Type.BaseInt); }
-	public int getBaseWis() { return get(Stat.BaseWis) + get(Bonus.Type.BaseWis); }
-	public int getBaseCha() { return get(Stat.BaseCha) + get(Bonus.Type.BaseCha); }
+	public int getBaseStr() { return get(Stat.BaseStr) + get(Type.BaseStr); }
+	public int getBaseDex() { return get(Stat.BaseDex) + get(Type.BaseDex); }
+	public int getBaseCon() { return get(Stat.BaseCon) + get(Type.BaseCon); }
+	public int getBaseInt() { return get(Stat.BaseInt) + get(Type.BaseInt); }
+	public int getBaseWis() { return get(Stat.BaseWis) + get(Type.BaseWis); }
+	public int getBaseCha() { return get(Stat.BaseCha) + get(Type.BaseCha); }
 	
 	public int getStr() { return get(Stat.Str); }
 	public int getDex() { return get(Stat.Dex); }
@@ -698,25 +701,25 @@ public class StatManager {
 	public int getWis() { return get(Stat.Wis); }
 	public int getCha() { return get(Stat.Cha); }
 	
-	public int getMentalResistance() { return get(Stat.MentalResistance) + get(Bonus.Type.MentalResistance); }
-	public int getPhysicalResistance() { return get(Stat.PhysicalResistance) + get(Bonus.Type.PhysicalResistance); }
-	public int getReflexResistance() { return get(Stat.ReflexResistance) + get(Bonus.Type.ReflexResistance); }
+	public int getMentalResistance() { return get(Stat.MentalResistance) + get(Type.MentalResistance); }
+	public int getPhysicalResistance() { return get(Stat.PhysicalResistance) + get(Type.PhysicalResistance); }
+	public int getReflexResistance() { return get(Stat.ReflexResistance) + get(Type.ReflexResistance); }
 	
-	public int getWeightLimit() { return get(Stat.WeightLimit) + get(Bonus.Type.WeightLimit) * 1000; }
+	public int getWeightLimit() { return get(Stat.WeightLimit) + get(Type.WeightLimit) * 1000; }
 	
-	public boolean isHidden() { return bonuses.has(Bonus.Type.Hidden); }
+	public boolean isHidden() { return bonuses.has(Type.Hidden); }
 	
 	public boolean isImmobilized() {
-		return (bonuses.has(Bonus.Type.Immobilized) || bonuses.has(Bonus.Type.UndispellableImmobilized))
-				&& !bonuses.has(Bonus.Type.ImmobilizationImmunity);
+		return (bonuses.has(Type.Immobilized) || bonuses.has(Type.UndispellableImmobilized))
+				&& !bonuses.has(Type.ImmobilizationImmunity);
 	}
 	
 	public boolean isHelpless() {
-		return (bonuses.has(Bonus.Type.Helpless) || bonuses.has(Bonus.Type.UndispellableHelpless))
-				&& !bonuses.has(Bonus.Type.ImmobilizationImmunity);
+		return (bonuses.has(Type.Helpless) || bonuses.has(Type.UndispellableHelpless))
+				&& !bonuses.has(Type.ImmobilizationImmunity);
 	}
 	
-	public int getAttacksOfOpportunity() { return 1 + get(Bonus.Type.AttacksOfOpportunity); }
+	public int getAttacksOfOpportunity() { return 1 + get(Type.AttacksOfOpportunity); }
 	
 	public int getAttackCost() { return stats.get(Stat.AttackCost); }
 	public int getMovementCost() { return stats.get(Stat.MovementCost); }

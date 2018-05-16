@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -28,7 +30,7 @@ public class ArmorProficiency extends Bonus {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("armorProficiency", armorType);
 		
 		return data;
@@ -39,7 +41,7 @@ public class ArmorProficiency extends Bonus {
 	}
 	
 	public ArmorProficiency(String armorType) {
-		super(Bonus.Type.ArmorProficiency, Bonus.StackType.GenericBonus);
+		super(Type.ArmorProficiency, StackType.GenericBonus);
 		
 		this.armorType = armorType;
 	}
@@ -47,7 +49,7 @@ public class ArmorProficiency extends Bonus {
 	public String getArmorType() { return armorType; }
 	
 	@Override public ArmorProficiency cloneWithReduction(int reduction) {
-		return new ArmorProficiency(this.armorType);
+		return new ArmorProficiency(armorType);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

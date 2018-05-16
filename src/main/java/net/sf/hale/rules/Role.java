@@ -138,13 +138,13 @@ public class Role {
 			spellFailureCasterLevelFactor = 0;
 		}
 		
-		defaultPlayerAttributes = new HashMap<Stat, Integer>();
-		defaultPlayerSkillSelections = new ArrayList<String>(5);
+		defaultPlayerAttributes = new HashMap<>();
+		defaultPlayerSkillSelections = new ArrayList<>(5);
 		if (data.containsKey("defaultSelections")) {
 			SimpleJSONObject selectionsIn = data.getObject("defaultSelections");
 			
 			for (String key : selectionsIn.keySet()) {
-				if (key.equals("skills")) {
+				if ("skills".equals(key)) {
 					SimpleJSONArray skillsIn = selectionsIn.getArray(key);
 					for (SimpleJSONArrayEntry entry : skillsIn) {
 						defaultPlayerSkillSelections.add(entry.getString());
@@ -164,7 +164,7 @@ public class Role {
 			prereqs = new PrereqList();
 		}
 		
-		levelUpLists = new HashMap<Integer, LevelUpList>();
+		levelUpLists = new HashMap<>();
 		
 		if (data.containsKey("casterLevelsAdded")) {
 			SimpleJSONArray casterLevelsIn = data.getArray("casterLevelsAdded");
@@ -248,12 +248,12 @@ public class Role {
 	 */
 	
 	public int getDefaultPlayerAttributeSelection(Stat stat) {
-		Integer value = this.defaultPlayerAttributes.get(stat);
+		Integer value = defaultPlayerAttributes.get(stat);
 		
 		if (value == null) {
 			return 0;
 		} else {
-			return value.intValue();
+			return value;
 		}
 	}
 	
@@ -483,7 +483,7 @@ public class Role {
 	 */
 	
 	public boolean creatureHasRolePrereqs(Creature creature) {
-		if (this.isBase) return false;
+		if (isBase) return false;
 		
 		return prereqs.hasRolePrereqs(creature);
 	}
@@ -516,7 +516,7 @@ public class Role {
 		
 		List<String> abilityIDs = list.abilities;
 		
-		List<Ability> abilities = new ArrayList<Ability>(abilityIDs.size());
+		List<Ability> abilities = new ArrayList<>(abilityIDs.size());
 		for (String id : abilityIDs) {
 			abilities.add(Game.ruleset.getAbility(id));
 		}
@@ -540,7 +540,7 @@ public class Role {
 		
 		List<String> listIDs = list.abilitySelectionLists;
 		
-		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>(listIDs.size());
+		List<AbilitySelectionList> lists = new ArrayList<>(listIDs.size());
 		for (String id : listIDs) {
 			lists.add(Game.ruleset.getAbilitySelectionList(id));
 		}
@@ -555,7 +555,7 @@ public class Role {
 	 */
 	
 	public Set<AbilitySelectionList> getAllReferencedAbilitySelectionLists() {
-		Set<AbilitySelectionList> lists = new LinkedHashSet<AbilitySelectionList>();
+		Set<AbilitySelectionList> lists = new LinkedHashSet<>();
 		
 		for (LevelUpList levelUpList : levelUpLists.values()) {
 			for (String id : levelUpList.abilitySelectionLists) {
@@ -575,15 +575,15 @@ public class Role {
 	 *
 	 */
 	
-	private class LevelUpList {
+	private static class LevelUpList {
 		private List<String> abilitySelectionLists;
 		private List<String> abilities;
 		private int casterLevelAdded;
 		
 		private LevelUpList() {
-			this.abilitySelectionLists = new ArrayList<String>(0);
-			this.abilities = new ArrayList<String>(0);
-			this.casterLevelAdded = 0;
+			abilitySelectionLists = new ArrayList<>(0);
+			abilities = new ArrayList<>(0);
+			casterLevelAdded = 0;
 		}
 	}
 }

@@ -22,12 +22,16 @@ package net.sf.hale.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.EquippableItemTemplate.Type;
 import net.sf.hale.entity.ItemTemplate;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Recipe;
+import net.sf.hale.rules.Recipe.Ingredient;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.widgets.ExpandableWidget;
 import net.sf.hale.widgets.IconViewer;
@@ -69,16 +73,16 @@ public class RecipeSetViewer extends Widget {
 	public RecipeSetViewer(boolean showCraftButtons) {
 		this.showCraftButtons = showCraftButtons;
 		
-		viewers = new ArrayList<RecipeViewer>();
+		viewers = new ArrayList<>();
 		
 		paneContent = new DialogLayout();
 		paneContent.setTheme("content");
 		paneContent.setIncludeInvisibleWidgets(false);
 		pane = new ScrollPane(paneContent);
-		pane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		pane.setFixed(Fixed.HORIZONTAL);
 		add(pane);
 		
-		skillButtons = new ArrayList<CraftSkillIconButton>();
+		skillButtons = new ArrayList<>();
 		for (Skill skill : Game.ruleset.getAllSkills()) {
 			if (!skill.isCraft()) continue;
 			
@@ -135,8 +139,8 @@ public class RecipeSetViewer extends Widget {
 			
 			viewers.clear();
 			paneContent.removeAllChildren();
-			DialogLayout.Group mainH = paneContent.createParallelGroup();
-			DialogLayout.Group mainV = paneContent.createSequentialGroup();
+			Group mainH = paneContent.createParallelGroup();
+			Group mainV = paneContent.createSequentialGroup();
 			
 			for (String recipeID : Game.curCampaign.getRecipeIDsForSkill(currentSkill)) {
 				Recipe recipe = Game.curCampaign.getRecipe(recipeID);
@@ -247,7 +251,7 @@ public class RecipeSetViewer extends Widget {
 			sb.append("</td></tr>");
 			
 			if (!recipe.getIngredientItemTypes().isEmpty()) {
-				List<EquippableItemTemplate.Type> types = recipe.getIngredientItemTypes(); 
+				List<Type> types = recipe.getIngredientItemTypes();
 				int numTypes = recipe.getIngredientItemTypes().size();
 				
 				sb.append("<tr><td>");
@@ -255,7 +259,7 @@ public class RecipeSetViewer extends Widget {
 				
 				switch (numTypes) {
 				case 1:
-					sb.append(types.get(0).toString());
+					sb.append(types.get(0));
 					break;
 				case 2:
 					sb.append(types.get(0));
@@ -278,7 +282,7 @@ public class RecipeSetViewer extends Widget {
 				sb.append("</span></td><td></td></tr>");
 			}
 			
-			for (Recipe.Ingredient ingredient : recipe) {
+			for (Ingredient ingredient : recipe) {
 				ItemTemplate template = EntityManager.getItemTemplate(ingredient.getItemID());
 				int quantity = ingredient.getQuantity();
 				
@@ -318,8 +322,8 @@ public class RecipeSetViewer extends Widget {
 			super( skill.getIcon() );
 			
 			this.skill = skill;
-			
-			this.setModel(new ToggleButtonModel());
+
+			setModel(new ToggleButtonModel());
 			addCallback(this);
 		}
 		

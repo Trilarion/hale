@@ -84,7 +84,7 @@ public class LoadingWaitPopup extends PopupWindow {
 	 */
 	
 	public void setBGSprite(Sprite sprite) {
-		this.bgSprite = sprite;
+        bgSprite = sprite;
 		bgSpriteOffset = new Point();
 		if (bgSprite != null) {
 			bgSpriteOffset.x = (Game.config.getResolutionX() - bgSprite.getWidth()) / 2;
@@ -99,7 +99,7 @@ public class LoadingWaitPopup extends PopupWindow {
 	 */
 	
 	public void setLoadingTaskList(LoadingTaskList list) {
-		this.taskList = list;
+        taskList = list;
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {

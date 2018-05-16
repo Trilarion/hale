@@ -22,6 +22,7 @@ package net.sf.hale.mainmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.mainmenu.AbstractSaveGamePopup.SelectorCallback;
 import net.sf.hale.util.SaveGameUtil;
 
 import de.matthiasmann.twl.Widget;
@@ -92,11 +93,11 @@ public class LoadGamePopup extends AbstractSaveGamePopup implements Runnable {
 	}
 	
 	@Override protected List<Selector> getValidSelectors() {
-		List<Selector> selectors = new ArrayList<Selector>();
+		List<Selector> selectors = new ArrayList<>();
 		
 		for (String saveGame : SaveGameUtil.getSaveGames()) {
 			SaveGameSelector selector = new SaveGameSelector(saveGame, getDateFormat());
-			selector.addCallback(new AbstractSaveGamePopup.SelectorCallback(selector));
+			selector.addCallback(new SelectorCallback(selector));
 			selectors.add(selector);
 		}
 		
@@ -116,7 +117,7 @@ public class LoadGamePopup extends AbstractSaveGamePopup implements Runnable {
 		 * accept button
 		 * @param saveGame the saveGame String ID that the user has selected
 		 */
-		
-		public void loadGameAccepted(String saveGame);
+
+        void loadGameAccepted(String saveGame);
 	}
 }

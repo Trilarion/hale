@@ -33,12 +33,12 @@ public interface EntityListener {
 	 * entity is updated or modified.
 	 * @param entity the entity that the listener is listening to
 	 */
-	
-	public void entityUpdated(Entity entity);
+
+    void entityUpdated(Entity entity);
 	
 	/**
 	 * Called when any listener should close and remove itself from the Widget tree (if it
 	 * is a widget)
 	 */
-	public void removeListener();
+    void removeListener();
 }

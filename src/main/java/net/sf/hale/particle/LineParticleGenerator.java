@@ -26,8 +26,8 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class LineParticleGenerator extends ParticleGenerator {
 	private enum LineStepMode {
-		X, Y;
-	}
+		X, Y
+    }
 	
 	private LineStepMode lineStepMode;
 	private float lineStepRatio;
@@ -67,12 +67,12 @@ public class LineParticleGenerator extends ParticleGenerator {
 	
 	public LineParticleGenerator(LineParticleGenerator other) {
 		super(other);
-		this.lineStepMode = other.lineStepMode;
-		this.lineStepRatio = other.lineStepRatio;
-		this.lineStartX = other.lineStartX;
-		this.lineStartY = other.lineStartY;
-		this.lineEndX = other.lineEndX;
-		this.lineEndY = other.lineEndY;
+        lineStepMode = other.lineStepMode;
+        lineStepRatio = other.lineStepRatio;
+        lineStartX = other.lineStartX;
+        lineStartY = other.lineStartY;
+        lineEndX = other.lineEndX;
+        lineEndY = other.lineEndY;
 	}
 	
 	public void setLineStart(float lineStartX, float lineStartY) {
@@ -98,11 +98,11 @@ public class LineParticleGenerator extends ParticleGenerator {
 	
 	@Override public boolean initialize() {
 		if (!super.initialize()) return false;
-		
-		this.lineStartX += getX();
-		this.lineStartY += getY();
-		this.lineEndX += getX();
-		this.lineEndY += getY();
+
+        lineStartX += getX();
+        lineStartY += getY();
+        lineEndX += getX();
+        lineEndY += getY();
 		
 		float diffX = lineEndX - lineStartX;
 		float diffY = lineEndY - lineStartY;

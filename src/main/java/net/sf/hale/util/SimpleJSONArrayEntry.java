@@ -49,7 +49,7 @@ public class SimpleJSONArrayEntry {
 	public SimpleJSONArrayEntry(Object data, String id) {
 		this.id = id;
 		this.data = data;
-		this.entryRead = false;
+        entryRead = false;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class SimpleJSONArrayEntry {
 	 */
 	
 	protected void setWarnOnMissingKeys(boolean warn) {
-		this.warnOnMissingKeys = warn;
+        warnOnMissingKeys = warn;
 		
 		if (objData != null) objData.setWarnOnMissingKeys(warn);
 		
@@ -209,7 +209,7 @@ public class SimpleJSONArrayEntry {
 		if (data instanceof Integer) {
 			entryRead = true;
 			
-			return ((Integer)data).intValue();
+			return (Integer) data;
 		} else {
 			Logger.appendToWarningLog("Array entry \"" + id + "\" is not an int.");
 			return defaultValue;
@@ -227,7 +227,7 @@ public class SimpleJSONArrayEntry {
 		if (data instanceof Boolean) {
 			entryRead = true;
 			
-			return ((Boolean)data).booleanValue();
+			return (Boolean) data;
 		} else {
 			Logger.appendToWarningLog("Array entry \"" + id + "\" is not a boolean.");
 			return defaultValue;

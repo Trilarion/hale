@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -35,14 +37,14 @@ public class DamageBonus extends IntBonus implements BonusWithSuperType {
 	
 	public static DamageBonus load(SimpleJSONObject data) {
 		int value = data.get("value", 0);
-		Bonus.Type type = Type.valueOf(data.get("type", null));
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		Type type = Type.valueOf(data.get("type", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		String damageType = data.get("damageType", null);
 		
 		return new DamageBonus(type, stackType, damageType, value);
 	}
 	
-	public DamageBonus(Bonus.Type type, Bonus.StackType stackType, String damageType, int value) {
+	public DamageBonus(Type type, StackType stackType, String damageType, int value) {
 		super(type, stackType, value);
 		
 		this.damageType = damageType;
@@ -53,7 +55,7 @@ public class DamageBonus extends IntBonus implements BonusWithSuperType {
 	@Override public String getSuperType() { return damageType; }
 	
 	@Override public DamageBonus cloneWithReduction(int reduction) {
-		return new DamageBonus(this.getType(), this.getStackType(), this.damageType, this.getValue() - reduction);
+		return new DamageBonus(getType(), getStackType(), damageType, getValue() - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

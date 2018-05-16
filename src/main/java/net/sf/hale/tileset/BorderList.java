@@ -65,7 +65,7 @@ public class BorderList implements Iterable<Border> {
 	 */
 	
 	public List<Border> getMatchingBorders(TerrainType[][] terrain, Point center) {
-		List<Border> borders = new ArrayList<Border>();
+		List<Border> borders = new ArrayList<>();
 		
 		for (Border border : this.borders) {
 			if (border.isMetAtPoint(terrain, center))
@@ -85,7 +85,7 @@ public class BorderList implements Iterable<Border> {
 	public static BorderList parse(SimpleJSONArray data, String id) {
 		BorderList borderList = new BorderList(id);
 		
-		ArrayList<Border> borders = new ArrayList<Border>();
+		ArrayList<Border> borders = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : data) {
 			SimpleJSONObject borderObject = entry.getObject();
 			

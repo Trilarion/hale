@@ -42,8 +42,8 @@ public class PointAllocatorModel {
 	
 	public PointAllocatorModel(int pointsRemaining) {
 		this.pointsRemaining = pointsRemaining;
-		
-		this.listeners = new LinkedList<Listener>();
+
+        listeners = new LinkedList<>();
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class PointAllocatorModel {
 	 */
 	
 	public void setPointsRemaining(int points) {
-		this.pointsRemaining = points;
+        pointsRemaining = points;
 	}
 	
 	/**
@@ -113,6 +113,6 @@ public class PointAllocatorModel {
 		/**
 		 * Method called whenever the number of allocated points has changed.
 		 */
-		public void allocatorModelUpdated();
+        void allocatorModelUpdated();
 	}
 }

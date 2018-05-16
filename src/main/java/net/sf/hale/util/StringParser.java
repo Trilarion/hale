@@ -39,14 +39,14 @@ public class StringParser extends StreamTokenizer {
 	
 	public StringParser(String input) {
 		super(new StringReader(input));
-		
-		this.resetSyntax();
-		this.wordChars('\u0000', '\uFFFF');
-		this.whitespaceChars(' ', ' ');
-		this.whitespaceChars('\t', '\t');
-		this.quoteChar('\"');
-		this.quoteChar('\'');
-		this.commentChar('#');
+
+        resetSyntax();
+        wordChars('\u0000', '\uFFFF');
+        whitespaceChars(' ', ' ');
+        whitespaceChars('\t', '\t');
+        quoteChar('\"');
+        quoteChar('\'');
+        commentChar('#');
 	}
 	
 	/**
@@ -57,10 +57,10 @@ public class StringParser extends StreamTokenizer {
 	
 	public boolean hasNext() throws IOException {
 		
-		if (this.nextToken() == StreamTokenizer.TT_EOF) return false;
-		this.pushBack();
-		if (this.nextToken() == StreamTokenizer.TT_EOL) return false;
-		this.pushBack();
+		if (nextToken() == StreamTokenizer.TT_EOF) return false;
+        pushBack();
+		if (nextToken() == StreamTokenizer.TT_EOL) return false;
+        pushBack();
 		
 		return true;
 	}
@@ -74,9 +74,9 @@ public class StringParser extends StreamTokenizer {
 	 */
 	
 	public String next() throws IOException {
-		this.nextToken();
+        nextToken();
 		
-		return this.sval;
+		return sval;
 	}
 	
 	/**
@@ -88,9 +88,9 @@ public class StringParser extends StreamTokenizer {
 	 */
 	
 	public long nextLong() throws IOException {
-		this.nextToken();
+        nextToken();
 		
-		return Long.parseLong(this.sval);
+		return Long.parseLong(sval);
 	}
 	
 	/**
@@ -102,9 +102,9 @@ public class StringParser extends StreamTokenizer {
 	 */
 	
 	public int nextInt() throws IOException {
-		this.nextToken();
+        nextToken();
 		
-		return Integer.parseInt(this.sval);
+		return Integer.parseInt(sval);
 	}
 	
 	/**
@@ -116,8 +116,8 @@ public class StringParser extends StreamTokenizer {
 	 */
 	
 	public boolean nextBoolean() throws IOException {
-		this.nextToken();
+        nextToken();
 		
-		return Boolean.parseBoolean(this.sval);
+		return Boolean.parseBoolean(sval);
 	}
 }

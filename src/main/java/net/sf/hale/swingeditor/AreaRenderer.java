@@ -23,6 +23,7 @@ import java.awt.Canvas;
 
 import javax.swing.SpinnerNumberModel;
 
+import net.sf.hale.swingeditor.AreaPalette.AreaClickHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -51,8 +52,8 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	private int scrollX, scrollY;
 	
 	private Tile actionPreviewTile;
-	private AreaPalette.AreaClickHandler clickHandler;
-	private AreaRenderer.ViewHandler viewHandler;
+	private AreaClickHandler clickHandler;
+	private ViewHandler viewHandler;
 	
 	private static final int MaxRadius = 20;
 	
@@ -73,7 +74,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	public AreaRenderer(Area area, Canvas canvas) {
 		this.canvas = canvas;
 		this.area = area;
-		mouseRadius = new SpinnerNumberModel(0, 0, AreaRenderer.MaxRadius, 1);
+		mouseRadius = new SpinnerNumberModel(0, 0, MaxRadius, 1);
 		lastMouseState = new boolean[Mouse.getButtonCount()];
 		mouseGrid = new Point(-100, -100);
 	}
@@ -102,7 +103,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	 */
 	
 	public void setActionPreviewTile(Tile tile) {
-		this.actionPreviewTile = tile;
+        actionPreviewTile = tile;
 		if (tile != null) {
 			tile.cacheSprite();
 		}
@@ -131,8 +132,8 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	 * @param handler
 	 */
 	
-	public void setViewHandler(AreaRenderer.ViewHandler handler) {
-		this.viewHandler = handler;
+	public void setViewHandler(ViewHandler handler) {
+        viewHandler = handler;
 	}
 	
 	/**
@@ -140,8 +141,8 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	 * @param handler
 	 */
 	
-	public void setClickHandler(AreaPalette.AreaClickHandler handler) {
-		this.clickHandler = handler;
+	public void setClickHandler(AreaClickHandler handler) {
+        clickHandler = handler;
 	}
 	
 	/**
@@ -158,13 +159,13 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		// reset the click timeout and check for updates to the mouse state
 		for (int i = 0; i < Mouse.getButtonCount(); i++) {
 			if (Mouse.isButtonDown(i) != lastMouseState[i]) {
-				lastClickTime = 0l;
+				lastClickTime = 0L;
 				lastMouseState[i] = !lastMouseState[i];
 			}
 		}
 
 		if (!mouseGrid.equals(prevMouseGrid)) {
-			lastClickTime = 0l;
+			lastClickTime = 0L;
 			prevMouseGrid = mouseGrid;
 			
 			if (viewHandler != null) {
@@ -285,15 +286,15 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		 * @param gridx
 		 * @param gridy
 		 */
-		
-		public void mouseMoved(int gridx, int gridy);
+
+        void mouseMoved(int gridx, int gridy);
 		
 		/**
 		 * Called whenever the view is scrolled to a new grid coordinate
 		 * @param gridx
 		 * @param gridy
 		 */
-		
-		public void viewMoved(int gridx, int gridy);
+
+        void viewMoved(int gridx, int gridy);
 	}
 }

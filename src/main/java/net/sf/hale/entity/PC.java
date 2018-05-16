@@ -115,16 +115,16 @@ public final class PC extends Creature {
 		super(template, parser);
 		
 		this.template = template;
-		
-		this.quickbar = new Quickbar(this);
+
+        quickbar = new Quickbar(this);
 		if (parser.containsKey("quickbar"))
 			quickbar.load(parser.getObject("quickbar"));
 		
 		if (parser.containsKey("experiencePoints"))
-			this.experiencePoints = parser.get("experiencePoints", 0);
+            experiencePoints = parser.get("experiencePoints", 0);
 		
 		if (parser.containsKey("unspentSkillPoints"))
-			this.unspentSkillPoints = parser.get("unspentSkillPoints", 0);
+            unspentSkillPoints = parser.get("unspentSkillPoints", 0);
 	}
 	
 	/**
@@ -138,11 +138,11 @@ public final class PC extends Creature {
 		super(template);
 		
 		this.template = template;
-		
-		this.quickbar = new Quickbar(this);
-		
-		this.experiencePoints = 0;
-		this.unspentSkillPoints = 0;
+
+        quickbar = new Quickbar(this);
+
+        experiencePoints = 0;
+        unspentSkillPoints = 0;
 	}
 	
 	/**
@@ -155,11 +155,11 @@ public final class PC extends Creature {
 	
 	public PC(PC other) {
 		super(other);
-		this.template = other.template;
-		this.quickbar = new Quickbar(other.quickbar, this);
-		
-		this.experiencePoints = other.experiencePoints;;
-		this.unspentSkillPoints = other.unspentSkillPoints;
+        template = other.template;
+        quickbar = new Quickbar(other.quickbar, this);
+
+        experiencePoints = other.experiencePoints;
+		unspentSkillPoints = other.unspentSkillPoints;
 	}
 	
 	@Override public PCTemplate getTemplate() {
@@ -182,7 +182,7 @@ public final class PC extends Creature {
 	 */
 	
 	public void addExperiencePoints(int amount) {
-		this.experiencePoints += amount;
+        experiencePoints += amount;
 	}
 	
 	/**
@@ -202,7 +202,7 @@ public final class PC extends Creature {
 	 */
 	
 	public void setUnspentSkillPoints(int value) {
-		this.unspentSkillPoints = value;
+        unspentSkillPoints = value;
 	}
 
 	@Override public boolean elapseTime(int numRounds) {

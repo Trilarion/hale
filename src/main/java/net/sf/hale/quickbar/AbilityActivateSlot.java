@@ -68,7 +68,7 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	 */
 	
 	public AbilityActivateSlot(Ability ability, PC parent) {
-		this.abilityID = ability.getID();
+        abilityID = ability.getID();
 		this.parent = parent;
 	}
 	
@@ -173,6 +173,6 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	}
 
 	@Override public QuickbarSlot getCopy(PC parent) {
-		return new AbilityActivateSlot(Game.ruleset.getAbility(this.abilityID), parent);
+		return new AbilityActivateSlot(Game.ruleset.getAbility(abilityID), parent);
 	}
 }

@@ -49,8 +49,8 @@ public class DistanceDistributionBase implements DistributionBase {
 	 */
 	
 	public DistanceDistributionBase(Point screenPoint) {
-		this.x = screenPoint.x;
-		this.y = screenPoint.y;
+        x = screenPoint.x;
+        y = screenPoint.y;
 	}
 	
 	@Override public float getBase(Particle particle) {

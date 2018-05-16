@@ -33,11 +33,14 @@ import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.ToggleButton;
 import net.sf.hale.Game;
 import net.sf.hale.ability.CreatureAbilitySet;
+import net.sf.hale.ability.CreatureAbilitySet.AbilityInstance;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.CreatedItem;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.entity.PC;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.SaveWriter;
@@ -63,8 +66,8 @@ public class CharacterBuilder extends GameSubWindow {
 	private AbstractBuilderPane activePane;
 	
 	private final DialogLayout content;
-	private final DialogLayout.Group mainContentH;
-	private final DialogLayout.Group mainContentV;
+	private final Group mainContentH;
+	private final Group mainContentV;
 	
 	/**
 	 * Create a new CharacterBuilder for the specified Buildable character.
@@ -72,12 +75,12 @@ public class CharacterBuilder extends GameSubWindow {
 	
 	public CharacterBuilder(Buildable character) {
 		this.character = character;
-		this.finishCallbacks = new ArrayList<FinishCallback>();
-		this.setSize(750, 550);
+        finishCallbacks = new ArrayList<>();
+        setSize(750, 550);
 		
 		content = new DialogLayout();
 		content.setTheme("content");
-		this.add(content);
+        add(content);
 		
 		paneButtons = new PaneSelectorButton[6];
 		paneButtons[0] = new PaneSelectorButton(new BuilderPaneRace(this, character));
@@ -100,12 +103,12 @@ public class CharacterBuilder extends GameSubWindow {
 		content.setVerticalGroup(mainV);
 		
 		if (character.isNewCharacter()) {
-			this.setTitle("Character Builder");
+            setTitle("Character Builder");
 			
 			// show the race selector
 			paneButtons[0].select();
 		} else {
-			this.setTitle("Character Builder for " + getCharacter().getName());
+            setTitle("Character Builder for " + getCharacter().getName());
 			
 			paneButtons[0].setEnabled(false);
 			paneButtons[2].setEnabled(false);
@@ -118,7 +121,7 @@ public class CharacterBuilder extends GameSubWindow {
 	
 	@Override protected void afterAddToGUI(GUI gui) {
 		super.afterAddToGUI(gui);
-		this.setPositionCentered();
+        setPositionCentered();
 	}
 	
 	/**
@@ -142,7 +145,7 @@ public class CharacterBuilder extends GameSubWindow {
 		
 		String id = creature.getTemplate().getID();
 		if (character.isNewCharacter()) {
-			id = CharacterBuilder.savePC(creature);
+			id = savePC(creature);
 		} else {
 			character.applySelectionsToCreature();
 		}
@@ -214,7 +217,7 @@ public class CharacterBuilder extends GameSubWindow {
 	 */
 	
 	public void setActivePane(AbstractBuilderPane pane) {
-		this.activePane = pane;
+        activePane = pane;
 		
 		mainContentH.clear(true);
 		mainContentV.clear(true);
@@ -227,8 +230,8 @@ public class CharacterBuilder extends GameSubWindow {
 		for (PaneSelectorButton button : paneButtons) {
 			button.setActive(button.pane == pane);
 		}
-		
-		this.activePane.updateCharacter();
+
+        activePane.updateCharacter();
 	}
 	
 	/**
@@ -245,8 +248,8 @@ public class CharacterBuilder extends GameSubWindow {
 		 * @param id the ID of the creature that has just leveled up or
 		 * been created
 		 */
-		
-		public void creatureModified(String id);
+
+        void creatureModified(String id);
 	}
 	
 	// close callback
@@ -296,8 +299,8 @@ public class CharacterBuilder extends GameSubWindow {
 		
 		// save abilities.  This format is different than the save file format, as
 		// it only needs to specify abilities and what level they were obtained
-		List<Object> abilitiesOut = new ArrayList<Object>();
-		for (CreatureAbilitySet.AbilityInstance abilityInstance : pc.abilities.getAllAbilityInstances()) {
+		List<Object> abilitiesOut = new ArrayList<>();
+		for (AbilityInstance abilityInstance : pc.abilities.getAllAbilityInstances()) {
 			// only save non racial and non role abilities
 			if (abilityInstance.isRoleAbility() || abilityInstance.isRacialAbility()) continue;
 			
@@ -317,18 +320,18 @@ public class CharacterBuilder extends GameSubWindow {
 		JSONOrderedObject inventoryOut = pc.inventory.save();
 		
 		// check for any created items that need to be saved
-		List<Object> createdItemsOut = new ArrayList<Object>();
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		List<Object> createdItemsOut = new ArrayList<>();
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = pc.inventory.getEquippedItem(slot);
 			if (item == null) continue;
 			checkToAddCreatedItem(item.getTemplate().getID(), createdItemsOut);
 		}
 		
-		for (ItemList.Entry entry : pc.inventory.getUnequippedItems()) {
+		for (Entry entry : pc.inventory.getUnequippedItems()) {
 			checkToAddCreatedItem(entry.getID(), createdItemsOut);
 		}
 		
-		if (createdItemsOut.size() > 0) {
+		if (!createdItemsOut.isEmpty()) {
 			inventoryOut.put("createdItems", createdItemsOut.toArray());
 		}
 		

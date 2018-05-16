@@ -19,15 +19,18 @@
 
 package net.sf.hale.view;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Ammo;
 import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.rules.DamageType;
@@ -71,9 +74,9 @@ public class CharacterSheet extends ScrollPane {
 		
 		textAreaModel = new HTMLTextAreaModel();
         textArea = new TextArea(textAreaModel);
-        
-        this.setContent(content);
-        this.setFixed(ScrollPane.Fixed.HORIZONTAL);
+
+        setContent(content);
+        setFixed(Fixed.HORIZONTAL);
         
         content.add(textArea);
         
@@ -99,7 +102,7 @@ public class CharacterSheet extends ScrollPane {
 		}
 		
 		if (creature != parent) {
-			this.creature = parent;
+            creature = parent;
 			
 			if (viewer != null) content.removeChild(viewer);
 			
@@ -142,7 +145,7 @@ public class CharacterSheet extends ScrollPane {
 		sb.append("</td><td style=\"width: 35ex\">");
 		
 		Weapon mainHand = parent.getMainHandWeapon();
-		EquippableItem offHand = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		EquippableItem offHand = parent.inventory.getEquippedItem(Slot.OffHand);
 		
 		// show main hand stats
 		{
@@ -153,11 +156,11 @@ public class CharacterSheet extends ScrollPane {
 			int quiverDamageBonus = 0;
 			switch (mainHand.getTemplate().getWeaponType()) {
 			case Ranged:
-				Ammo quiver = (Ammo)parent.inventory.getEquippedItem(Inventory.Slot.Quiver);
+				Ammo quiver = (Ammo)parent.inventory.getEquippedItem(Slot.Quiver);
 				
 				if (mainHand.getTemplate().isAmmoForThisWeapon(quiver)) {
-					quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Bonus.Type.WeaponAttack);
-					quiverDamageBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Bonus.Type.WeaponDamage);
+					quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Type.WeaponAttack);
+					quiverDamageBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Type.WeaponDamage);
 				}
 				break;
 			default:
@@ -165,24 +168,24 @@ public class CharacterSheet extends ScrollPane {
 			}
 			
 			int attackBonus = parent.stats.get(Stat.MainHandAttackBonus) + parent.stats.get(Stat.LevelAttackBonus) +
-				mainHand.bonuses.get(Bonus.Type.WeaponAttack) + mainHand.getQualityAttackBonus() +
-				quiverAttackBonus + parent.stats.get(mainHand.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType);
+				mainHand.bonuses.get(Type.WeaponAttack) + mainHand.getQualityAttackBonus() +
+				quiverAttackBonus + parent.stats.get(mainHand.getTemplate().getDamageType().getName(), Type.AttackForWeaponType);
 			
 			sb.append("<p>Attack Bonus <span style=\"font-family: medium-green;\">").append(attackBonus).append("</span></p>");
 			
 			float damageMult = 1.0f + (float)( parent.stats.get(Stat.LevelDamageBonus) +  
 					parent.stats.get(Stat.MainHandDamageBonus) + mainHand.getQualityDamageBonus() + 
-					parent.stats.get(mainHand.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) +
-					mainHand.bonuses.get(Bonus.Type.WeaponDamage) + quiverDamageBonus) / 100.0f;
+					parent.stats.get(mainHand.getTemplate().getDamageType().getName(), Type.DamageForWeaponType) +
+					mainHand.bonuses.get(Type.WeaponDamage) + quiverDamageBonus) / 100.0f;
 			float damageMin = ((float)mainHand.getTemplate().getMinDamage() * damageMult);
 			float damageMax = ((float)mainHand.getTemplate().getMaxDamage() * damageMult);
 
 			int threatRange = mainHand.getTemplate().getCriticalThreat() -
-					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-					mainHand.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
+					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalChance) -
+					mainHand.bonuses.get(Type.WeaponCriticalChance) - parent.stats.get(Type.CriticalChance);
 			int multiplier = mainHand.getTemplate().getCriticalMultiplier() +
-					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-					mainHand.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
+					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalMultiplier) +
+					mainHand.bonuses.get(Type.WeaponCriticalMultiplier) + parent.stats.get(Type.CriticalMultiplier);
 			
 			sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 			sb.append("</span> to <span style=\"font-family: medium-red;\">");
@@ -243,24 +246,24 @@ public class CharacterSheet extends ScrollPane {
 				Weapon offHandWeapon = (Weapon)offHand;
 				
 				int attackBonus = parent.stats.get(Stat.OffHandAttackBonus) + parent.stats.get(Stat.LevelAttackBonus) +
-						offHand.bonuses.get(Bonus.Type.WeaponAttack) + offHandWeapon.getQualityAttackBonus() +
-						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType);
+						offHand.bonuses.get(Type.WeaponAttack) + offHandWeapon.getQualityAttackBonus() +
+						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Type.AttackForWeaponType);
 
 				sb.append("<p>Attack Bonus <span style=\"font-family: medium-green;\">").append(attackBonus).append("</span></p>");
 
 				float damageMult = 1.0f + (float)( parent.stats.get(Stat.LevelDamageBonus) +
 						parent.stats.get(Stat.OffHandDamageBonus) + offHandWeapon.getQualityDamageBonus() + 
-						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) +
-						offHand.bonuses.get(Bonus.Type.WeaponDamage) ) / 100.0f ;
+						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Type.DamageForWeaponType) +
+						offHand.bonuses.get(Type.WeaponDamage) ) / 100.0f ;
 				float damageMin = ((float)offHandWeapon.getTemplate().getMinDamage() * damageMult);
 				float damageMax = ((float)offHandWeapon.getTemplate().getMaxDamage() * damageMult);
 
 				int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
-						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalChance) -
+						offHandWeapon.bonuses.get(Type.WeaponCriticalChance) - parent.stats.get(Type.CriticalChance);
 				int multiplier = offHandWeapon.getTemplate().getCriticalMultiplier() +
-						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalMultiplier) +
+						offHandWeapon.bonuses.get(Type.WeaponCriticalMultiplier) + parent.stats.get(Type.CriticalMultiplier);
 				
 				sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 				sb.append("</span> to <span style=\"font-family: medium-red;\">");
@@ -283,32 +286,32 @@ public class CharacterSheet extends ScrollPane {
 		sb.append("<div style=\"font-family: medium\"><table style=\"width: 24ex;\">"); {
 			sb.append("<tr><td style=\"width: 10ex;\">").append("Strength</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseStr()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Str)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Str)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getStr()).append("</td></tr>");
 			
 			sb.append("<tr><td style=\"width: 12ex;\">").append("Dexterity</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseDex()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Dex)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Dex)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getDex()).append("</td></tr>");
 			
 			sb.append("<tr><td style=\"width: 12ex;\">").append("Constitution</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseCon()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Con)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Con)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getCon()).append("</td></tr>");
 			
 			sb.append("<tr><td style=\"width: 12ex;\">").append("Intelligence</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseInt()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Int)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Int)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getInt()).append("</td></tr>");
 			
 			sb.append("<tr><td style=\"width: 12ex;\">").append("Wisdom</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseWis()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Wis)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Wis)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getWis()).append("</td></tr>");
 			
 			sb.append("<tr><td style=\"width: 12ex;\">").append("Charisma</td><td style=\"width: 3ex; font-family: medium-blue;\">");
 			sb.append(parent.stats.getBaseCha()).append("</td><td style=\"width: 2ex;\">+</td><td style=\"width: 2ex;\">");
-			sb.append(parent.stats.get(Bonus.Type.Cha)).append("</td><td style=\"width: 2ex;\">=</td>");
+			sb.append(parent.stats.get(Type.Cha)).append("</td><td style=\"width: 2ex;\">=</td>");
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getCha()).append("</td></tr>");
 
 		}
@@ -379,10 +382,10 @@ public class CharacterSheet extends ScrollPane {
 		sb.append(parent.stats.get(Stat.InitiativeBonus)).append("</td></tr>");
 		
 		sb.append("<tr><td style=\"width: 25ex; font-family: blue\">Concealment</td><td style=\"font-family: black\">");
-		sb.append(parent.stats.get(Bonus.Type.Concealment)).append("</td></tr>");
+		sb.append(parent.stats.get(Type.Concealment)).append("</td></tr>");
 		
 		sb.append("<tr><td style=\"width: 10ex; font-family: blue\">").append("Spell Resistance</td><td style=\"font-family: black\">");
-		int spellResistance = Math.min(100, Math.max(0, parent.stats.get(Bonus.Type.SpellResistance)) );
+		int spellResistance = Math.min(100, Math.max(0, parent.stats.get(Type.SpellResistance)) );
 		sb.append(spellResistance);
 		sb.append("</td></tr>");
 		
@@ -456,8 +459,8 @@ public class CharacterSheet extends ScrollPane {
 		
 		@Override protected void layout() {
 			super.layout();
-			
-			this.layoutChildFullInnerArea(textArea);
+
+            layoutChildFullInnerArea(textArea);
 			
 			if (viewer != null) {
 				viewer.setSize(viewer.getPreferredWidth(), viewer.getPreferredHeight());

@@ -20,6 +20,7 @@
 package net.sf.hale.ability;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.hale.Game;
 
@@ -32,13 +33,12 @@ import net.sf.hale.Game;
  * @author Jared Stephen
  *
  */
-
 public class AbilityActivateCallback implements Runnable {
 	private AbilitySlot slot;
 	
 	private String function;
 	private ScriptFunctionType type;
-	private ArrayList<Object> arguments;
+	private List<Object> arguments;
 	
 	/**
 	 * Creates a new AbilityActivateCallback for the specified AbilitySlot
@@ -50,8 +50,8 @@ public class AbilityActivateCallback implements Runnable {
 	public AbilityActivateCallback(AbilitySlot slot, String function) {
 		this.slot = slot;
 		this.function = function;
-		this.arguments = new ArrayList<Object>();
-		this.arguments.add(slot);
+        arguments = new ArrayList<>();
+        arguments.add(slot);
 	}
 	
 	/**
@@ -64,8 +64,8 @@ public class AbilityActivateCallback implements Runnable {
 	public AbilityActivateCallback(AbilitySlot slot, ScriptFunctionType type) {
 		this.slot = slot;
 		this.type = type;
-		this.arguments = new ArrayList<Object>();
-		this.arguments.add(slot);
+        arguments = new ArrayList<>();
+        arguments.add(slot);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class AbilityActivateCallback implements Runnable {
 	 */
 	
 	public void addArgument(Object argument) {
-		this.arguments.add(argument);
+        arguments.add(argument);
 	}
 	
 	/*

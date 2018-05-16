@@ -26,6 +26,7 @@ import de.matthiasmann.twl.AnimationState;
 
 import net.sf.hale.Game;
 import net.sf.hale.defaultability.MouseActionList;
+import net.sf.hale.defaultability.MouseActionList.Condition;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Location;
@@ -54,7 +55,7 @@ public abstract class Targeter {
 	private int mouseX, mouseY;
 	private Point mouseGridPoint;
 	private boolean mouseHoverValid;
-	private MouseActionList.Condition mouseActionCondition;
+	private Condition mouseActionCondition;
 	
 	private Creature parent;
 	private Scriptable scriptable;
@@ -95,22 +96,22 @@ public abstract class Targeter {
 	public Targeter(Creature parent, Scriptable scriptable, AbilitySlot abilitySlot) {
 		this.parent = parent;
 		this.scriptable = scriptable;
-		this.cancelable = true;
+        cancelable = true;
 		this.abilitySlot = abilitySlot;
 		
 		if (abilitySlot != null) {
-			this.setMenuTitle(abilitySlot.getAbility().getName());
+            setMenuTitle(abilitySlot.getAbility().getName());
 		}
-		
-		this.allowedPoints = new ArrayList<Point>();
-		
-		this.callbackArguments = new ArrayList<Object>();
-		this.callbackArguments.add(this);
-		
-		this.treatAllowedPointsAsNonEmpty = false;
-		
-		this.activateCallback = new ActivateCallback();
-		this.cancelCallback = new CancelCallback();
+
+        allowedPoints = new ArrayList<>();
+
+        callbackArguments = new ArrayList<>();
+        callbackArguments.add(this);
+
+        treatAllowedPointsAsNonEmpty = false;
+
+        activateCallback = new ActivateCallback();
+        cancelCallback = new CancelCallback();
 	}
 	
 	/**
@@ -328,8 +329,8 @@ public abstract class Targeter {
 	 * @param condition the Condition for the mouse cursor
 	 */
 	
-	protected void setMouseActionCondition(MouseActionList.Condition condition) {
-		this.mouseActionCondition = condition;
+	protected void setMouseActionCondition(Condition condition) {
+        mouseActionCondition = condition;
 	}
 	
 	/**
@@ -337,7 +338,7 @@ public abstract class Targeter {
 	 * @return the current condition for the mouse cursor
 	 */
 	
-	public MouseActionList.Condition getMouseActionCondition() { return mouseActionCondition; }
+	public Condition getMouseActionCondition() { return mouseActionCondition; }
 	
 	/**
 	 * Returns the mouse x coordinate when this targeter last had its mouse position set
@@ -437,7 +438,7 @@ public abstract class Targeter {
 		}
 		
 		// check range conditions
-		int range = AreaUtil.distance(mouseGridPoint, this.parent.getLocation().toPoint());
+		int range = AreaUtil.distance(mouseGridPoint, parent.getLocation().toPoint());
 		if (maxRange != 0) {
 			targetOK = targetOK && range <= maxRange;
 		}
@@ -531,7 +532,7 @@ public abstract class Targeter {
 	 */
 	
 	public void setCancelCallback(Runnable callback) {
-		this.cancelCallback = callback;
+        cancelCallback = callback;
 	}
 	
 	/**
@@ -541,7 +542,7 @@ public abstract class Targeter {
 	 */
 	
 	public void setActivateCallback(Runnable callback) {
-		this.activateCallback = callback;
+        activateCallback = callback;
 	}
 	
 	/**
@@ -576,7 +577,7 @@ public abstract class Targeter {
 	 */
 	
 	public void cancel() {
-		this.canceled = true;
+        canceled = true;
 		
 		Game.mainViewer.updateInterface();
 		
@@ -612,7 +613,7 @@ public abstract class Targeter {
 	 */
 	
 	public void setCheckValidCallback(CheckValidCallback cb) {
-		this.checkValidCallback = cb;
+        checkValidCallback = cb;
 	}
 	
 	/**
@@ -686,11 +687,11 @@ public abstract class Targeter {
 		 * and will instead be ignored and removed from the queue if applicable
 		 * @return true if the targeter is valid and should proceed, false otherwise
 		 */
-		
-		public boolean isValid();
+
+        boolean isValid();
 	}
 	
-	private class CancelCallback implements Runnable {
+	private static class CancelCallback implements Runnable {
 		@Override public void run() {
 			Game.areaListener.getTargeterManager().cancelCurrentTargeter();
 			Game.mainViewer.getMenu().hide();

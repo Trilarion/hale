@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -30,7 +32,7 @@ public class StandaloneDamageBonus extends IntBonus {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("standaloneDamageType", damageType);
 		data.put("minDamage", minDamage);
 		data.put("maxDamage", maxDamage);
@@ -47,7 +49,7 @@ public class StandaloneDamageBonus extends IntBonus {
 	}
 	
 	public StandaloneDamageBonus(String damageType, int minDamage, int maxDamage) {
-		super(Bonus.Type.StandaloneDamage, Bonus.StackType.GenericBonus, (minDamage + maxDamage) / 2);
+		super(Type.StandaloneDamage, StackType.GenericBonus, (minDamage + maxDamage) / 2);
 		
 		this.damageType = damageType;
 		this.minDamage = minDamage;
@@ -59,7 +61,7 @@ public class StandaloneDamageBonus extends IntBonus {
 	public String getDamageType() { return damageType; }
 	
 	@Override public StandaloneDamageBonus cloneWithReduction(int reduction) {
-		return new StandaloneDamageBonus(this.damageType, this.minDamage - reduction, this.maxDamage - reduction);
+		return new StandaloneDamageBonus(damageType, minDamage - reduction, maxDamage - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

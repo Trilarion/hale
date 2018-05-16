@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.icon.ComposedCreatureIcon.Entry;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
@@ -36,7 +38,7 @@ import de.matthiasmann.twl.Color;
  *
  */
 
-public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon.Entry> {
+public class ComposedCreatureIcon implements Icon, Iterable<Entry> {
 	private final Color skinColor;
 	private final Color clothingColor;
 	
@@ -48,12 +50,12 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 	 *
 	 */
 	
-	public class Entry {
-		public final SubIcon.Type type;
+	public static class Entry {
+		public final Type type;
 		public final String spriteID;
 		public final Color color;
 		
-		private Entry(SubIcon.Type type, String spriteID, Color color) {
+		private Entry(Type type, String spriteID, Color color) {
 			this.type = type;
 			this.spriteID = spriteID;
 			this.color = color;
@@ -61,7 +63,7 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 	}
 	
 	private ComposedCreatureIcon(Color skinColor, Color clothingColor) {
-		entries = new ArrayList<Entry>();
+		entries = new ArrayList<>();
 		
 		if (skinColor == null)
 			this.skinColor = Color.WHITE;
@@ -96,7 +98,7 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 	 */
 	
 	protected ComposedCreatureIcon(SimpleJSONObject data) {
-		entries = new ArrayList<Entry>();
+		entries = new ArrayList<>();
 		
 		if (data.containsKey("skinColor")) {
 			skinColor = Color.parserColor(data.get("skinColor", null));
@@ -113,7 +115,7 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 		for (SimpleJSONArrayEntry entry : data.getArray("subIcons")) {
 			SimpleJSONObject iconObject = entry.getObject();
 			
-			SubIcon.Type type = SubIcon.Type.valueOf(iconObject.get("type", null));
+			Type type = Type.valueOf(iconObject.get("type", null));
 			String spriteID = iconObject.get("sprite", null);
 			Color color = Color.parserColor(iconObject.get("color", null));
 			
@@ -128,17 +130,17 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 	 */
 	
 	protected ComposedCreatureIcon(ComposedCreatureIcon other) {
-		entries = new ArrayList<Entry>(other.entries);
+		entries = new ArrayList<>(other.entries);
 		
 		skinColor = other.skinColor;
 		clothingColor = other.clothingColor;
 	}
 	
 	@Override public ComposedCreatureIcon multiplyByColor(Color color) {
-		ComposedCreatureIcon icon = new ComposedCreatureIcon(this.skinColor.multiply(color),
-				this.clothingColor.multiply(color));
+		ComposedCreatureIcon icon = new ComposedCreatureIcon(skinColor.multiply(color),
+                clothingColor.multiply(color));
 		
-		for (Entry entry : this.entries) {
+		for (Entry entry : entries) {
 			icon.entries.add(new Entry(entry.type, entry.spriteID, entry.color.multiply(color)));
 		}
 		
@@ -172,7 +174,7 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 	
 	public boolean containsBaseBackgroundSubIcon() {
 		for (Entry entry : entries) {
-			if (entry.type == SubIcon.Type.BaseBackground)
+			if (entry.type == Type.BaseBackground)
 				return true;
 		}
 		
@@ -211,7 +213,7 @@ public class ComposedCreatureIcon implements Icon, Iterable<ComposedCreatureIcon
 		out.put( "skinColor", "#" + Integer.toHexString(skinColor.toARGB()) );
 		out.put( "clothingColor", "#" + Integer.toHexString(clothingColor.toARGB()) );
 		
-		List<Object> subIconsOut = new ArrayList<Object>();
+		List<Object> subIconsOut = new ArrayList<>();
 		
 		for (Entry entry : entries) {
 			JSONOrderedObject entryOut = new JSONOrderedObject();

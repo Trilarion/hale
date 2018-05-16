@@ -33,12 +33,15 @@ import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.bonus.StatManager;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.icon.ComposedCreatureIcon;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.icon.IconFactory;
 import net.sf.hale.icon.IconRenderer;
 import net.sf.hale.icon.SimpleIcon;
 import net.sf.hale.icon.SubIcon;
+import net.sf.hale.icon.SubIcon.Factory;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.icon.SubIconRenderer;
 import net.sf.hale.interfacelock.EntityOffsetAnimation;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -139,23 +142,23 @@ public abstract class Creature extends Entity {
 	
 	@Override public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
 		super.load(data, area, refHandler);
-		
-		this.currentHitPoints = data.get("currentHitPoints", 0);
+
+        currentHitPoints = data.get("currentHitPoints", 0);
 		
 		if (data.containsKey("temporaryHitPoints"))
-			this.temporaryHitPoints = data.get("temporaryHitPoints", 0);
+            temporaryHitPoints = data.get("temporaryHitPoints", 0);
 		else
-			this.temporaryHitPoints = 0;
+            temporaryHitPoints = 0;
 		
 		if (data.containsKey("summonExpiration"))
-			this.summonExpiration = data.get("summonExpiration", 0);
+            summonExpiration = data.get("summonExpiration", 0);
 		else
-			this.summonExpiration = -1;
-		
-		this.skills.load(data.getObject("skills"));
-		this.roles.load(data.getObject("roles"), false);
-		this.abilities.load(data.getObject("abilities"), refHandler);
-		this.inventory.load(data.getObject("inventory"), refHandler);
+            summonExpiration = -1;
+
+        skills.load(data.getObject("skills"));
+        roles.load(data.getObject("roles"), false);
+        abilities.load(data.getObject("abilities"), refHandler);
+        inventory.load(data.getObject("inventory"), refHandler);
 		
 		stats.recomputeAllStats();
 		timer.reset();
@@ -192,7 +195,7 @@ public abstract class Creature extends Entity {
 		super(template);
 		
 		this.template = template;
-		this.renderer = createIconRenderer();
+        renderer = createIconRenderer();
 		
 		// parse attributes
 		stats = new StatManager(this);
@@ -206,7 +209,7 @@ public abstract class Creature extends Entity {
 		attributes[5] = obj.get("charisma", 0);
 		stats.setAttributes(attributes);
 		
-		unarmedWeapons = new ArrayList<String>();
+		unarmedWeapons = new ArrayList<>();
 		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate().getID());
 		
 		// parse skills
@@ -240,7 +243,7 @@ public abstract class Creature extends Entity {
 		
 		summonExpiration = -1;
 		
-		moveAoOsThisRound = new ArrayList<Creature>(2);
+		moveAoOsThisRound = new ArrayList<>(2);
 		
 		animatingOffset = new Point();
 		
@@ -271,13 +274,13 @@ public abstract class Creature extends Entity {
 		// this is only applicable for the character builder, where they might
 		// not be defined yet
 		if (template.getRace() != null && template.getGender() != null) {
-			this.renderer = createIconRenderer();
+            renderer = createIconRenderer();
 		} else
-			this.renderer = IconFactory.emptyIcon;
+            renderer = IconFactory.emptyIcon;
 		
 		stats = new StatManager(this);
 		
-		unarmedWeapons = new ArrayList<String>();
+		unarmedWeapons = new ArrayList<>();
 		if (template.getRace() != null) {
 			unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate().getID());
 		}
@@ -289,7 +292,7 @@ public abstract class Creature extends Entity {
 		
 		summonExpiration = -1;
 		
-		moveAoOsThisRound = new ArrayList<Creature>(2);
+		moveAoOsThisRound = new ArrayList<>(2);
 		
 		animatingOffset = new Point();
 		
@@ -309,9 +312,9 @@ public abstract class Creature extends Entity {
 	
 	protected Creature(Creature other) {
 		super(other);
-		
-		this.template = other.template;
-		this.renderer = createIconRenderer();
+
+        template = other.template;
+        renderer = createIconRenderer();
 		
 		stats = new StatManager(other.stats, this);
 		roles = new RoleSet(other.roles, this);
@@ -321,7 +324,7 @@ public abstract class Creature extends Entity {
 		
 		summonExpiration = -1;
 		
-		moveAoOsThisRound = new ArrayList<Creature>(2);
+		moveAoOsThisRound = new ArrayList<>(2);
 		
 		animatingOffset = new Point();
 		
@@ -331,7 +334,7 @@ public abstract class Creature extends Entity {
 		// Note that Inventory MUST be initialized last
 		inventory = new Inventory(other.inventory, this);
 		
-		unarmedWeapons = new ArrayList<String>();
+		unarmedWeapons = new ArrayList<>();
 		for (String templateID : other.unarmedWeapons) {
 			unarmedWeapons.add(templateID);
 		}
@@ -359,7 +362,7 @@ public abstract class Creature extends Entity {
 		offsetAnimation = animation;
 		
 		if (offsetAnimation != null)
-			offsetAnimation.setAnimatingPoint(this.animatingOffset);
+			offsetAnimation.setAnimatingPoint(animatingOffset);
 	}
 	
 	/**
@@ -368,7 +371,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public void setCurrentlyMoving(boolean isMoving) {
-		this.isCurrentlyMoving = isMoving;
+        isCurrentlyMoving = isMoving;
 	}
 	
 	public boolean isCurrentlyMoving() {
@@ -426,7 +429,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public void setSummoned(int duration) {
-		this.summonExpiration = Game.curCampaign.getDate().getTotalRoundsElapsed() + duration;
+        summonExpiration = Game.curCampaign.getDate().getTotalRoundsElapsed() + duration;
 	}
 	
 	/**
@@ -446,7 +449,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public Encounter getEncounter() {
-		return this.encounter;
+		return encounter;
 	}
 	
 	/**
@@ -465,14 +468,14 @@ public abstract class Creature extends Entity {
 	 */
 	
 	@Override public boolean setLocation(Location newLocation) {
-		Location oldLocation = this.getLocation();
-		Point oldScreen = this.getLocation().getScreenPoint();
+		Location oldLocation = getLocation();
+		Point oldScreen = getLocation().getScreenPoint();
 		Point newScreen = newLocation.getScreenPoint();
 		
 		super.setLocation(newLocation);
 		
 		// offset animation positions for inventory
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			if (inventory.getEquippedItem(slot) == null) continue;
 			
 			inventory.getEquippedItem(slot).getEffects().offsetAnimationPositions(newScreen.x - oldScreen.x, newScreen.y - oldScreen.y);
@@ -630,7 +633,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public final boolean hasVisibility(Location location) {
-		if (location.getArea() != this.getLocation().getArea())
+		if (location.getArea() != getLocation().getArea())
 			return false;
 		
 		return visibility[location.getX()][location.getY()];
@@ -689,11 +692,11 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public boolean canTakeMoveAoOIgnoringLocation(Creature target) {
-		if (!this.getFaction().isHostile(target)) return false;
+		if (!getFaction().isHostile(target)) return false;
 		
-		if (this.attacksOfOpportunityAvailable < 1) return false;
+		if (attacksOfOpportunityAvailable < 1) return false;
 		
-		if (this.moveAoOsThisRound.contains(target)) return false;
+		if (moveAoOsThisRound.contains(target)) return false;
 		
 		return true;
 	}
@@ -716,7 +719,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public void takeAttackOfOpportunity() {
-		this.attacksOfOpportunityAvailable--;
+        attacksOfOpportunityAvailable--;
 	}
 	
 	/**
@@ -726,7 +729,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public Weapon getOffHandWeapon() {
-		EquippableItem item = inventory.getEquippedItem(Inventory.Slot.OffHand);
+		EquippableItem item = inventory.getEquippedItem(Slot.OffHand);
 		
 		if (item instanceof Weapon) {
 			return (Weapon)item;
@@ -743,7 +746,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public Weapon getMainHandWeapon() {
-		EquippableItem item = this.inventory.getEquippedItem(Inventory.Slot.MainHand);
+		EquippableItem item = inventory.getEquippedItem(Slot.MainHand);
 		
 		if (item == null) {
 			return getDefaultWeapon();
@@ -759,8 +762,8 @@ public abstract class Creature extends Entity {
 	
 	public Weapon getDefaultWeapon() {
 		if (unarmedWeapon == null) {
-			WeaponTemplate bestWeapon = (WeaponTemplate)EntityManager.getItemTemplate(unarmedWeapons.get(0));;
-			for (int i = 1; i < unarmedWeapons.size(); i++) {
+			WeaponTemplate bestWeapon = (WeaponTemplate)EntityManager.getItemTemplate(unarmedWeapons.get(0));
+            for (int i = 1; i < unarmedWeapons.size(); i++) {
 				WeaponTemplate curWeapon = (WeaponTemplate)EntityManager.getItemTemplate(unarmedWeapons.get(i));
 				
 				if (curWeapon.getAverageDamagePerAP() > bestWeapon.getAverageDamagePerAP()) {
@@ -798,7 +801,7 @@ public abstract class Creature extends Entity {
 	
 	public boolean threatensLocation(Location location) {
 		// can only threaten creatures in the same area
-		if (location.getArea() != this.getLocation().getArea()) return false;
+		if (location.getArea() != getLocation().getArea()) return false;
 		
 		return threatensPointInCurrentArea(location.getX(), location.getY());
 	}
@@ -813,14 +816,14 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public boolean threatensPointInCurrentArea(int x, int y) {
-		if (this.isDying() || this.isDead()) return false;
+		if (isDying() || isDead()) return false;
 		
-		if (this.attacksOfOpportunityAvailable < 1) return false;
+		if (attacksOfOpportunityAvailable < 1) return false;
 		
-		if (this.stats.isHelpless()) return false;
+		if (stats.isHelpless()) return false;
 		
 		// must be able to see the tile
-		if (!this.visibility[x][y]) return false;
+		if (!visibility[x][y]) return false;
 				
 		Weapon weapon = getMainHandWeapon();
 		if (!weapon.getTemplate().threatensAoOs()) return false;
@@ -848,7 +851,7 @@ public abstract class Creature extends Entity {
 		if (!timer.canAttack()) return false;
 		
 		// can't attack across areas
-		if (location.getArea() != this.getLocation().getArea()) return false;
+		if (location.getArea() != getLocation().getArea()) return false;
 		
 		if (stats.isHelpless()) return false;
 		
@@ -887,10 +890,10 @@ public abstract class Creature extends Entity {
 	public void addTemporaryHitPoints(int amount) {
 		// can't heal dead creatures
 		if (isDead()) return;
-		
-		this.temporaryHitPoints += amount;
-		
-		this.updateListeners();
+
+        temporaryHitPoints += amount;
+
+        updateListeners();
 	}
 	
 	/**
@@ -904,10 +907,10 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public void removeTemporaryHitPoints(int amount) {
-		if (this.temporaryHitPoints > amount) {
+		if (temporaryHitPoints > amount) {
 			takeDamage(amount, "Effect");
 		} else {
-			takeDamage(this.temporaryHitPoints, "Effect");
+			takeDamage(temporaryHitPoints, "Effect");
 		}
 	}
 	
@@ -959,8 +962,8 @@ public abstract class Creature extends Entity {
 		if (isDead()) {
 			Game.mainViewer.updateEntity(this);
 		}
-		
-		this.updateListeners();
+
+        updateListeners();
 	}
 	
 	/**
@@ -980,8 +983,8 @@ public abstract class Creature extends Entity {
 		
 		Game.mainViewer.addFadeAway(Integer.toString(amount), getLocation().getX(),
 				getLocation().getY(), new Color(0xFF33CCFF));
-		
-		this.updateListeners();
+
+        updateListeners();
 	}
 	
 	/**
@@ -992,9 +995,9 @@ public abstract class Creature extends Entity {
 	
 	public void raiseFromDead() {
 		if (!isDead()) return;
-		
-		this.temporaryHitPoints = 0;
-		this.currentHitPoints = 1;
+
+        temporaryHitPoints = 0;
+        currentHitPoints = 1;
 		
 		Game.mainViewer.addFadeAway("Raised", getLocation().getX(),
 				getLocation().getY(), new Color(0xFF33CCFF));
@@ -1050,7 +1053,7 @@ public abstract class Creature extends Entity {
 	public Attack performMainHandAttack(Creature target) {
 		timer.performAttack();
 		
-		return new Attack(this, target, Inventory.Slot.MainHand);
+		return new Attack(this, target, Slot.MainHand);
 	}
 	
 	/**
@@ -1062,7 +1065,7 @@ public abstract class Creature extends Entity {
 	 */
 	
 	public Attack performOffHandAttack(Creature target) {
-		return new Attack(this, target, Inventory.Slot.OffHand);
+		return new Attack(this, target, Slot.OffHand);
 	}
 	
 	/**
@@ -1073,7 +1076,7 @@ public abstract class Creature extends Entity {
 	 * @return the newly created attack
 	 */
 	
-	public Attack performSingleAttack(Creature target, Inventory.Slot slot) {
+	public Attack performSingleAttack(Creature target, Slot slot) {
 		return new Attack(this, target, slot);
 	}
 	
@@ -1130,14 +1133,14 @@ public abstract class Creature extends Entity {
 	 * @param slot the inventory slot being equipped into
 	 */
 	
-	protected void addSubIcon(EquippableItem item, Inventory.Slot slot) {
+	protected void addSubIcon(EquippableItem item, Slot slot) {
 		if (! (renderer instanceof SubIconRenderer) ) return;
 
 		SimpleIcon icon = item.getTemplate().getSubIcon();
 		if (icon == null) return;
 
 		// first check if this item has a sub icon override
-		SubIcon.Type type = item.getTemplate().getSubIconTypeOverride();
+		Type type = item.getTemplate().getSubIconTypeOverride();
 		if (type == null) {
 			// if it does not, use the default setting from the inventory slot
 			type = slot.getSubIconType(item);
@@ -1147,7 +1150,7 @@ public abstract class Creature extends Entity {
 		
 		if (!template.getRace().drawsSubIconType(type)) return;
 		
-		SubIcon.Factory factory = new SubIcon.Factory(type, template.getRace(), template.getGender());
+		Factory factory = new Factory(type, template.getRace(), template.getGender());
 		factory.setPrimaryIcon(icon.getSpriteID(), icon.getColor());
 		factory.setSecondaryIcon(null, ((ComposedCreatureIcon)template.getIcon()).getClothingColor());
 		factory.setCoversBeard(item.getTemplate().coversBeard());
@@ -1163,11 +1166,11 @@ public abstract class Creature extends Entity {
 	 * @param slot the inventory slot being unequipped from
 	 */
 	
-	protected void removeSubIcon(EquippableItem item, Inventory.Slot slot) {
+	protected void removeSubIcon(EquippableItem item, Slot slot) {
 		if (! (renderer instanceof SubIconRenderer) ) return;
 		
 		// first check if this item has a sub icon override
-		SubIcon.Type type = item.getTemplate().getSubIconTypeOverride();
+		Type type = item.getTemplate().getSubIconTypeOverride();
 		
 		if (type == null) {
 			// if it does not, use the default setting from the inventory slot
@@ -1187,16 +1190,16 @@ public abstract class Creature extends Entity {
 		inventory.elapseTime(numRounds);
 		
 		timer.reset();
-		
-		this.attacksOfOpportunityAvailable = stats.getAttacksOfOpportunity();
+
+        attacksOfOpportunityAvailable = stats.getAttacksOfOpportunity();
 		
 		if (isSummoned() && summonExpiration <= Game.curCampaign.getDate().getTotalRoundsElapsed()) {
-			this.currentHitPoints = -20;
-			this.temporaryHitPoints = 0;
+            currentHitPoints = -20;
+            temporaryHitPoints = 0;
 			Game.mainViewer.updateEntity(this);
 		}
-		
-		this.alreadySearchedForHiddenCreatures = false;
+
+        alreadySearchedForHiddenCreatures = false;
 		
 		boolean returnValue = abilities.elapseTime(numRounds);
 		

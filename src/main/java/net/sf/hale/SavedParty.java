@@ -64,12 +64,12 @@ public class SavedParty {
 		
 		this.resourceLocation = resourceLocation;
 		this.id = id;
-		this.name = parser.get("name", id);
-		this.currencyInCP = parser.get("currency", 0);
-		this.maxLevel = parser.get("maxLevel", 0);
-		this.minLevel = parser.get("minLevel", 0);
+        name = parser.get("name", id);
+        currencyInCP = parser.get("currency", 0);
+        maxLevel = parser.get("maxLevel", 0);
+        minLevel = parser.get("minLevel", 0);
 		
-		characters = new ArrayList<String>();
+		characters = new ArrayList<>();
 		
 		SimpleJSONArray charsArray = parser.getArray("characters");
 		for (SimpleJSONArrayEntry entry : charsArray) {
@@ -93,12 +93,12 @@ public class SavedParty {
 		this.currencyInCP = currencyInCP;
 		this.maxLevel = maxLevel;
 		this.minLevel = minLevel;
-		this.characters = new ArrayList<String>(characters);
+		this.characters = new ArrayList<>(characters);
 		
 		// get unique ID String
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-		this.id = name + "-" + format.format(Calendar.getInstance().getTime());
-		this.resourceLocation = Game.getPartiesBaseDirectory() + this.id + ResourceType.JSON.getExtension();
+        id = name + "-" + format.format(Calendar.getInstance().getTime());
+        resourceLocation = Game.getPartiesBaseDirectory() + id + ResourceType.JSON.getExtension();
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class SavedParty {
 		obj.put("maxLevel", maxLevel);
 		obj.put("minLevel", minLevel);
 
-		List<Object> chars = new ArrayList<Object>();
+		List<Object> chars = new ArrayList<>();
 		for (String character : characters) {
 			chars.add(character);
 		}

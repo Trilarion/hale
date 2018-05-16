@@ -34,6 +34,7 @@ import net.sf.hale.area.Area;
 import net.sf.hale.area.Transition;
 import net.sf.hale.entity.CreatedItemModel;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Encounter;
 import net.sf.hale.entity.Entity;
@@ -57,6 +58,7 @@ import net.sf.hale.particle.GaussianDistribution;
 import net.sf.hale.particle.GaussianDistributionWithBase;
 import net.sf.hale.particle.LineParticleGenerator;
 import net.sf.hale.particle.ParticleGenerator;
+import net.sf.hale.particle.ParticleGenerator.Mode;
 import net.sf.hale.particle.RectParticleGenerator;
 import net.sf.hale.particle.SpeedDistributionBase;
 import net.sf.hale.particle.UniformAngleDistribution;
@@ -71,6 +73,8 @@ import net.sf.hale.rules.Currency;
 import net.sf.hale.rules.Date;
 import net.sf.hale.rules.Dice;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.CustomRelationship;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.Quality;
 import net.sf.hale.rules.QuestEntry;
@@ -197,7 +201,7 @@ public class ScriptInterface implements HasScriptState {
 
 		try {
 			DelayedAttackCallback cb = Game.areaListener.getCombatRunner().creatureSingleAttackAnimate(
-					attacker, target, Inventory.Slot.MainHand);
+					attacker, target, Slot.MainHand);
 
 			if (cb != null) {
 				// wait for cb to finish
@@ -218,7 +222,7 @@ public class ScriptInterface implements HasScriptState {
 	}
 	
 	public Attack getAttack(Creature attacker, Creature defender, String slot) {
-		Attack attack = attacker.performSingleAttack(defender, Inventory.Slot.valueOf(slot));
+		Attack attack = attacker.performSingleAttack(defender, Slot.valueOf(slot));
 		attack.computeFlankingBonus(Game.curCampaign.curArea.getEntities());
 		attack.computeIsHit();
 		
@@ -234,7 +238,7 @@ public class ScriptInterface implements HasScriptState {
 	 */
 	
 	public Attack getMainHandAttack(Creature attacker, Creature defender) {
-		return getAttack(attacker, defender, Inventory.Slot.MainHand.toString());
+		return getAttack(attacker, defender, Slot.MainHand.toString());
 	}
 	
 	/**
@@ -246,7 +250,7 @@ public class ScriptInterface implements HasScriptState {
 	 */
 	
 	public Attack getOffHandAttack(Creature attacker, Creature defender) {
-		return getAttack(attacker, defender, Inventory.Slot.OffHand.toString());
+		return getAttack(attacker, defender, Slot.OffHand.toString());
 	}
 	
 	public void singleAttack(Creature attacker, Point position) {
@@ -254,11 +258,11 @@ public class ScriptInterface implements HasScriptState {
 	}
 	
 	public void singleAttack(Creature attacker, Creature defender) {
-		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.MainHand);
+		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Slot.MainHand);
 	}
 	
 	public void singleAttack(Creature attacker, Creature defender, String slot) {
-		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.valueOf(slot));
+		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Slot.valueOf(slot));
 	}
 	
 	/**
@@ -372,7 +376,7 @@ public class ScriptInterface implements HasScriptState {
 		for (Creature creature : target.getLocation().getArea().getEntities().getCreaturesWithinRadius(target.getLocation().getX(),
 				target.getLocation().getY(), Game.curCampaign.curArea.getVisibilityRadius())) {
 			
-			if (creature.getFaction().getRelationship(target.getFaction()) != Faction.Relationship.Hostile) continue;
+			if (creature.getFaction().getRelationship(target.getFaction()) != Relationship.Hostile) continue;
 			
 			if ( !creature.hasVisibility(target.getLocation()) ) continue;			
 			
@@ -640,7 +644,6 @@ public class ScriptInterface implements HasScriptState {
 		try {
 			Thread.sleep(Game.config.getCombatDelay() * multiple);
 		} catch (InterruptedException e) {
-			return;
 		}
 	}
 	
@@ -648,19 +651,18 @@ public class ScriptInterface implements HasScriptState {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			return;
 		}
 	}
 	
 	public ParticleGenerator createParticleGenerator(String type, String mode, String particle, float numParticles) {
-		if (type.equalsIgnoreCase("Point")) {
-			return new ParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
-		} else if (type.equalsIgnoreCase("Line")) {
-			return new LineParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
-		} else if (type.equalsIgnoreCase("Rect")) {
-			return new RectParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
-		} else if (type.equalsIgnoreCase("Circle")) {
-			return new CircleParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
+		if ("Point".equalsIgnoreCase(type)) {
+			return new ParticleGenerator(Mode.valueOf(mode), particle, numParticles);
+		} else if ("Line".equalsIgnoreCase(type)) {
+			return new LineParticleGenerator(Mode.valueOf(mode), particle, numParticles);
+		} else if ("Rect".equalsIgnoreCase(type)) {
+			return new RectParticleGenerator(Mode.valueOf(mode), particle, numParticles);
+		} else if ("Circle".equalsIgnoreCase(type)) {
+			return new CircleParticleGenerator(Mode.valueOf(mode), particle, numParticles);
 		} else {
 			return null;
 		}
@@ -694,7 +696,6 @@ public class ScriptInterface implements HasScriptState {
 		try {
 			Thread.sleep((long) (animation.getSecondsRemaining() * 1000.0f));
 		} catch (InterruptedException e) {
-			return;
 		}
 	}
 	
@@ -708,7 +709,6 @@ public class ScriptInterface implements HasScriptState {
 		try {
 			Thread.sleep((long) (generator.getTimeLeft() * 1000.0f));
 		} catch (InterruptedException e) {
-			return;
 		}
 	}
 	
@@ -800,7 +800,7 @@ public class ScriptInterface implements HasScriptState {
 	}
 	
 	public void setFactionRelationship(String faction1, String faction2, String relationship) {
-		Faction.CustomRelationship cr = new Faction.CustomRelationship(faction1, faction2, relationship);
+		CustomRelationship cr = new CustomRelationship(faction1, faction2, relationship);
 		
 		cr.setFactionRelationships();
 		

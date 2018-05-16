@@ -20,6 +20,8 @@
 package net.sf.hale.bonus;
 
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -29,7 +31,7 @@ public class SkillBonus extends IntBonus implements BonusWithSuperType {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("stackType", getStackType().toString());
 		data.put("value", getValue());
 		data.put("skillID", skillID);
@@ -39,14 +41,14 @@ public class SkillBonus extends IntBonus implements BonusWithSuperType {
 	
 	public static SkillBonus load(SimpleJSONObject data) {
 		int value = data.get("value", 0);
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		String skillID = data.get("skillID", null);
 		
 		return new SkillBonus(skillID, stackType, value);
 	}
 	
-	public SkillBonus(String skillID, Bonus.StackType stackType, int value) {
-		super(Bonus.Type.Skill, stackType, value);
+	public SkillBonus(String skillID, StackType stackType, int value) {
+		super(Type.Skill, stackType, value);
 		this.skillID = skillID;
 	}
 	
@@ -55,7 +57,7 @@ public class SkillBonus extends IntBonus implements BonusWithSuperType {
 	@Override public String getSuperType() { return skillID; }
 	
 	@Override public SkillBonus cloneWithReduction(int reduction) {
-		return new SkillBonus(this.skillID, this.getStackType(), this.getValue() - reduction);
+		return new SkillBonus(skillID, getStackType(), getValue() - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

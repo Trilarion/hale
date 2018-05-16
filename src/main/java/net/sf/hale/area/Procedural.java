@@ -32,11 +32,11 @@ public class Procedural {
 	
 	public Procedural(Area area, SimpleJSONObject data) {
 		this.area = area;
-		this.tileset = Game.curCampaign.getTileset(area.getTileset());
-		
-		this.baseTerrain = data.get("baseTerrain", null);
-		
-		this.seed = Game.dice.randSeed();
+        tileset = Game.curCampaign.getTileset(area.getTileset());
+
+        baseTerrain = data.get("baseTerrain", null);
+
+        seed = Game.dice.randSeed();
 		
 		if (data.containsKey("gridGenerator")) {
 			generator = new GridGenerator(area, data.getObject("gridGenerator"));
@@ -51,7 +51,7 @@ public class Procedural {
 	 */
 	
 	public long getSeed() {
-		return this.seed;
+		return seed;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class Procedural {
 	 */
 	
 	public void generateLayers() {
-		this.random = new Dice(this.seed);
+        random = new Dice(seed);
 		
 		// fill base terrain
 		TerrainType baseTerrain = tileset.getTerrainType(this.baseTerrain);
@@ -84,7 +84,7 @@ public class Procedural {
 			}
 		}
 		
-		generator.setDice(this.random);
+		generator.setDice(random);
 		generator.generate();
 	}
 	

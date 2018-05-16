@@ -23,6 +23,7 @@ import java.util.List;
 
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.BonusList;
 import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Enchantment;
@@ -61,20 +62,20 @@ public class ItemIconHover extends TextArea {
 	 */
 	
 	public ItemIconHover(Item item, ItemIconViewer hoverSource) {
-		this.textAreaModel = new HTMLTextAreaModel();
-		this.setModel(textAreaModel);
+        textAreaModel = new HTMLTextAreaModel();
+        setModel(textAreaModel);
 		
 		valueDescription = "Value";
 		valuePercentage = 100;
-		
-		this.parent = hoverSource;
+
+        parent = hoverSource;
 		this.item = item;
 	}
 	
 	@Override public int getPreferredWidth() {
 		// the + 1 here prevents wrap around that sometimes occurs; most likely a bug with
 		// de.matthiasmann.twl.TextArea
-		return super.getPreferredInnerWidth() + getBorderHorizontal() + 1;
+		return getPreferredInnerWidth() + getBorderHorizontal() + 1;
 	}
 	
 	/**
@@ -83,7 +84,7 @@ public class ItemIconHover extends TextArea {
 	 */
 	
 	public void setRequiresText(String text) {
-		this.requiresText = text;
+        requiresText = text;
 	}
 	
 	/**
@@ -93,7 +94,7 @@ public class ItemIconHover extends TextArea {
 	 */
 	
 	public void setEmptyHoverText(String text) {
-		this.emptyHoverText = text;
+        emptyHoverText = text;
 	}
 	
 	/**
@@ -112,8 +113,8 @@ public class ItemIconHover extends TextArea {
 	 */
 	
 	public void setValue(String description, int percentage) {
-		this.valueDescription = description;
-		this.valuePercentage = percentage;
+        valueDescription = description;
+        valuePercentage = percentage;
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
@@ -192,7 +193,7 @@ public class ItemIconHover extends TextArea {
 			
 			sb.append("<div>Base Damage: ");
 			
-			float damageMult = 1.0f + (weapon.getQualityDamageBonus() + weapon.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+			float damageMult = 1.0f + (weapon.getQualityDamageBonus() + weapon.bonuses.get(Type.WeaponDamage)) / 100.0f;
 			float damageMin = ((float)weapon.getTemplate().getMinDamage() * damageMult);
 			float damageMax = ((float)weapon.getTemplate().getMaxDamage() * damageMult);
 			
@@ -209,7 +210,7 @@ public class ItemIconHover extends TextArea {
 			// show attack with enchantment bonuses
 			sb.append("<div>Attack: <span style=\"font-family: blue;\">");
 			int attackBonus = weapon.getQualityAttackBonus();
-			for (Bonus bonus : allBonuses.getBonusesOfType(Bonus.Type.WeaponAttack)) {
+			for (Bonus bonus : allBonuses.getBonusesOfType(Type.WeaponAttack)) {
 				attackBonus += bonus.getValue();
 			}
 			if (attackBonus > 0) sb.append("+");

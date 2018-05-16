@@ -24,10 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import de.matthiasmann.twl.EditField.Callback;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.SavedParty;
 import net.sf.hale.characterbuilder.Buildable;
 import net.sf.hale.characterbuilder.CharacterBuilder;
+import net.sf.hale.characterbuilder.CharacterBuilder.FinishCallback;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.PC;
@@ -87,7 +90,7 @@ public class PartyFormationWindow extends Widget {
 	public PartyFormationWindow(MainMenu mainMenu, NewGameWindow window, Set<String> charactersInParties) {
 		this.charactersInParties = charactersInParties;
 		this.mainMenu = mainMenu;
-		this.newGameWindow = window;
+        newGameWindow = window;
 		mainMenu.setButtonsVisible(false);
 		
 		titleLabel = new Label();
@@ -98,7 +101,7 @@ public class PartyFormationWindow extends Widget {
 		nameLabel.setTheme("namelabel");
 		
 		nameField = new EditField();
-		nameField.addCallback(new EditField.Callback() {
+		nameField.addCallback(new Callback() {
 			@Override public void callback(int key) {
 				setAcceptEnabled();
 			}
@@ -189,13 +192,13 @@ public class PartyFormationWindow extends Widget {
 		
 		partyPaneContent = new Content();
 		partyPane = new ScrollPane(partyPaneContent);
-		partyPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		partyPane.setFixed(Fixed.HORIZONTAL);
 		partyPane.setTheme("partypane");
 		add(partyPane);
 		
 		availablePaneContent = new Content();
 		availablePane = new ScrollPane(availablePaneContent);
-		availablePane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		availablePane.setFixed(Fixed.HORIZONTAL);
 		availablePane.setTheme("selectorpane");
 		add(availablePane);
 		
@@ -219,7 +222,7 @@ public class PartyFormationWindow extends Widget {
 	}
 	
 	private List<PC> getPCsInDirectory(String directory) {
-		List<PC> pcs = new ArrayList<PC>();
+		List<PC> pcs = new ArrayList<>();
 		
 		File directoryFile = new File(directory);
 		
@@ -273,11 +276,11 @@ public class PartyFormationWindow extends Widget {
 		
 		availablePaneContent.add(new CreateCharacterSelector());
 		
-		List<PC> pcs = new ArrayList<PC>();
+		List<PC> pcs = new ArrayList<>();
 		pcs.addAll(getPCsInDirectory("characters/"));
 		pcs.addAll(getPCsInDirectory(Game.getCharactersBaseDirectory()));
 		
-		List<UniqueCharacter> characters = new ArrayList<UniqueCharacter>();
+		List<UniqueCharacter> characters = new ArrayList<>();
 		
 		for (PC pc : pcs) {
 			// check adding the creature to the existing unique characters
@@ -311,7 +314,7 @@ public class PartyFormationWindow extends Widget {
 		if (newGameWindow != null) {
 			int maxLevel = 0;
 			int minLevel = Integer.MAX_VALUE;
-			List<String> characterIDs = new ArrayList<String>();
+			List<String> characterIDs = new ArrayList<>();
 			for (CharacterSelector selector : partyPaneContent.selectors) {
 				characterIDs.add(selector.getCreatureID());
 
@@ -326,7 +329,7 @@ public class PartyFormationWindow extends Widget {
 
 			newGameWindow.populatePartySelectors(party.getID());
 		} else {
-			List<String> party = new ArrayList<String>();
+			List<String> party = new ArrayList<>();
 			for (CharacterSelector selector : partyPaneContent.selectors) {
 				party.add(selector.getCreatureID());
 			}
@@ -349,7 +352,7 @@ public class PartyFormationWindow extends Widget {
 		clearHighlightedSelector();
 		
 		selector.getAnimationState().setAnimationState(Button.STATE_SELECTED, true);
-		this.highlightedSelector = selector;
+        highlightedSelector = selector;
 	}
 	
 	private void clearHighlightedSelector() {
@@ -446,7 +449,7 @@ public class PartyFormationWindow extends Widget {
 	private void showCharacterEditor() {
         CharacterBuilder builder = new CharacterBuilder(new Buildable());
         mainMenu.add(builder);
-        builder.addFinishCallback(new CharacterBuilder.FinishCallback() {
+        builder.addFinishCallback(new FinishCallback() {
         	@Override public void creatureModified(String id) {
         		PC pc = EntityManager.getPC(id);
 				
@@ -502,7 +505,7 @@ public class PartyFormationWindow extends Widget {
 		private int selectorGap;
 		
 		private Content() {
-			selectors = new ArrayList<CharacterSelector>();
+			selectors = new ArrayList<>();
 		}
 		
 		private void addSelectorToTop(CharacterSelector selector, boolean addButton, boolean removeButton) {
@@ -528,7 +531,7 @@ public class PartyFormationWindow extends Widget {
 			if (top) {
 				// move the just added widget to the top of the list
 				// below the create character button
-				this.moveChild(getNumChildren() - 1, 1);
+                moveChild(getNumChildren() - 1, 1);
 			}
 				
 			invalidateLayout();

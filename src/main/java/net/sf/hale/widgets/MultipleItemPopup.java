@@ -58,11 +58,11 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 	
 	public MultipleItemPopup(Widget parent) {
 		super(parent);
-		
-		this.setCloseOnClickedOutside(false);
+
+        setCloseOnClickedOutside(false);
 		
 		content = new Content();
-		this.add(content);
+        add(content);
 		
 		label = new Label();
 		label.setTheme("titlelabel");
@@ -153,9 +153,9 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 		accept.setText(callback.getLabelText());
 		
 		// set the value label text
-		this.run();
+        run();
 		
-		super.openPopupCentered();
+		openPopupCentered();
 		
 		Game.mainViewer.getMenu().hide();
 	}
@@ -174,8 +174,8 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 		 * MultipleItemPopup should use
 		 * @return the title label text
 		 */
-		
-		public String getLabelText();
+
+        String getLabelText();
 		
 		/**
 		 * Returns the value label text that the associated
@@ -186,8 +186,8 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 		 * @param quantity the quantity to compute the value for
 		 * @return the value label text
 		 */
-		
-		public String getValueText(int quantity);
+
+        String getValueText(int quantity);
 		
 		/**
 		 * Returns the maximum quantity that should be available
@@ -197,8 +197,8 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 		 * 
 		 * @return the maximum quantity available for the item
 		 */
-		
-		public int getMaximumQuantity();
+
+        int getMaximumQuantity();
 		
 		/**
 		 * Method used as the callback for the MultipleItemPopup.
@@ -207,8 +207,8 @@ public class MultipleItemPopup extends PopupWindow implements Runnable {
 		 * 
 		 * @param quantity the quantity selected by the MultipleItemPopup
 		 */
-		
-		public void performItemAction(int quantity);
+
+        void performItemAction(int quantity);
 	}
 	
 	private class Content extends Widget {

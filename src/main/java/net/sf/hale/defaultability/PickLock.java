@@ -22,6 +22,7 @@ package net.sf.hale.defaultability;
 import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.Openable;
@@ -45,7 +46,7 @@ public class PickLock implements DefaultAbility {
 	@Override public boolean canActivate(PC parent, Location targetPosition) {
 		if (!parent.timer.canPerformAction("OpenLockCost")) return false;
 		
-		if (!parent.stats.has(Bonus.Type.LockPicking)) return false;
+		if (!parent.stats.has(Type.LockPicking)) return false;
 		
 		openable = targetPosition.getOpenable();
 		if (openable == null) return false;
@@ -93,7 +94,7 @@ public class PickLock implements DefaultAbility {
 		
 		if (openable == null || !parent.timer.canPerformAction("OpenLockCost")) return false;
 		
-		if (!parent.stats.has(Bonus.Type.LockPicking)) return false;
+		if (!parent.stats.has(Type.LockPicking)) return false;
 		
 		parent.timer.performAction("OpenLockCost");
 		

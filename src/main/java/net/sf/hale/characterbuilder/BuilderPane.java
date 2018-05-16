@@ -20,8 +20,10 @@
 package net.sf.hale.characterbuilder;
 
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.DialogLayout.Group;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
@@ -43,8 +45,8 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 	private Label titleLabel;
 	private ScrollPane selectorPane;
 	private DialogLayout selectorPaneContent;
-	private DialogLayout.Group selectorPaneContentH;
-	private DialogLayout.Group selectorPaneContentV;
+	private Group selectorPaneContentH;
+	private Group selectorPaneContentV;
 	private Label pointsLabel;
 	
 	private int titleGap, paneGap;
@@ -62,7 +64,7 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		textAreaModel = new HTMLTextAreaModel();
 		TextArea textArea = new TextArea(textAreaModel);
         textPane = new ScrollPane(textArea);
-        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+        textPane.setFixed(Fixed.HORIZONTAL);
         textPane.setCanAcceptKeyboardFocus(false);
         textPane.setTheme("descriptionpane");
         
@@ -72,7 +74,7 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		selectorPaneContent = new DialogLayout();
 		selectorPaneContent.setTheme("content");
 		selectorPane = new ScrollPane(selectorPaneContent);
-		selectorPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		selectorPane.setFixed(Fixed.HORIZONTAL);
 		selectorPane.setTheme("selectorpane");
 		
 		selectorPaneContentH = selectorPaneContent.createParallelGroup();
@@ -82,11 +84,11 @@ public abstract class BuilderPane extends AbstractBuilderPane {
         
         pointsLabel = new Label();
         pointsLabel.setTheme("pointslabel");
-        
-        this.add(pointsLabel);
-        this.add(titleLabel);
-        this.add(selectorPane);
-        this.add(textPane);
+
+        add(pointsLabel);
+        add(titleLabel);
+        add(selectorPane);
+        add(textPane);
 	}
 	
 	/**
@@ -101,9 +103,9 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
-		
-		this.titleGap = themeInfo.getParameter("titlegap", 0);
-		this.paneGap = themeInfo.getParameter("panegap", 0);
+
+        titleGap = themeInfo.getParameter("titlegap", 0);
+        paneGap = themeInfo.getParameter("panegap", 0);
 	}
 	
 	@Override protected void layout() {

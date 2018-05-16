@@ -24,6 +24,7 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
@@ -61,8 +62,8 @@ public class Trap extends Item {
 		super(template);
 		
 		this.template = template;
-		
-		this.isSpotted = false;
+
+        isSpotted = false;
 	}
 	
 	@Override public TrapTemplate getTemplate() {
@@ -88,7 +89,7 @@ public class Trap extends Item {
 	 */
 	
 	public boolean canAttemptPlace(PC parent) {
-		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Type.TrapHandling)) return false;
 		
 		// if there is already a trap at the location
 		if (parent.getLocation().getTrap() != null) {
@@ -281,7 +282,7 @@ public class Trap extends Item {
 		int num = Game.ruleset.getValue("TrapQualityDifficultyNumerator");
 		int den = Game.ruleset.getValue("TrapQualityDifficultyDenominator");
 		
-		int qualityBonus = this.getQuality().getModifier();
+		int qualityBonus = getQuality().getModifier();
 		
 		int bonus = qualityBonus * num / den;
 		

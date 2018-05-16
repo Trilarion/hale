@@ -2,7 +2,6 @@ package net.sf.hale.widgets;
 
 import de.matthiasmann.twl.Color;
 import net.sf.hale.util.Point;
-import net.sf.hale.widgets.OverHeadFadeAway;
 
 public class FixedFadeAway extends OverHeadFadeAway {
 	private Point screenPoint;
@@ -10,7 +9,7 @@ public class FixedFadeAway extends OverHeadFadeAway {
 	public FixedFadeAway(String text, Point screenPoint, Color color) {
 		super(text, new Point(0,0), color);
 		this.screenPoint = screenPoint;
-		this.setTheme("overheadfadeaway");
+        setTheme("overheadfadeaway");
 	}
 	
 	@Override public void initialize(long startTime) {

@@ -24,6 +24,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.util.SaveGameUtil;
 
 import de.matthiasmann.twl.Button;
@@ -56,9 +58,9 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 		super(parent);
 		
 		format = new SimpleDateFormat("H:mm:ss dd MMMMM yyyy");
-		
-		this.setCloseOnClickedOutside(false);
-		this.setCloseOnEscape(true);
+
+        setCloseOnClickedOutside(false);
+        setCloseOnEscape(true);
 		
 		content = new Content();
 		add(content);
@@ -95,16 +97,16 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 	 */
 	
 	protected void setActiveSelector(Selector selector) {
-		if (this.selected != null) {
-			this.selected.setActive(false);
+		if (selected != null) {
+            selected.setActive(false);
 		}
+
+        selected = selector;
 		
-		this.selected = selector;
-		
-		if (this.selected != null)
+		if (selected != null)
 			selector.setActive(true);
-		
-		this.content.accept.setEnabled(this.selected != null);
+
+        content.accept.setEnabled(selected != null);
 	}
 	
 	/**
@@ -113,7 +115,7 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 	 */
 	
 	protected void setDeleteEnabled(boolean enabled) {
-		this.content.delete.setEnabled(enabled);
+        content.delete.setEnabled(enabled);
 	}
 	
 	private class Content extends Widget {
@@ -135,7 +137,7 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 			cancel.setTheme("cancelbutton");
 			cancel.addCallback(new Runnable() {
 				@Override public void run() {
-					AbstractSaveGamePopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			add(cancel);
@@ -165,7 +167,7 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 			selectorPaneContent = new DialogLayout();
 			selectorPaneContent.setTheme("content");
 			selectorPane = new ScrollPane(selectorPaneContent);
-			selectorPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			selectorPane.setFixed(Fixed.HORIZONTAL);
 			selectorPane.setTheme("selectorpane");
 			add(selectorPane);
 			
@@ -175,8 +177,8 @@ public abstract class AbstractSaveGamePopup extends PopupWindow {
 		private void addSelectors() {
 			selectorPaneContent.removeAllChildren();
 			
-			DialogLayout.Group mainV = selectorPaneContent.createSequentialGroup();
-			DialogLayout.Group mainH = selectorPaneContent.createParallelGroup();
+			Group mainV = selectorPaneContent.createSequentialGroup();
+			Group mainH = selectorPaneContent.createParallelGroup();
 			
 			for (Selector selector : getValidSelectors()) {
 				mainV.addWidget(selector);

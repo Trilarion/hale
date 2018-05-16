@@ -22,6 +22,7 @@ package net.sf.hale.entity;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.Stat;
 
 /**
@@ -62,7 +63,7 @@ public class RoundTimer {
 	 */
 	
 	public void setFreeMode(boolean freeMode) {
-		this.isInFreeMode = freeMode;
+        isInFreeMode = freeMode;
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public class RoundTimer {
 	public void reset() {
 		active = true;
 		
-		maxAP = Math.max(0, Game.ruleset.getValue("BaseActionPoints") + parent.stats.get(Bonus.Type.ActionPoint) * 100);
+		maxAP = Math.max(0, Game.ruleset.getValue("BaseActionPoints") + parent.stats.get(Type.ActionPoint) * 100);
 		
 		AP = maxAP;
 		
@@ -95,7 +96,7 @@ public class RoundTimer {
 		int bonus = path.getMovementBonus(index);
 		
 		// immobilization immunity protects against slowing effects
-		if (bonus < 0 && parent.stats.has(Bonus.Type.ImmobilizationImmunity))
+		if (bonus < 0 && parent.stats.has(Type.ImmobilizationImmunity))
 			bonus = 0;
 		
 		return parent.stats.get(Stat.MovementCost) * (100 - bonus) / 100;
@@ -175,7 +176,7 @@ public class RoundTimer {
 	 * @return the amount of AP
 	 */
 	
-	public int getAP() { return this.AP; }
+	public int getAP() { return AP; }
 	
 	/**
 	 * Returns true if the parent has sufficient AP to attack, false otherwise
@@ -217,7 +218,7 @@ public class RoundTimer {
 	public boolean canPerformAction(int cost) {		
 		if (parent.stats.isHelpless()) return false;
 		
-		if (this.AP < cost && !isInFreeMode) return false;
+		if (AP < cost && !isInFreeMode) return false;
 		
 		return true;
 	}
@@ -268,7 +269,7 @@ public class RoundTimer {
 	private int getCostToEquipItem(EquippableItem item) {
 		switch (item.getTemplate().getType()) {
 		case Weapon: case Shield:
-			return Game.ruleset.getValue("EquipItemCost") * (100 - parent.stats.get(Bonus.Type.ActionPointEquipHands)) / 100;
+			return Game.ruleset.getValue("EquipItemCost") * (100 - parent.stats.get(Type.ActionPointEquipHands)) / 100;
 		case Armor:
 			return Game.ruleset.getValue("EquipArmorCost");
 		default:
@@ -281,7 +282,7 @@ public class RoundTimer {
 	}
 	
 	public boolean performEquipAction(EquippableItem item) {
-		return performAction(this.getCostToEquipItem(item));
+		return performAction(getCostToEquipItem(item));
 	}
 	
 	/**

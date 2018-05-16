@@ -1,6 +1,7 @@
 package net.sf.hale.view;
 
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
@@ -19,13 +20,13 @@ public class MessagesWindow extends GameSubWindow {
 	private StringBuilder content;
 	
 	public MessagesWindow() {
-		this.setTitle("Messages");
+        setTitle("Messages");
 		
 		textAreaModel = new HTMLTextAreaModel();
         textArea = new TextArea(textAreaModel);
 		scrollPane = new ScrollPane(textArea);
 		scrollPane.setTheme("messagespane");
-		scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		scrollPane.setFixed(Fixed.HORIZONTAL);
 		add(scrollPane);
 		
 		content = new StringBuilder();

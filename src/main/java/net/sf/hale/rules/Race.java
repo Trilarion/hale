@@ -34,8 +34,10 @@ import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.WeaponTemplate;
 import net.sf.hale.icon.SubIcon;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.Logger;
@@ -71,7 +73,7 @@ public class Race {
 	private final Map<Integer, List<String>> abilitySelectionLists;
 	
 	private final String subIconRaceString;
-	private final Map<SubIcon.Type, Point> iconOffsets;
+	private final Map<Type, Point> iconOffsets;
 	
 	private final List<String> abilities;
 	
@@ -85,54 +87,54 @@ public class Race {
 	
 	private final boolean showDetailedDescription;
 	
-	private final List<Inventory.Slot> restrictedSlots; 
+	private final List<Slot> restrictedSlots;
 	
 	public Race(String id, SimpleJSONParser parser) {
 		this.id = id;
-		this.name = parser.get("name", id);
+        name = parser.get("name", id);
 		
 		String defaultWeaponID = parser.get("defaultWeapon", null);
-		this.defaultWeapon = (WeaponTemplate)EntityManager.getItemTemplate(defaultWeaponID);
+        defaultWeapon = (WeaponTemplate)EntityManager.getItemTemplate(defaultWeaponID);
 		
 		parser.setWarnOnMissingKeys(false);
-		
-		this.movementCost = parser.get("baseMovementCost", 1000);
-		this.descriptionFile = parser.get("descriptionFile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
-		this.icon = parser.get("icon", null);
-		this.playerSelectable = parser.get("playerSelectable", false);
-		this.showDetailedDescription = parser.get("showDetailedDescription", true);
+
+        movementCost = parser.get("baseMovementCost", 1000);
+        descriptionFile = parser.get("descriptionFile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
+        icon = parser.get("icon", null);
+        playerSelectable = parser.get("playerSelectable", false);
+        showDetailedDescription = parser.get("showDetailedDescription", true);
 		
 		if (parser.containsKey("baseAttributes")) {
 			SimpleJSONArray attrArray = parser.getArray("baseAttributes");
 			
 			Iterator<SimpleJSONArrayEntry> iter = attrArray.iterator();
-			
-			this.baseStr = iter.next().getInt(10);
-			this.baseDex = iter.next().getInt(10);
-			this.baseCon = iter.next().getInt(10);
-			this.baseInt = iter.next().getInt(10);
-			this.baseWis = iter.next().getInt(10);
-			this.baseCha = iter.next().getInt(10);
+
+            baseStr = iter.next().getInt(10);
+            baseDex = iter.next().getInt(10);
+            baseCon = iter.next().getInt(10);
+            baseInt = iter.next().getInt(10);
+            baseWis = iter.next().getInt(10);
+            baseCha = iter.next().getInt(10);
 		} else {
-			this.baseStr = 10;
-			this.baseDex = 10;
-			this.baseCon = 10;
-			this.baseInt = 10;
-			this.baseWis = 10;
-			this.baseCha = 10;
+            baseStr = 10;
+            baseDex = 10;
+            baseCon = 10;
+            baseInt = 10;
+            baseWis = 10;
+            baseCha = 10;
 		}
 		
-		List<Inventory.Slot> restrictedSlots = new ArrayList<Inventory.Slot>();
+		List<Slot> restrictedSlots = new ArrayList<>();
 		if (parser.containsKey("restrictedSlots")) {
 			SimpleJSONArray array = parser.getArray("restrictedSlots");
 			for (SimpleJSONArrayEntry entry : array) {
 				String slotID = entry.getString();
-				restrictedSlots.add(Inventory.Slot.valueOf(slotID));
+				restrictedSlots.add(Slot.valueOf(slotID));
 			}
 		}
 		this.restrictedSlots = Collections.unmodifiableList(restrictedSlots);
 		
-		abilities = new ArrayList<String>();
+		abilities = new ArrayList<>();
 		if (parser.containsKey("abilities")) {
 			SimpleJSONArray array = parser.getArray("abilities");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -141,7 +143,7 @@ public class Race {
 		}
 		((ArrayList<String>)abilities).trimToSize();
 		
-		racialTypes = new ArrayList<RacialType>();
+		racialTypes = new ArrayList<>();
 		if (parser.containsKey("racialTypes")) {
 			SimpleJSONArray array = parser.getArray("racialTypes");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -149,16 +151,16 @@ public class Race {
 			}
 		}
 		((ArrayList<RacialType>)racialTypes).trimToSize();
+
+        hasBeard = parser.get("hasBeard", true);
+        hasHair = parser.get("hasHair", true);
+        defaultBeardIndex = parser.get("defaultBeardIndex", 1);
+        defaultHairIndex = parser.get("defaultHairIndex", 1);
+        defaultBeardColor = parser.get("defaultBeardColor", null);
+        defaultHairColor = parser.get("defaultHairColor", null);
+        defaultSkinColor = parser.get("defaultSkinColor", null);
 		
-		this.hasBeard = parser.get("hasBeard", true);
-		this.hasHair = parser.get("hasHair", true);
-		this.defaultBeardIndex = parser.get("defaultBeardIndex", 1);
-		this.defaultHairIndex = parser.get("defaultHairIndex", 1);
-		this.defaultBeardColor = parser.get("defaultBeardColor", null);
-		this.defaultHairColor = parser.get("defaultHairColor", null);
-		this.defaultSkinColor = parser.get("defaultSkinColor", null);
-		
-		List<Integer> selectableHairIndices = new ArrayList<Integer>();
+		List<Integer> selectableHairIndices = new ArrayList<>();
 		if (parser.containsKey("selectableHairIndices")) {
 			SimpleJSONArray array = parser.getArray("selectableHairIndices");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -167,7 +169,7 @@ public class Race {
 		}
 		this.selectableHairIndices = Collections.unmodifiableList(selectableHairIndices);
 		
-		List<Integer> selectableBeardIndices = new ArrayList<Integer>();
+		List<Integer> selectableBeardIndices = new ArrayList<>();
 		if (parser.containsKey("selectableBeardIndices")) {
 			SimpleJSONArray array = parser.getArray("selectableBeardIndices");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -177,7 +179,7 @@ public class Race {
 		this.selectableBeardIndices = Collections.unmodifiableList(selectableBeardIndices);
 		
 		
-		List<String> hairAndBeardColors = new ArrayList<String>();
+		List<String> hairAndBeardColors = new ArrayList<>();
 		if (parser.containsKey("hairAndBeardColors")) {
 			SimpleJSONArray array = parser.getArray("hairAndBeardColors");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -186,7 +188,7 @@ public class Race {
 		}
 		this.hairAndBeardColors = Collections.unmodifiableList(hairAndBeardColors);
 		
-		List<String> skinColors = new ArrayList<String>();
+		List<String> skinColors = new ArrayList<>();
 		if (parser.containsKey("skinColors")) {
 			SimpleJSONArray array = parser.getArray("skinColors");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -194,36 +196,36 @@ public class Race {
 			}
 		}
 		this.skinColors = Collections.unmodifiableList(skinColors);
-		
-		this.subIconRaceString = parser.get("subIconRaceString", null);
+
+        subIconRaceString = parser.get("subIconRaceString", null);
 		if (parser.containsKey("icons")) {
 			SimpleJSONObject obj = parser.getObject("icons");
-			
-			this.maleBackgroundIcon = obj.get("maleBackground", null);
-			this.maleForegroundIcon = obj.get("maleForeground", null);
-			this.maleEarsIcon = obj.get("maleEars", null);
-			this.femaleBackgroundIcon = obj.get("femaleBackground", null);
-			this.femaleForegroundIcon = obj.get("femaleForeground", null);
-			this.femaleEarsIcon = obj.get("femaleEars", null);
-			this.maleClothesIcon = obj.get("maleClothes", null);
-			this.femaleClothesIcon = obj.get("femaleClothes", null);
+
+            maleBackgroundIcon = obj.get("maleBackground", null);
+            maleForegroundIcon = obj.get("maleForeground", null);
+            maleEarsIcon = obj.get("maleEars", null);
+            femaleBackgroundIcon = obj.get("femaleBackground", null);
+            femaleForegroundIcon = obj.get("femaleForeground", null);
+            femaleEarsIcon = obj.get("femaleEars", null);
+            maleClothesIcon = obj.get("maleClothes", null);
+            femaleClothesIcon = obj.get("femaleClothes", null);
 		} else {
-			this.maleBackgroundIcon = null;
-			this.maleForegroundIcon = null;
-			this.maleEarsIcon = null;
-			this.femaleBackgroundIcon = null;
-			this.femaleForegroundIcon = null;
-			this.femaleEarsIcon = null;
-			this.maleClothesIcon = null;
-			this.femaleClothesIcon = null;
+            maleBackgroundIcon = null;
+            maleForegroundIcon = null;
+            maleEarsIcon = null;
+            femaleBackgroundIcon = null;
+            femaleForegroundIcon = null;
+            femaleEarsIcon = null;
+            maleClothesIcon = null;
+            femaleClothesIcon = null;
 		}
 		
-		iconOffsets = new HashMap<SubIcon.Type, Point>();
+		iconOffsets = new HashMap<>();
 		if (parser.containsKey("iconOffsets")) {
 			SimpleJSONObject obj = parser.getObject("iconOffsets");
 			
 			for (String key : obj.keySet()) {
-				SubIcon.Type type = SubIcon.Type.valueOf(key);
+				Type type = Type.valueOf(key);
 				
 				SimpleJSONArray array = obj.getArray(key);
 				Iterator<SimpleJSONArrayEntry> iter = array.iterator();
@@ -235,7 +237,7 @@ public class Race {
 			}
 		}
 		
-		abilitySelectionLists = new HashMap<Integer, List<String>>();
+		abilitySelectionLists = new HashMap<>();
 		if (parser.containsKey("abilitySelectionsFromList")) {
 			SimpleJSONObject obj = parser.getObject("abilitySelectionsFromList");
 			
@@ -250,7 +252,7 @@ public class Race {
 			}
 		}
 		
-		randomMaleNames = new ArrayList<String>();
+		randomMaleNames = new ArrayList<>();
 		if (parser.containsKey("randomMaleNames")) {
 			SimpleJSONArray array = parser.getArray("randomMaleNames");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -259,7 +261,7 @@ public class Race {
 		}
 		((ArrayList<String>)randomMaleNames).trimToSize();
 		
-		randomFemaleNames = new ArrayList<String>();
+		randomFemaleNames = new ArrayList<>();
 		if (parser.containsKey("randomFemaleNames")) {
 			SimpleJSONArray array = parser.getArray("randomFemaleNames");
 			for (SimpleJSONArrayEntry entry : array) {
@@ -274,7 +276,7 @@ public class Race {
 	private void addAbilitySelectionListAtLevel(String listID, int level) {
 		List<String> listsAtLevel = abilitySelectionLists.get(level);
 		if (listsAtLevel == null) {
-			listsAtLevel = new ArrayList<String>(1);
+			listsAtLevel = new ArrayList<>(1);
 			abilitySelectionLists.put(level, listsAtLevel);
 		}
 		
@@ -288,7 +290,7 @@ public class Race {
 	 * @return whether the slot is restricted
 	 */
 	
-	public boolean isSlotRestricted(Inventory.Slot slot) {
+	public boolean isSlotRestricted(Slot slot) {
 		return restrictedSlots.contains(slot);
 	}
 	
@@ -300,7 +302,7 @@ public class Race {
 	 */
 	
 	public boolean isSlotRestricted(String slot) {
-		return isSlotRestricted(Inventory.Slot.valueOf(slot));
+		return isSlotRestricted(Slot.valueOf(slot));
 	}
 	
 	/**
@@ -320,11 +322,11 @@ public class Race {
 	 * @return whether members of this race should draw sub icons of this type
 	 */
 	
-	public boolean drawsSubIconType(SubIcon.Type type) {
+	public boolean drawsSubIconType(Type type) {
 		return iconOffsets.containsKey(type);
 	}
 	
-	public Point getIconOffset(SubIcon.Type type) {
+	public Point getIconOffset(Type type) {
 		if (!iconOffsets.containsKey(type)) {
 			iconOffsets.put(type, new Point(0, 0));
 		}
@@ -456,7 +458,7 @@ public class Race {
 		
 		if (idList == null) return Collections.emptyList();
 		
-		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>(idList.size());
+		List<AbilitySelectionList> lists = new ArrayList<>(idList.size());
 		for (String id : idList) {
 			lists.add(Game.ruleset.getAbilitySelectionList(id));
 		}
@@ -465,7 +467,7 @@ public class Race {
 	}
 	
 	public List<RacialType> getRacialTypes() {
-		return new ArrayList<RacialType>(racialTypes);
+		return new ArrayList<>(racialTypes);
 	}
 	
 	/**
@@ -478,7 +480,7 @@ public class Race {
 		for (String abilityID : abilities) {
 			Ability ability = Game.ruleset.getAbility(abilityID);
 			if (ability == null) {
-				Logger.appendToWarningLog("Racial ability " + abilityID + " for race " + this.id + " not found.");
+				Logger.appendToWarningLog("Racial ability " + abilityID + " for race " + id + " not found.");
 				continue;
 			}
 			
@@ -493,7 +495,7 @@ public class Race {
 	 */
 	
 	public Set<AbilitySelectionList> getAllReferencedAbilitySelectionLists() {
-		Set<AbilitySelectionList> lists = new LinkedHashSet<AbilitySelectionList>();
+		Set<AbilitySelectionList> lists = new LinkedHashSet<>();
 		
 		for (int level : abilitySelectionLists.keySet()) {
 			for (String listID : abilitySelectionLists.get(level)) {

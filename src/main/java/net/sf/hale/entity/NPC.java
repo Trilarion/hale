@@ -70,7 +70,7 @@ public final class NPC extends Creature {
 	
 	public NPC(NPC other) {
 		super(other);
-		this.template = other.template;
+        template = other.template;
 	}
 	
 	/**

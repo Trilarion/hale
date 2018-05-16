@@ -10,4 +10,4 @@ function onBossFightFinished(game) {
 
 function startCutscene(game) {
     game.showCutscene("sonorinCanyon");
-}
+}

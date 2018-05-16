@@ -49,7 +49,7 @@ public class ElevationList {
 	public static ElevationList parse(SimpleJSONArray data) {
 		ElevationList elevationList = new ElevationList();
 		
-		ArrayList<Elevation> elevation = new ArrayList<Elevation>();
+		ArrayList<Elevation> elevation = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : data) {
 			SimpleJSONObject elevationObject = entry.getObject();
 			
@@ -72,7 +72,7 @@ public class ElevationList {
 	}
 	
 	public List<Elevation> getMatchingElevationRules(AreaElevationGrid grid, Point center) {
-		List<Elevation> elevation = new ArrayList<Elevation>();
+		List<Elevation> elevation = new ArrayList<>();
 		
 		for (Elevation elev : this.elevation) {
 			if (elev.isMetAtPoint(grid, center))

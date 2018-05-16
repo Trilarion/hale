@@ -43,8 +43,8 @@ public interface DistributionOneValue extends Saveable {
 	 * @param particle the Particle to generate a value for.
 	 * @return a generated float value for use with the supplied particle
 	 */
-	
-	public float generate(Particle particle);
+
+    float generate(Particle particle);
 	
 	/**
 	 * If this DistributionOneValue has any internal state, returns a copy
@@ -53,6 +53,6 @@ public interface DistributionOneValue extends Saveable {
 	 * 
 	 * @return a copy of this Distribution or this Distribution
 	 */
-	
-	public DistributionOneValue getCopyIfHasState();
+
+    DistributionOneValue getCopyIfHasState();
 }

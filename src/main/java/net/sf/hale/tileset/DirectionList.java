@@ -47,7 +47,7 @@ public class DirectionList implements Iterable<Direction> {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Direction direction : directions) {
-			sb.append(direction.toString());
+			sb.append(direction);
 		}
 		
 		return sb.toString();
@@ -103,7 +103,7 @@ public class DirectionList implements Iterable<Direction> {
 	
 	public static DirectionList parse(String input) {
 		DirectionList list = new DirectionList();
-		ArrayList<Direction> directions = new ArrayList<Direction>();
+		ArrayList<Direction> directions = new ArrayList<>();
 		
 		StringParser tokenizer = new StringParser(input);
 		tokenizer.whitespaceChars('-', '-');

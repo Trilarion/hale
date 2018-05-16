@@ -64,40 +64,40 @@ public class WorldMapLocation implements Saveable {
 	 */
 	
 	public WorldMapLocation(SimpleJSONObject data) {
-		this.name = data.get("id", null);
+        name = data.get("id", null);
 		
 		if (data.containsKey("startingTransition")) {
-			this.startingTransition = data.get("startingTransition", null);
+            startingTransition = data.get("startingTransition", null);
 		} else {
-			this.startingTransition = null;
+            startingTransition = null;
 		}
 		
 		if (data.containsKey("icon")) {
-			this.icon = IconFactory.createIcon(data.getObject("icon"));
+            icon = IconFactory.createIcon(data.getObject("icon"));
 		} else {
-			this.icon = IconFactory.emptyIcon;
+            icon = IconFactory.emptyIcon;
 		}
 		
 		if (data.containsKey("iconPosition")) {
 			SimpleJSONObject iconPositionIn = data.getObject("iconPosition");
-			this.iconX = iconPositionIn.get("x", 0);
-			this.iconY = iconPositionIn.get("y", 0);
+            iconX = iconPositionIn.get("x", 0);
+            iconY = iconPositionIn.get("y", 0);
 		} else {
-			this.iconX = 0;
-			this.iconY = 0;
+            iconX = 0;
+            iconY = 0;
 		}
 		
 		if (data.containsKey("travelTimes")) {
-			this.travelTimesInHours = new HashMap<String, Integer>();
+            travelTimesInHours = new HashMap<>();
 			SimpleJSONObject travelIn = data.getObject("travelTimes");
 			for (String destLocation : travelIn.keySet()) {
-				this.travelTimesInHours.put(destLocation, travelIn.get(destLocation, 0));
+                travelTimesInHours.put(destLocation, travelIn.get(destLocation, 0));
 			}
 		} else {
-			this.travelTimesInHours = Collections.emptyMap();
+            travelTimesInHours = Collections.emptyMap();
 		}
-		
-		this.revealed = false;
+
+        revealed = false;
 	}
 	
 	/**

@@ -46,9 +46,9 @@ public class Enchantment {
 	
 	public Enchantment(String script, boolean user) {
 		this.script = script;
-		this.isUser = user;
-		
-		this.bonuses = new BonusList();
+        isUser = user;
+
+        bonuses = new BonusList();
 		
 		JSEngine engine = Game.scriptEngineManager.getEngine();
 		

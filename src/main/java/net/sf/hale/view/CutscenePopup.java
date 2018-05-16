@@ -19,6 +19,7 @@
 
 package net.sf.hale.view;
 
+import net.sf.hale.Cutscene.Frame;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Cutscene;
@@ -60,7 +61,7 @@ public class CutscenePopup extends PopupWindow {
 	public CutscenePopup(Widget parent, Cutscene cutscene) {
 		super(parent);
 		this.cutscene = cutscene;
-		this.currentFrameIndex = 0;
+        currentFrameIndex = 0;
 		
 		content = new Content();
 		content.setFrame(cutscene.getFrames().get(currentFrameIndex));
@@ -88,7 +89,7 @@ public class CutscenePopup extends PopupWindow {
 	@Override public void closePopup() {
 		super.closePopup();
 		
-		for (Cutscene.Frame frame : cutscene.getFrames()) {
+		for (Frame frame : cutscene.getFrames()) {
 			Sprite sprite = SpriteManager.getSpriteAnyExtension(frame.getBGImage());
 			SpriteManager.freeTexture(sprite);
 		}
@@ -163,7 +164,7 @@ public class CutscenePopup extends PopupWindow {
 					getInnerBottom() - skipButton.getHeight() - skipOffset);
 		}
 		
-		private void setFrame(Cutscene.Frame frame) {
+		private void setFrame(Frame frame) {
 			bgSprite = SpriteManager.getSpriteAnyExtension(frame.getBGImage());
 			bgSpriteOffset = new Point();
 			if (bgSprite != null) {
@@ -214,7 +215,7 @@ public class CutscenePopup extends PopupWindow {
 		}
 	}
 	
-	private class CutsceneTextArea extends TextArea {
+	private static class CutsceneTextArea extends TextArea {
 		private CutsceneTextArea(HTMLTextAreaModel model) {
 			super(model);
 			setTheme("textarea");
@@ -227,7 +228,7 @@ public class CutscenePopup extends PopupWindow {
 		}
 	}
 	
-	private class BackgroundLoader extends Thread {
+	private static class BackgroundLoader extends Thread {
 		private Cutscene cutscene;
 		
 		private BackgroundLoader(Cutscene cutscene) {
@@ -235,7 +236,7 @@ public class CutscenePopup extends PopupWindow {
 		}
 		
 		@Override public void run() {
-			for (Cutscene.Frame frame : cutscene.getFrames()) {
+			for (Frame frame : cutscene.getFrames()) {
 				SpriteManager.getSpriteAnyExtension(frame.getBGImage());
 			}
 		}

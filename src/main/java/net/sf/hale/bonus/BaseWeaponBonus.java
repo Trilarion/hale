@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -35,14 +37,14 @@ public class BaseWeaponBonus extends IntBonus implements BonusWithSuperType {
 	
 	public static BaseWeaponBonus load(SimpleJSONObject data) {
 		int value = data.get("value", 0);
-		Bonus.Type type = Type.valueOf(data.get("type", null));
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		Type type = Type.valueOf(data.get("type", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		String baseWeapon = data.get("baseWeapon", null);
 		
 		return new BaseWeaponBonus(baseWeapon, type, stackType, value);
 	}
 	
-	public BaseWeaponBonus(String baseWeapon, Bonus.Type type, Bonus.StackType stackType, int value) {
+	public BaseWeaponBonus(String baseWeapon, Type type, StackType stackType, int value) {
 		super(type, stackType, value);
 		
 		this.baseWeapon = baseWeapon;
@@ -53,7 +55,7 @@ public class BaseWeaponBonus extends IntBonus implements BonusWithSuperType {
 	@Override public String getSuperType() { return baseWeapon; }
 	
 	@Override public BaseWeaponBonus cloneWithReduction(int reduction) {
-		return new BaseWeaponBonus(this.baseWeapon, this.getType(), this.getStackType(), this.getValue() - reduction);
+		return new BaseWeaponBonus(baseWeapon, getType(), getStackType(), getValue() - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

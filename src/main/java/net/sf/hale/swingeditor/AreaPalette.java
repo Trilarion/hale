@@ -29,6 +29,7 @@ import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.swingeditor.AreaRenderer.ViewHandler;
 import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.Layer;
 import net.sf.hale.tileset.TerrainTile;
@@ -44,8 +45,9 @@ import net.sf.hale.util.PointImmutable;
  *
  */
 
-public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
-	private AreaRenderer renderer;
+public class AreaPalette extends JPanel implements ViewHandler {
+    private static final long serialVersionUID = -8154952701111718745L;
+    private AreaRenderer renderer;
 	private Area area;
 	private Tileset tileset;
 	
@@ -74,13 +76,13 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	 */
 	
 	public void setArea(AreaRenderer areaRenderer) {
-		this.renderer = areaRenderer;
-		this.area = areaRenderer.getArea();
-		
-		this.removeAll();
+        renderer = areaRenderer;
+        area = areaRenderer.getArea();
+
+        removeAll();
 		
 		if (area != null) {
-			this.tileset = Game.curCampaign.getTileset(area.getTileset());
+            tileset = Game.curCampaign.getTileset(area.getTileset());
 			
 			addWidgets();
 		}
@@ -146,9 +148,9 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		add(contentPane, c);
 		
 		// add terrain tab
-		List<JButton> tileButtons = new ArrayList<JButton>();
+		List<JButton> tileButtons = new ArrayList<>();
 		
-		List<String> terrainTypeIDs = new ArrayList<String>(tileset.getTerrainTypeIDs());
+		List<String> terrainTypeIDs = new ArrayList<>(tileset.getTerrainTypeIDs());
 		Collections.sort(terrainTypeIDs);
 		
 		for (String terrainTypeID : terrainTypeIDs) {
@@ -160,7 +162,7 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		// add features tab
 		tileButtons.clear();
 		
-		List<String> featureTypeIDs = new ArrayList<String>(tileset.getFeatureTypeIDs());
+		List<String> featureTypeIDs = new ArrayList<>(tileset.getFeatureTypeIDs());
 		Collections.sort(featureTypeIDs);
 		
 		for (String featureTypeID : featureTypeIDs) {
@@ -320,14 +322,15 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	}
 	
 	private class TileAction extends AbstractAction implements AreaClickHandler {
-		private final String tileID;
+        private static final long serialVersionUID = -2427877101000044801L;
+        private final String tileID;
 		private final String layerID;
 		private final String spriteID;
 		
 		private TileAction() {
-			this.tileID = null;
-			this.layerID = null;
-			this.spriteID = null;
+            tileID = null;
+            layerID = null;
+            spriteID = null;
 		}
 		
 		private TileAction(String label, String tileID, String layerID, Icon icon) {
@@ -335,7 +338,7 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 			
 			this.tileID = tileID;
 			this.layerID = layerID;
-			this.spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
+            spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
 		}
 
 		// called when the button is clicked
@@ -360,10 +363,11 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	}
 	
 	private class TerrainAction extends TileAction {
-		private final TerrainType terrainType;
+        private static final long serialVersionUID = -7123918009508096135L;
+        private final TerrainType terrainType;
 		
 		private TerrainAction() {
-			this.terrainType = null;
+            terrainType = null;
 		}
 		
 		private TerrainAction(TerrainType terrainType, String tileID, String layerID, Icon icon) {
@@ -380,10 +384,11 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	}
 	
 	private class FeatureAction extends TileAction {
-		private final FeatureType featureType;
+        private static final long serialVersionUID = 9006287924063244373L;
+        private final FeatureType featureType;
 		
 		private FeatureAction() {
-			this.featureType = null;
+            featureType = null;
 		}
 		
 		private FeatureAction(FeatureType featureType, String tileID, String layerID, Icon icon) {
@@ -417,8 +422,8 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		 * @param y the grid y coordinate
 		 * @param r the grid radius
 		 */
-		
-		public void leftClicked(int x, int y, int r);
+
+        void leftClicked(int x, int y, int r);
 		
 		/**
 		 * Called when the user right clicks on the area
@@ -426,8 +431,8 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		 * @param y the grid y coordinate
 		 * @param r the grid radius
 		 */
-		
-		public void rightClicked(int x, int y, int r);
+
+        void rightClicked(int x, int y, int r);
 	}
 
 	@Override public void mouseMoved(int gridx, int gridy) {

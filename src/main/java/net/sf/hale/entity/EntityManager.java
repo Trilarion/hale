@@ -39,10 +39,10 @@ import net.sf.hale.util.SimpleJSONParser;
  */
 
 public class EntityManager {
-	private static Map<String, EntityTemplate> templates = new HashMap<String, EntityTemplate>();
+	private static Map<String, EntityTemplate> templates = new HashMap<>();
 	
 	// stored creatures with already added levels and stats
-	private static Map<String, Creature> creatures = new HashMap<String, Creature>();
+	private static Map<String, Creature> creatures = new HashMap<>();
 	
 	/**
 	 * Adds the specified PC to the list of available creatures.  This method is only

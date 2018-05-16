@@ -121,20 +121,20 @@ public class Border implements Iterable<BorderTile> {
 	 */
 	
 	public static Border parse(SimpleJSONObject data, String parentID) {
-		ArrayList<BorderTile> tiles = new ArrayList<BorderTile>();
+		ArrayList<BorderTile> tiles = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : data.getArray("tiles")) {
 			tiles.add( BorderTile.parse(entry.getObject()) );
 		}
 		tiles.trimToSize();
 		data.setWarnOnMissingKeys(false);
 		
-		ArrayList<DirectionList> mustHave = new ArrayList<DirectionList>();
+		ArrayList<DirectionList> mustHave = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : data.getArray("MustHave")) {
 			mustHave.add( DirectionList.parse(entry.getString()) );
 		}
 		mustHave.trimToSize();
 		
-		ArrayList<DirectionList> mustNotHave = new ArrayList<DirectionList>();
+		ArrayList<DirectionList> mustNotHave = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : data.getArray("MustNotHave")) {
 			mustNotHave.add( DirectionList.parse(entry.getString()) );
 		}

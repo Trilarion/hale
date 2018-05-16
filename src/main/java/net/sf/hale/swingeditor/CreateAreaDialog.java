@@ -34,7 +34,8 @@ import net.sf.hale.util.Logger;
  */
 
 public class CreateAreaDialog extends JDialog {
-	private JButton ok, cancel;
+    private static final long serialVersionUID = -4374188180088386760L;
+    private JButton ok, cancel;
 	
 	private JTextField idField, nameField;
 	private JSpinner widthSpinner, heightSpinner, visibilitySpinner;
@@ -42,7 +43,7 @@ public class CreateAreaDialog extends JDialog {
 	
 	public CreateAreaDialog(JFrame parent) {
 		super(parent, "Create New Area", true);
-		this.setResizable(false);
+        setResizable(false);
 		
 		JPanel content = new JPanel(new GridBagLayout());
 		getContentPane().add(content);
@@ -152,12 +153,12 @@ public class CreateAreaDialog extends JDialog {
 	}
 	
 	private boolean isValidToCreateArea() {
-		if (idField.getText().length() == 0) return false;
+		if (idField.getText().isEmpty()) return false;
 		
 		// if name is alphanumeric or underscore
 		if (!idField.getText().matches("^[a-zA-Z0-9_-]*$")) return false;
 		
-		if (nameField.getText().length() == 0) return false;
+		if (nameField.getText().isEmpty()) return false;
 		
 		return true;
 	}
@@ -181,7 +182,9 @@ public class CreateAreaDialog extends JDialog {
 	}
 	
 	private class CancelAction extends AbstractAction {
-		public CancelAction() {
+        private static final long serialVersionUID = 5823001305757416935L;
+
+        public CancelAction() {
 			super("Cancel");
 		}
 		
@@ -192,7 +195,9 @@ public class CreateAreaDialog extends JDialog {
 	}
 	
 	private class OKAction extends AbstractAction {
-		public OKAction() {
+        private static final long serialVersionUID = -6915948307733098250L;
+
+        public OKAction() {
 			super("Create");
 		}
 		

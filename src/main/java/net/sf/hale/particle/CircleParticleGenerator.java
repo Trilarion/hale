@@ -59,14 +59,14 @@ public class CircleParticleGenerator extends ParticleGenerator {
 	
 	public CircleParticleGenerator(CircleParticleGenerator other) {
 		super(other);
-		
-		this.minBound = other.minBound;
-		this.maxBound = other.maxBound;
+
+        minBound = other.minBound;
+        maxBound = other.maxBound;
 	}
 	
 	public void setCircleBounds(float min, float max) {
-		this.minBound = min;
-		this.maxBound = max;
+        minBound = min;
+        maxBound = max;
 	}
 	
 	@Override public void offsetPosition(float x, float y) {

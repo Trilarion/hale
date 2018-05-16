@@ -21,9 +21,11 @@ package net.sf.hale.view;
 
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Ammo;
 import net.sf.hale.entity.Enchantment;
 import net.sf.hale.entity.Entity;
@@ -75,7 +77,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
         
         DialogLayout layout = new DialogLayout();
 		layout.setTheme("content");
-		this.add(layout);
+		add(layout);
 		
 		// set up the widgets for the top row
 		String titleString = item.getLongName();
@@ -90,9 +92,9 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 		Label title = new Label(titleString);
 		title.setTheme("titlelabel");
 		
-		DialogLayout.Group topRowV = layout.createParallelGroup(iconViewer, title);
+		Group topRowV = layout.createParallelGroup(iconViewer, title);
 		
-		DialogLayout.Group topRowH = layout.createSequentialGroup(iconViewer);
+		Group topRowH = layout.createSequentialGroup(iconViewer);
 		topRowH.addGap(10);
 		topRowH.addWidget(title);
 		topRowH.addGap(10);
@@ -101,7 +103,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 		textAreaModel = new HTMLTextAreaModel();
         TextArea textArea = new TextArea(textAreaModel);
         ScrollPane textPane = new ScrollPane(textArea);
-        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+        textPane.setFixed(Fixed.HORIZONTAL);
         textPane.setTheme("detailspane");
         
         // set the main top level layout
@@ -146,7 +148,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 	
 	private void appendEnchantments(EquippableItem item, StringBuilder sb) {
 		List<Enchantment> enchantments = item.getTemplate().getEnchantments();
-		if (enchantments.size() > 0) {
+		if (!enchantments.isEmpty()) {
 			sb.append("<div style=\"margin-bottom: 1em;\">");
 			sb.append("<span style=\"font-family: medium-blue;\">Enchantments</span>");
 			for (Enchantment enchantment : enchantments) {
@@ -324,7 +326,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 	}
 	
 	private void appendWeaponString(Weapon item, StringBuilder sb) {
-		float damageMult = 1.0f + (item.getQualityDamageBonus() + item.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+		float damageMult = 1.0f + (item.getQualityDamageBonus() + item.bonuses.get(Type.WeaponDamage)) / 100.0f;
 		String damageMin = Game.numberFormat(1).format(((float)item.getTemplate().getMinDamage() * damageMult));
 		String damageMax = Game.numberFormat(1).format(((float)item.getTemplate().getMaxDamage() * damageMult));
 

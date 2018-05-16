@@ -74,11 +74,11 @@ public class Scriptable implements Saveable {
 	 */
 	
 	public Scriptable(String script, String scriptLocation, boolean scriptInline) {
-		scriptFunctions = new HashSet<ScriptFunctionType>();
+		scriptFunctions = new HashSet<>();
 		
 		this.script = script;
 		this.scriptLocation = scriptLocation;
-		this.inline = scriptInline;
+        inline = scriptInline;
 		
 		if (script != null) {
 			JSEngine engine = Game.scriptEngineManager.getEngine();
@@ -105,11 +105,11 @@ public class Scriptable implements Saveable {
 	 */
 	
 	public Scriptable(Scriptable other) {
-		this.script = other.script;
-		this.scriptLocation = other.scriptLocation;
-		this.inline = other.inline;
-		
-		this.scriptFunctions = new HashSet<ScriptFunctionType>(other.scriptFunctions);
+        script = other.script;
+        scriptLocation = other.scriptLocation;
+        inline = other.inline;
+
+        scriptFunctions = new HashSet<>(other.scriptFunctions);
 	}
 	
 	/**
@@ -227,7 +227,7 @@ public class Scriptable implements Saveable {
 		try {
 			// script has already been pre-parsed; eval should not return any errors
 			engine.eval(script);
-			returnValue = engine.invokeFunction(function, Scriptable.createArgumentList(arguments));
+			returnValue = engine.invokeFunction(function, createArgumentList(arguments));
 		} catch (ScriptException e) {
 			Logger.appendToErrorLog("Error invoking function " + function +
 					" for script " + scriptLocation, e);

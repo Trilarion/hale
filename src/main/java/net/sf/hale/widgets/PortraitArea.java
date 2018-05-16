@@ -22,6 +22,7 @@ package net.sf.hale.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.entity.PC;
 
@@ -55,11 +56,11 @@ public class PortraitArea extends ScrollPane {
 		content = new Content();
 		setContent(content);
 		
-		portraits = new ArrayList<PortraitViewer>();
+		portraits = new ArrayList<>();
 		
 		updateParty();
 		
-		setFixed(ScrollPane.Fixed.HORIZONTAL);
+		setFixed(Fixed.HORIZONTAL);
 	}
 	
 	/**

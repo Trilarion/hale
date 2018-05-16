@@ -69,7 +69,7 @@ public class InGameOptionsPopup extends PopupWindow {
 			accept.addCallback(new Runnable() {
 				@Override public void run() {
 					applySettings();
-					InGameOptionsPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			add(accept);
@@ -78,7 +78,7 @@ public class InGameOptionsPopup extends PopupWindow {
 			cancel.setTheme("cancelbutton");
 			cancel.addCallback(new Runnable() {
 				@Override public void run() {
-					InGameOptionsPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			add(cancel);

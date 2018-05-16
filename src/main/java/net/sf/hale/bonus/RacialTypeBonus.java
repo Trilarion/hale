@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -35,14 +37,14 @@ public class RacialTypeBonus extends IntBonus implements BonusWithSuperType {
 	
 	public static RacialTypeBonus load(SimpleJSONObject data) {
 		int value = data.get("value", 0);
-		Bonus.Type type = Type.valueOf(data.get("type", null));
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		Type type = Type.valueOf(data.get("type", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		String racialType = data.get("racialType", null);
 		
 		return new RacialTypeBonus(type, stackType, racialType, value);
 	}
 	
-	public RacialTypeBonus(Bonus.Type type, Bonus.StackType stackType, String racialType, int value) {
+	public RacialTypeBonus(Type type, StackType stackType, String racialType, int value) {
 		super(type, stackType, value);
 		
 		this.racialType = racialType;
@@ -53,7 +55,7 @@ public class RacialTypeBonus extends IntBonus implements BonusWithSuperType {
 	@Override public String getSuperType() { return racialType; }
 	
 	@Override public RacialTypeBonus cloneWithReduction(int reduction) {
-		return new RacialTypeBonus(this.getType(), this.getStackType(), this.racialType, this.getValue() - reduction);
+		return new RacialTypeBonus(getType(), getStackType(), racialType, getValue() - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

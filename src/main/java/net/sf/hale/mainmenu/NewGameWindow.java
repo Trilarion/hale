@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.SavedParty;
 import net.sf.hale.entity.EntityManager;
@@ -147,7 +149,7 @@ public class NewGameWindow extends Widget {
 		
 		partyPane = new ScrollPane(partyPaneContent);
 		partyPane.setTheme("partypane");
-		partyPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		partyPane.setFixed(Fixed.HORIZONTAL);
 		add(partyPane);
 		
 		charactersLabel = new Label();
@@ -159,7 +161,7 @@ public class NewGameWindow extends Widget {
 		
 		charactersPane = new ScrollPane(charactersPaneContent);
 		charactersPane.setTheme("characterspane");
-		charactersPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		charactersPane.setFixed(Fixed.HORIZONTAL);
 		add(charactersPane);
 		
 		String preselectedID = Game.curCampaign.getStartingCharacter();
@@ -175,7 +177,7 @@ public class NewGameWindow extends Widget {
 			showInvalidPartiesButton.setVisible(false);
 		}
 		
-		charactersUsedInParties = new HashSet<String>();
+		charactersUsedInParties = new HashSet<>();
 		
 		populatePartySelectors(null);
 		populateCurrentParty();
@@ -225,11 +227,11 @@ public class NewGameWindow extends Widget {
 		
 		partyPaneContent.removeAllChildren();
 		
-		DialogLayout.Group mainH = partyPaneContent.createParallelGroup();
-		DialogLayout.Group mainV = partyPaneContent.createSequentialGroup();
+		Group mainH = partyPaneContent.createParallelGroup();
+		Group mainV = partyPaneContent.createSequentialGroup();
 		
 		if (preselected == null) {
-			List<SavedParty> savedParties = new ArrayList<SavedParty>();
+			List<SavedParty> savedParties = new ArrayList<>();
 			
 			savedParties.addAll(getPartiesInDirectory("characters/parties/"));
 			
@@ -293,7 +295,7 @@ public class NewGameWindow extends Widget {
 	}
 	
 	private List<SavedParty> getPartiesInDirectory(String directory) {
-		List<SavedParty> partyList = new ArrayList<SavedParty>();
+		List<SavedParty> partyList = new ArrayList<>();
 		
 		File directoryFile = new File(directory);
 		
@@ -320,11 +322,11 @@ public class NewGameWindow extends Widget {
 	private void populateCurrentParty() {
 		charactersPaneContent.removeAllChildren();
 		
-		DialogLayout.Group mainH = charactersPaneContent.createParallelGroup();
-		DialogLayout.Group mainV = charactersPaneContent.createSequentialGroup();
+		Group mainH = charactersPaneContent.createParallelGroup();
+		Group mainV = charactersPaneContent.createSequentialGroup();
 		
 		if (preselected != null) {
-			CharacterSelector selector = new CharacterSelector(preselected, NewGameWindow.this.mainMenu);
+			CharacterSelector selector = new CharacterSelector(preselected, mainMenu);
 			mainH.addWidget(selector);
 			mainV.addWidget(selector);
 			
@@ -336,7 +338,7 @@ public class NewGameWindow extends Widget {
 				
 				pc.resetTime();
 				
-				CharacterSelector selector = new CharacterSelector(pc, NewGameWindow.this.mainMenu);
+				CharacterSelector selector = new CharacterSelector(pc, mainMenu);
 				mainH.addWidget(selector);
 				mainV.addWidget(selector);
 			}
@@ -519,8 +521,8 @@ public class NewGameWindow extends Widget {
 			}
 			
 			selectedParty = this;
-			
-			this.setActive(true);
+
+            setActive(true);
 			
 			populateCurrentParty();
 			

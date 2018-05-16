@@ -9,6 +9,7 @@ import net.sf.hale.tileset.Border;
 import net.sf.hale.tileset.BorderList;
 import net.sf.hale.tileset.BorderTile;
 import net.sf.hale.tileset.ElevationList;
+import net.sf.hale.tileset.ElevationList.Elevation;
 import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
@@ -44,17 +45,17 @@ public class TerrainGrid {
 	 */
 	
 	public TerrainGrid(Area area) {
-		this.tileset = Game.curCampaign.getTileset(area.getTileset());
+        tileset = Game.curCampaign.getTileset(area.getTileset());
 		this.area = area;
-		this.width = area.getWidth();
-		this.height = area.getHeight();
+        width = area.getWidth();
+        height = area.getHeight();
 		
 		terrain = new TerrainType[width][height];
 		terrainTiles = new TerrainTile[width][height];
 		features = new FeatureType[width][height];
 		featureTiles = new TerrainTile[width][height];
 		
-		List<Tile> tiles = new ArrayList<Tile>();
+		List<Tile> tiles = new ArrayList<>();
 		
 		// at each grid point, figure out what the terrain type is
 		for (int x = 0; x < width; x++) {
@@ -159,7 +160,7 @@ public class TerrainGrid {
 			}
 		}
 		
-		for (ElevationList.Elevation elevation : tileset.getElevationList().
+		for (Elevation elevation : tileset.getElevationList().
 				getMatchingElevationRules(area.getElevationGrid(), p)) {
 			
 			Border border = elevation.getBorder();

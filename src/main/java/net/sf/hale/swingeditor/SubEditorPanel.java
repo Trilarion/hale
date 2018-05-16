@@ -35,7 +35,8 @@ import javax.swing.JPanel;
  */
 
 public abstract class SubEditorPanel extends JPanel {
-	/**
+    private static final long serialVersionUID = -310587347270590608L;
+    /**
 	 * The parent frame that this panel has been added to
 	 */
 	
@@ -49,7 +50,7 @@ public abstract class SubEditorPanel extends JPanel {
 	
 	public SubEditorPanel(JFrame parent) {
 		super(new GridBagLayout());
-		this.parentFrame = parent;
+        parentFrame = parent;
 		
 		c = new GridBagConstraints();
 		c.gridx = GridBagConstraints.RELATIVE;

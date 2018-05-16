@@ -47,6 +47,7 @@ import javax.swing.JScrollPane;
  */
 
 public class ImageSelector extends JPanel {
+	private static final long serialVersionUID = 7882567534404763952L;
 	private List<String> choices;
 	private List<BufferedImage> icons;
 	
@@ -74,16 +75,16 @@ public class ImageSelector extends JPanel {
 		currentColor = Color.white;
 		
 		GridBagConstraints c = new GridBagConstraints();
-		
-		this.choices = new ArrayList<String>();
-		this.icons = new ArrayList<BufferedImage>();
+
+        choices = new ArrayList<>();
+        icons = new ArrayList<>();
 		
 		Iterator<String> iter = choicesMap.keySet().iterator();
 		
 		int initialIndex = 0;
 		Integer[] intArray = new Integer[choicesMap.size()];
 		for (int i = 0; i < intArray.length; i++) {
-			intArray[i] = new Integer(i);
+			intArray[i] = i;
 			
 			String iconString = iter.next();
 			
@@ -115,8 +116,8 @@ public class ImageSelector extends JPanel {
 		chooseColor = new JButton(new ShowColorChooser());
 		add(chooseColor, c);
 		c.gridy++;
-		
-		this.gridWidth = 7;
+
+        gridWidth = 7;
 	}
 	
 	/**
@@ -125,7 +126,7 @@ public class ImageSelector extends JPanel {
 	 */
 	
 	public void setGridColumns(int width) {
-		this.gridWidth = width;
+        gridWidth = width;
 	}
 	
 	/**
@@ -134,7 +135,7 @@ public class ImageSelector extends JPanel {
 	 */
 	
 	public void setDefaultColor(de.matthiasmann.twl.Color color) {
-		this.currentColor = new Color(color.toARGB(), true);
+        currentColor = new Color(color.toARGB(), true);
 		
 		chooseColor.setBackground(currentColor);
 		iconButton.setImageToCurrentImage();
@@ -146,7 +147,7 @@ public class ImageSelector extends JPanel {
 	 */
 	
 	public void setDefaultColor(Color color) {
-		this.currentColor = color;
+        currentColor = color;
 		iconButton.setImageToCurrentImage();
 	}
 	
@@ -170,6 +171,7 @@ public class ImageSelector extends JPanel {
 	}
 	
 	private class IconButton extends JButton {
+		private static final long serialVersionUID = -3877082478586496907L;
 		private BufferedImage image;
 		
 		private IconButton(AbstractAction action) {
@@ -192,6 +194,8 @@ public class ImageSelector extends JPanel {
 	}
 	
 	private class ShowIconChooser extends AbstractAction {
+		private static final long serialVersionUID = 7334435232542170711L;
+
 		@Override public void actionPerformed(ActionEvent evt) {
 			ColorSelectorWindow window = new ColorSelectorWindow();
 			window.setVisible(true);
@@ -199,6 +203,7 @@ public class ImageSelector extends JPanel {
 	}
 	
 	private class ColorSelectorWindow extends JDialog {
+		private static final long serialVersionUID = -6780576279925180915L;
 		private JScrollPane scrollPane;
 		
 		private ColorSelectorWindow() {
@@ -231,6 +236,7 @@ public class ImageSelector extends JPanel {
 	}
 	
 	private class SelectColor extends AbstractAction {
+		private static final long serialVersionUID = -8052763846762104815L;
 		private JDialog menu;
 		
 		private SelectColor(JDialog menu) {
@@ -249,6 +255,8 @@ public class ImageSelector extends JPanel {
 	}
 	
 	private class ShowColorChooser extends AbstractAction {
+		private static final long serialVersionUID = 1365698826273871762L;
+
 		private ShowColorChooser() { super("Choose Color"); }
 		
 		@Override public void actionPerformed(ActionEvent evt) {

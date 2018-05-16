@@ -23,8 +23,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
+import net.sf.hale.characterbuilder.AbilitySelectorButton.HoverHolder;
+import net.sf.hale.characterbuilder.IconButton.Callback;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 import de.matthiasmann.twl.Button;
@@ -42,7 +45,7 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class BuilderPaneAbilities extends AbstractBuilderPane implements AbilitySelectorButton.Callback, AbilitySelectorButton.HoverHolder {
+public class BuilderPaneAbilities extends AbstractBuilderPane implements AbilitySelectorButton.Callback, HoverHolder {
 	private Selection currentSelection;
 	private List<Selection> selections;
 	
@@ -72,18 +75,18 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		
 		titleLabel = new Label("Selections");
 		titleLabel.setTheme("titlelabel");
-		this.add(titleLabel);
+		add(titleLabel);
 		
 		abilitiesPane = new ScrollPane();
 		abilitiesPane.setTheme("abilitiespane");
-		this.add(abilitiesPane);
+		add(abilitiesPane);
 		
-		selections = new ArrayList<Selection>();
+		selections = new ArrayList<>();
 		
 		selectedAbilitiesPane = new ScrollPane();
-		selectedAbilitiesPane.setFixed(ScrollPane.Fixed.VERTICAL);
+		selectedAbilitiesPane.setFixed(Fixed.VERTICAL);
 		selectedAbilitiesPane.setTheme("selectedabilitiespane");
-		this.add(selectedAbilitiesPane);
+		add(selectedAbilitiesPane);
 		
 		resetButton = new Button("Reset Selections");
 		resetButton.setTheme("resetbutton");
@@ -92,7 +95,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 				resetSelections();
 			}
 		});
-		this.add(resetButton);
+		add(resetButton);
 	}
 
 	@Override protected void next() {
@@ -145,7 +148,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		List<AbilitySelectionList> roleLists =
 			getCharacter().getSelectedRole().getAbilitySelectionsAddedAtLevel(roleLevel);
 		
-		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>();
+		List<AbilitySelectionList> lists = new ArrayList<>();
 		lists.addAll(raceLists);
 		lists.addAll(roleLists);
 		
@@ -178,7 +181,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 				if (currentSelection == null) {
 					currentSelection = selection;
 					AbilitySelectionListPane pane = new AbilitySelectionListPane(selection.list,
-							workingCopy, this, true, new ArrayList<String>());
+							workingCopy, this, true, new ArrayList<>());
 					pane.addAbilitySelectorCallback(this);
 					abilitiesPane.setContent(pane);
 				}
@@ -250,7 +253,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 	
 	private class SelectedAbilitiesContent extends DialogLayout {
 		private SelectedAbilitiesContent() {
-			this.setTheme("content");
+			setTheme("content");
 			
 			Group mainH = createParallelGroup();
 			Group mainV = createSequentialGroup();
@@ -285,14 +288,14 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 	 *
 	 */
 	
-	private class AbilitySelectionViewer extends IconButton implements IconButton.Callback {
+	private class AbilitySelectionViewer extends IconButton implements Callback {
 		private SelectedAbilityHover hoverLabel;
 		private Ability ability;
 		private String emptyLabelText;
 		
 		private AbilitySelectionViewer(String emptyLabelText) {
 			super(null);
-			super.addCallback(this);
+			addCallback(this);
 			
 			this.emptyLabelText = emptyLabelText;
 		}
@@ -303,7 +306,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		}
 		
 		private void clearAbility() {
-			this.ability = null;
+			ability = null;
 			setIcon(null);
 		}
 		
@@ -339,7 +342,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		}
 	}
 	
-	private class SelectedAbilityHover extends Widget {
+	private static class SelectedAbilityHover extends Widget {
 		private Label abilityNameLabel;
 		private Widget parent;
 		
@@ -348,7 +351,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 			
 			abilityNameLabel = new Label(text);
 			abilityNameLabel.setTheme("abilitynamelabel");
-			this.add(abilityNameLabel);
+			add(abilityNameLabel);
 		}
 		
 		@Override protected void layout() {
@@ -357,12 +360,12 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 			abilityNameLabel.setSize(abilityNameLabel.getPreferredWidth(), abilityNameLabel.getPreferredHeight());
 			
 			int height = Math.max(abilityNameLabel.getHeight(), parent.getHeight());
-			
-			this.setSize(abilityNameLabel.getWidth() + getBorderHorizontal(), height);
+
+			setSize(abilityNameLabel.getWidth() + getBorderHorizontal(), height);
 			
 			abilityNameLabel.setPosition(getInnerX(), getY() + (height - abilityNameLabel.getHeight()) / 2);
-			
-			this.setPosition(parent.getRight(), parent.getY());
+
+			setPosition(parent.getRight(), parent.getY());
 		}
 	}
 	
@@ -373,7 +376,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		
 		private Selection(AbilitySelectionList list) {
 			this.list = list;
-			this.selector = new AbilitySelectionViewer(list.getName() + " Ability");
+			selector = new AbilitySelectionViewer(list.getName() + " Ability");
 		}
 		
 		private void setAbility(Ability ability) {

@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import de.matthiasmann.twl.Event.Type;
+import de.matthiasmann.twl.Label.CallbackReason;
 import net.sf.hale.Game;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
@@ -90,7 +92,7 @@ public class CharacterSelector extends Widget {
 			this.charactersInParties = Collections.emptySet();
 		
 		this.character = character;
-		this.pc = character.getBestCreature();
+        pc = character.getBestCreature();
 
 		characterMeetsLevelRequirements = pc != null;
 		// use the first creature if none meet the requirements
@@ -112,7 +114,7 @@ public class CharacterSelector extends Widget {
         	@Override public void run() {
         		CharWindow window = new CharWindow();
         		CharacterSelector.this.parent.add(window);
-        		window.updateContent(CharacterSelector.this.pc);
+        		window.updateContent(pc);
         		window.setPosition(details.getRight(), details.getY() - 150);
         	}
         });
@@ -184,7 +186,7 @@ public class CharacterSelector extends Widget {
 	 */
 	
 	public void setNewGameWindow(PartyFormationWindow window) {
-		this.newGameWindow = window;
+        newGameWindow = window;
 	}
 	
 	private void setSelectedCreature(PC pc) {
@@ -346,7 +348,7 @@ public class CharacterSelector extends Widget {
 		}
 	}
 	
-	private class ExpandBox extends Label implements CallbackWithReason<Label.CallbackReason> {
+	private class ExpandBox extends Label implements CallbackWithReason<CallbackReason> {
 		private boolean boxHover;
 		private int rowHeight;
 		
@@ -409,7 +411,7 @@ public class CharacterSelector extends Widget {
 		}
 		
 		// label clicked callback
-		@Override public void callback(Label.CallbackReason reason) {
+		@Override public void callback(CallbackReason reason) {
 			openPopup();
 		}
 		
@@ -438,7 +440,7 @@ public class CharacterSelector extends Widget {
 		
 		@Override protected void handleMouseHover(Event evt) {
 			if (evt.isMouseEvent()) {
-				boolean newHover = evt.getType() != Event.Type.MOUSE_EXITED;
+				boolean newHover = evt.getType() != Type.MOUSE_EXITED;
 				if (newHover != boxHover) {
 					boxHover = newHover;
 					updateHover();
@@ -464,8 +466,8 @@ public class CharacterSelector extends Widget {
 		private PopupContent(PopupWindow popup) {
 			setTheme("content");
 			
-			selectors = new ArrayList<CharacterButton>();
-			deleteButtons = new ArrayList<DeleteButton>();
+			selectors = new ArrayList<>();
+			deleteButtons = new ArrayList<>();
 			
 			for (PC pc : character) {
 				CharacterButton button = new CharacterButton(pc, popup);
@@ -519,10 +521,10 @@ public class CharacterSelector extends Widget {
 			addCallback(this);
 			
 			if (pc.getTemplate().isPregenerated()) {
-				this.setEnabled(false);
+                setEnabled(false);
 				setTooltipContent("This character is pregenerated and may not be deleted.");
 			} else if (charactersInParties.contains(pc.getTemplate().getID())) {
-				this.setEnabled(false);
+                setEnabled(false);
 				setTooltipContent("This character is in one or more parties and may not be deleted.");
 			}
 		}
@@ -664,7 +666,7 @@ public class CharacterSelector extends Widget {
 		}
 		
 		@Override public int getPreferredInnerHeight() {
-			return Math.max(rowHeight * numRows, this.deleteButton.getPreferredHeight());
+			return Math.max(rowHeight * numRows, deleteButton.getPreferredHeight());
 		}
 		
 		@Override protected void layout() {

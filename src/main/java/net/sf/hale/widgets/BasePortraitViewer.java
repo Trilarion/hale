@@ -57,7 +57,7 @@ public class BasePortraitViewer extends ToggleButton {
 		setTheme("portraitviewer");
 		
 		this.creature = creature;
-		this.enableEventHandling = false;
+        enableEventHandling = false;
 		
 		if (creature != null && creature.getTemplate().getPortrait() != null)
 			portraitSprite = SpriteManager.getPortrait(creature.getTemplate().getPortrait());
@@ -96,7 +96,7 @@ public class BasePortraitViewer extends ToggleButton {
 	 */
 	
 	public void setEnableEventHandling(boolean enable) {
-		this.enableEventHandling = enable;
+        enableEventHandling = enable;
 	}
 	
 	/**

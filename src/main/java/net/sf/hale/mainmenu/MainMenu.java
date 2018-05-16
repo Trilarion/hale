@@ -27,9 +27,12 @@ import java.util.List;
 
 import net.sf.hale.Config;
 import net.sf.hale.Game;
+import net.sf.hale.Game.OSType;
 import net.sf.hale.loading.CampaignLoadingTaskList;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
+import net.sf.hale.mainmenu.LoadGamePopup.Callback;
+import net.sf.hale.mainmenu.MainMenuAction.Action;
 import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Campaign;
@@ -59,7 +62,7 @@ import de.matthiasmann.twl.ThemeInfo;
  *
  */
 
-public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
+public class MainMenu extends DesktopArea implements Callback {
 	private Runnable exitCallback;
 	
 	private Sprite backgroundSprite;
@@ -92,8 +95,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	private final Button releaseNotesButton;
 	private final Label versionLabel;
 	
-	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
-	private final List<PopupWindow> popupsToHide = new ArrayList<PopupWindow>();
+	private final List<PopupWindow> popupsToShow = new ArrayList<>();
+	private final List<PopupWindow> popupsToHide = new ArrayList<>();
 	
 	private String version;
 	
@@ -103,7 +106,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	 */
 	
 	public MainMenu() {
-		this.setTheme("mainmenu");
+        setTheme("mainmenu");
 
 		gui = new GUI(this, Game.renderer);
 		gui.setSize();
@@ -112,7 +115,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         
         campaignLabel = new Label();
         campaignLabel.setTheme("campaignlabel");
-        this.add(campaignLabel);
+        add(campaignLabel);
         
         try {
 			version = FileUtil.readFileAsString("docs/version.txt");
@@ -128,7 +131,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		popup.openPopupCentered();
         	}
         });
-        this.add(campaignButton);
+        add(campaignButton);
         
         newGameButton = new Button();
         newGameButton.setTheme("newgamebutton");
@@ -145,7 +148,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		}
         	}
         });
-        this.add(newGameButton);
+        add(newGameButton);
         
         loadGameButton = new Button();
         loadGameButton.setTheme("loadgamebutton");
@@ -157,7 +160,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		popup.openPopupCentered();
         	}
         });
-        this.add(loadGameButton);
+        add(loadGameButton);
         
         creditsButton = new Button();
         creditsButton.setTheme("creditsbutton");
@@ -172,7 +175,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 				}
         	}
         });
-        this.add(creditsButton);
+        add(creditsButton);
         
         updateButton = new Button();
         updateButton.setTheme("updatebutton");
@@ -182,7 +185,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		new Updater().runUpdater(MainMenu.this);
         	}
         });
-        this.add(updateButton);
+        add(updateButton);
         
         optionsButton = new Button();
         optionsButton.setTheme("optionsbutton");
@@ -192,7 +195,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		popup.openPopupCentered();
         	}
         });
-        this.add(optionsButton);
+        add(optionsButton);
         
         exitButton = new Button();
         exitButton.setTheme("exitbutton");
@@ -201,7 +204,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         		showExitPopup();
         	}
         });
-        this.add(exitButton);
+        add(exitButton);
         
         // load the background image
         backgroundSprite = SpriteManager.getSpriteAnyExtension("mainmenu");
@@ -212,39 +215,43 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         }
         
         // load last open campaign from file if it exists
-        String campaignID = this.getLastOpenCampaign();
-        if (campaignID != null) this.loadCampaign(campaignID);
-        
-        
-        if (version.equals("svn")) {
-        	versionLabel = new Label("Build ID: " + Game.config.getVersionID());
-        } else if (version.equals("disabled")) {
-        	versionLabel = new Label("Version Disabled");
-        } else {
-        	versionLabel = new Label("Version: " + version);
-        	
-        	File updateAvailable = new File(Game.getConfigBaseDirectory() + "updateAvailable.txt");
-        	if (updateAvailable.isFile()) {
-        		updateButton.setVisible(true);
-        	} else if (Game.osType == Game.OSType.Windows) {
-        		// only attempt auto updates under windows
-        		// in linux, updates are downloaded via the unified package manager
-        		// for each distro
-        		
-        		long curTime = System.currentTimeMillis();
-        		long interval = Game.config.getCheckForUpdatesInterval();
-        		long lastTime = Config.getLastCheckForUpdatesTime();
+        String campaignID = getLastOpenCampaign();
+        if (campaignID != null) loadCampaign(campaignID);
 
-        		if (lastTime + interval < curTime) {
-        			CheckForUpdatesTask task = new CheckForUpdatesTask(this);
-        			task.start();
-        		}
 
-        		Config.writeCheckForUpdatesTime(curTime);
-        	}
+        switch (version) {
+            case "svn":
+                versionLabel = new Label("Build ID: " + Game.config.getVersionID());
+                break;
+            case "disabled":
+                versionLabel = new Label("Version Disabled");
+                break;
+            default:
+                versionLabel = new Label("Version: " + version);
+
+                File updateAvailable = new File(Game.getConfigBaseDirectory() + "updateAvailable.txt");
+                if (updateAvailable.isFile()) {
+                    updateButton.setVisible(true);
+                } else if (Game.osType == OSType.Windows) {
+                    // only attempt auto updates under windows
+                    // in linux, updates are downloaded via the unified package manager
+                    // for each distro
+
+                    long curTime = System.currentTimeMillis();
+                    long interval = Game.config.getCheckForUpdatesInterval();
+                    long lastTime = Config.getLastCheckForUpdatesTime();
+
+                    if (lastTime + interval < curTime) {
+                        CheckForUpdatesTask task = new CheckForUpdatesTask(this);
+                        task.start();
+                    }
+
+                    Config.writeCheckForUpdatesTime(curTime);
+                }
+                break;
         }
         versionLabel.setTheme("versionlabel");
-        this.add(versionLabel);
+        add(versionLabel);
         
         releaseNotesButton = new Button();
         releaseNotesButton.addCallback(new Runnable() {
@@ -419,7 +426,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		while (menuRunning) {
 			if (loader != null && !loader.isAlive()) {
 				popup.closePopup();
-				MainMenu.this.update();
+                update();
 				loader = null;
 				
 				if (exitOnLoad) {
@@ -455,10 +462,10 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		
 		gui.destroy();
 		
-		if (exit) return new MainMenuAction(MainMenuAction.Action.Exit);
-		else if (restart) return new MainMenuAction(MainMenuAction.Action.Restart);
+		if (exit) return new MainMenuAction(Action.Exit);
+		else if (restart) return new MainMenuAction(Action.Restart);
 		else if (loadGame != null) return new MainMenuAction(loadGame);
-		else return new MainMenuAction(MainMenuAction.Action.NewGame);
+		else return new MainMenuAction(Action.NewGame);
 	}
 	
 	/**
@@ -468,7 +475,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	 */
 	
 	public void setExitCallback(Runnable callback) {
-		this.exitCallback = callback;
+        exitCallback = callback;
 	}
 	
 	/**
@@ -486,8 +493,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	 */
 	
 	public void restartMenu() {
-		this.menuRunning = false;
-		this.restart = true;
+        menuRunning = false;
+        restart = true;
 	}
 	
 	/**
@@ -528,7 +535,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		}
 		else {
 			newGameButton.setEnabled(true);
-			loadGameButton.setEnabled(SaveGameUtil.getSaveGames().size() > 0);
+			loadGameButton.setEnabled(!SaveGameUtil.getSaveGames().isEmpty());
 
 			if (Game.curCampaign != null) {
 				
@@ -562,7 +569,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	}
 
 	@Override public void loadGameAccepted(String saveGame) {
-		this.loadGame = saveGame;
+        loadGame = saveGame;
 		update();
 	}
 	

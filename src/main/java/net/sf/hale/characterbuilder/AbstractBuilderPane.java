@@ -62,9 +62,9 @@ public abstract class AbstractBuilderPane extends Widget {
         	}
         });
         back.setTheme("backbutton");
-        
-        this.add(back);
-        this.add(next);
+
+        add(back);
+        add(next);
 	}
 	
 	@Override protected void layout() {

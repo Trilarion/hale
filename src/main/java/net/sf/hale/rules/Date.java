@@ -58,9 +58,9 @@ public class Date {
 		hours = 0;
 		days = 0;
 		months = 0;
-		
-		this.numberFormat = NumberFormat.getInstance();
-		this.numberFormat.setMinimumIntegerDigits(2);
+
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumIntegerDigits(2);
 	}
 	
 	private void computeTimeScales() {

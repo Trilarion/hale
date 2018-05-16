@@ -27,6 +27,7 @@ import de.matthiasmann.twl.Button;
 
 import net.sf.hale.Game;
 import net.sf.hale.defaultability.MouseActionList;
+import net.sf.hale.defaultability.MouseActionList.Condition;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.util.Point;
 import net.sf.hale.widgets.RightClickMenu;
@@ -59,9 +60,9 @@ public class ListTargeter extends Targeter {
 	
 	public ListTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
-		this.selectedPoints = new ArrayList<Point>();
-		this.numberOfSelections = 1;
-		this.uniqueSelectionsRequired = false;
+        selectedPoints = new ArrayList<>();
+        numberOfSelections = 1;
+        uniqueSelectionsRequired = false;
 	}
 	
 	/*
@@ -107,7 +108,7 @@ public class ListTargeter extends Targeter {
 	public Point getSelected() {
 		if (selectedPoints.size() < 1) return null;
 		
-		return this.selectedPoints.get(0);
+		return selectedPoints.get(0);
 	}
 	
 	/**
@@ -133,7 +134,7 @@ public class ListTargeter extends Targeter {
 	public Point getSelected(int index) {
 		if (selectedPoints.size() < index + 1) return null;
 		
-		return this.selectedPoints.get(index);
+		return selectedPoints.get(index);
 	}
 	
 	/**
@@ -144,7 +145,7 @@ public class ListTargeter extends Targeter {
 	 */
 	
 	public List<Creature> getSelectedCreatures() {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		for (Point p : selectedPoints) {
 			Creature creature = Game.curCampaign.curArea.getCreatureAtGridPoint(p);
@@ -195,15 +196,15 @@ public class ListTargeter extends Targeter {
 		if (!super.setMousePosition(x, y, gridPoint)) return false;
 		
 		// set mouse action condition
-		MouseActionList.Condition condition = MouseActionList.Condition.Cancel;
+		Condition condition = Condition.Cancel;
 		
 		if (canSelectPoint(gridPoint)) {
-			int selectionsLeft = numberOfSelections - this.selectedPoints.size();
+			int selectionsLeft = numberOfSelections - selectedPoints.size();
 			
 			if (selectionsLeft == 1) {
-				condition = MouseActionList.Condition.TargetSelect;
+				condition = Condition.TargetSelect;
 			} else if (selectionsLeft > 1) {
-				condition = MouseActionList.Condition.TargetSelectAdd;
+				condition = Condition.TargetSelectAdd;
 			}
 		}
 		
@@ -223,10 +224,10 @@ public class ListTargeter extends Targeter {
 		menu.clear();
 		
 		menu.setPosition(x, y);
-		menu.addMenuLevel(this.getMenuTitle());
+		menu.addMenuLevel(getMenuTitle());
 		
-		if (canSelectPoint(this.getMouseGridPosition())) {
-			int selectionsLeft = numberOfSelections - this.selectedPoints.size();
+		if (canSelectPoint(getMouseGridPosition())) {
+			int selectionsLeft = numberOfSelections - selectedPoints.size();
 			
 			if (selectionsLeft == 1) {
 				Button button = new Button("Select & Activate");
@@ -242,7 +243,7 @@ public class ListTargeter extends Targeter {
 				menu.addButton(button);
 				
 				// add use all remaining selections and activate button
-				if (!this.uniqueSelectionsRequired) {
+				if (!uniqueSelectionsRequired) {
 					button = new Button("Select All & Activate");
 					AddAllCallback callback = new AddAllCallback(selectionsLeft);
 					button.addCallback(callback);
@@ -253,7 +254,7 @@ public class ListTargeter extends Targeter {
 			}
 		}
 		
-		if (this.isCancelable()) {
+		if (isCancelable()) {
 			Button button = new Button("Cancel");
 			button.addCallback(getCancelCallback());
 			
@@ -269,18 +270,18 @@ public class ListTargeter extends Targeter {
 	 */
 	
 	public void performLeftClickAction() {
-		if (!canSelectPoint(this.getMouseGridPosition())) return;
+		if (!canSelectPoint(getMouseGridPosition())) return;
 
-		int selectionsLeft = numberOfSelections - this.selectedPoints.size();
+		int selectionsLeft = numberOfSelections - selectedPoints.size();
 
 		if (selectionsLeft == 1) {
-			selectedPoints.add(new Point(this.getMouseGridPosition()));
+			selectedPoints.add(new Point(getMouseGridPosition()));
 
 			//activate the Targeter callback
-			this.getActivateCallback().run();
+            getActivateCallback().run();
 
 		} else if (selectionsLeft > 1) {
-			selectedPoints.add(new Point(this.getMouseGridPosition()));
+			selectedPoints.add(new Point(getMouseGridPosition()));
 		}
 	}
 	

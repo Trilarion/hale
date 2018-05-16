@@ -24,6 +24,7 @@ import net.sf.hale.Keybindings;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ThemeInfo;
+import net.sf.hale.Keybindings.Binding;
 
 /**
  * A button with an associated hot key binding callback
@@ -32,7 +33,7 @@ import de.matthiasmann.twl.ThemeInfo;
  */
 
 public class HotKeyButton extends Button {
-	private Keybindings.Binding binding;
+	private Binding binding;
 	
 	/**
 	 * Sets the hot key binding that is used for this button's tooltip and
@@ -40,9 +41,9 @@ public class HotKeyButton extends Button {
 	 * @param binding
 	 */
 	
-	public void setHotKeyBinding(Keybindings.Binding binding) {
+	public void setHotKeyBinding(Binding binding) {
 		this.binding = binding;
-		super.addCallback(binding);
+		addCallback(binding);
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {

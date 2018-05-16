@@ -21,6 +21,11 @@ package net.sf.hale.widgets;
 
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
+import net.sf.hale.Keybindings.CancelMovement;
+import net.sf.hale.Keybindings.EndTurn;
+import net.sf.hale.Keybindings.ShowMenu;
+import net.sf.hale.Keybindings.ToggleMovementMode;
+import net.sf.hale.Keybindings.ToggleWindow;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.interfacelock.MovementHandler;
 
@@ -29,6 +34,7 @@ import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.renderer.AnimationState.StateKey;
 import de.matthiasmann.twl.renderer.Image;
+import net.sf.hale.interfacelock.MovementHandler.Mode;
 
 /**
  * The interface widget containing many of the buttons used to access
@@ -58,32 +64,32 @@ public class MainPane extends Widget {
 	 */
 	
 	public MainPane() {
-		this.setTheme("mainpane");
+        setTheme("mainpane");
 		
 		windowButtons = new HotKeyButton[6];
 		
 		windowButtons[0] = new HotKeyButton();
 		windowButtons[0].setTheme("menubutton");
-		windowButtons[0].setHotKeyBinding(new Keybindings.ShowMenu());
+		windowButtons[0].setHotKeyBinding(new ShowMenu());
 		
 		windowButtons[1] = new HotKeyButton();
 		windowButtons[1].setTheme("mapbutton");
-		windowButtons[1].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
+		windowButtons[1].setHotKeyBinding(new ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
 		
 		windowButtons[2] = new HotKeyButton();
 		windowButtons[2].setTheme("inventorybutton");
-		windowButtons[2].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
+		windowButtons[2].setHotKeyBinding(new ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		
 		windowButtons[3] = new HotKeyButton();
 		windowButtons[3].setTheme("characterbutton");
-		windowButtons[3].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
+		windowButtons[3].setHotKeyBinding(new ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
 		
 		windowButtons[4] = new LogButton();
-		windowButtons[4].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
+		windowButtons[4].setHotKeyBinding(new ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
 		
 		windowButtons[5] = new HotKeyButton();
 		windowButtons[5].setTheme("messagesbutton");
-		windowButtons[5].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
+		windowButtons[5].setHotKeyBinding(new ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
 		
 		for (Button button : windowButtons) {
 			add(button);
@@ -91,16 +97,16 @@ public class MainPane extends Widget {
 		
 		endTurn = new HotKeyButton();
 		endTurn.setTheme("endturnbutton");
-		endTurn.setHotKeyBinding(new Keybindings.EndTurn());
+		endTurn.setHotKeyBinding(new EndTurn());
 		add(endTurn);
 		
 		movementMode = new MovementModeButton();
-		movementMode.setHotKeyBinding(new Keybindings.ToggleMovementMode());
+		movementMode.setHotKeyBinding(new ToggleMovementMode());
 		add(movementMode);
 		
 		stop = new HotKeyButton();
 		stop.setTheme("stopbutton");
-		stop.setHotKeyBinding(new Keybindings.CancelMovement());
+		stop.setHotKeyBinding(new CancelMovement());
 		add(stop);
 	}
 	
@@ -165,7 +171,7 @@ public class MainPane extends Widget {
 	 */
 	
 	public void setMovementModeIcon() {
-		if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
+		if (Game.interfaceLocker.getMovementMode() == Mode.Party) {
 			movementMode.setOverlay(movementMode.partyIcon);
 		} else {
 			movementMode.setOverlay(movementMode.singleIcon);
@@ -216,13 +222,13 @@ public class MainPane extends Widget {
 			!Game.areaListener.getTargeterManager().isInTargetMode();
 	}
 	
-	private class LogButton extends HotKeyButton {
+	private static class LogButton extends HotKeyButton {
 		private void setNotification(boolean notification) {
 			getAnimationState().setAnimationState(STATE_NOTIFICATION, notification);
 		}
 	}
 	
-	private class MovementModeButton extends HotKeyButton {
+	private static class MovementModeButton extends HotKeyButton {
 		private Image singleIcon, partyIcon;
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {

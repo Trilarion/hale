@@ -85,15 +85,15 @@ public class Item extends Entity {
 		if (template.hasQuality()) {
 			Quality qual = Game.ruleset.getItemQuality(quality);
 			this.quality = quality;
-			
-			this.qualityValue = template.getValueInCPOver100() * qual.getValueAdjustment() / 100;
+
+            qualityValue = template.getValueInCPOver100() * qual.getValueAdjustment() / 100;
 		} else {
 			if (quality != null) {
 				Logger.appendToWarningLog("Quality cannot be set for " + getTemplate().getID());
 			}
 			
 			this.quality = null;
-			this.qualityValue = template.getValueInCPOver100();
+            qualityValue = template.getValueInCPOver100();
 		}
 	}
 	

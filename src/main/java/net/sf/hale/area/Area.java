@@ -32,7 +32,9 @@ import net.sf.hale.ability.AreaEffectList;
 import net.sf.hale.ability.Aura;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.EffectTarget;
+import net.sf.hale.area.Transition.EndPoint;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Door;
@@ -97,7 +99,7 @@ public class Area implements EffectTarget, Saveable {
 		}
 		
 		// write out the explored matrix
-		List<Object> exp = new ArrayList<Object>();
+		List<Object> exp = new ArrayList<>();
 		for (int x = 0; x < explored.length; x++) {
 			for (int y = 0; y < explored[0].length; y++) {
 				if (explored[x][y]) {
@@ -115,7 +117,7 @@ public class Area implements EffectTarget, Saveable {
 		}
 		data.put("encounters", encounterData);
 		
-		List<Object> triggerData = new ArrayList<Object>();
+		List<Object> triggerData = new ArrayList<>();
 		for (String triggerID : triggers.keySet()) {
 			Object trigger = triggers.get(triggerID).save();
 			
@@ -149,7 +151,7 @@ public class Area implements EffectTarget, Saveable {
 		data.put("tileset", tileset);
 
 		// write start locations
-		List<int[]> startLoc = new ArrayList<int[]>();
+		List<int[]> startLoc = new ArrayList<>();
 		for (PointImmutable p : startLocations) {
 			int[] coords = new int[2];
 			coords[0] = p.x;
@@ -159,7 +161,7 @@ public class Area implements EffectTarget, Saveable {
 		data.put("startLocations", startLoc.toArray());
 		
 		// write creatures
-		List<JSONOrderedObject> creaturesData = new ArrayList<JSONOrderedObject>();
+		List<JSONOrderedObject> creaturesData = new ArrayList<>();
 		for (Creature creature : entityList.getAllCreatures()) {
 			JSONOrderedObject creatureData = new JSONOrderedObject();
 			creatureData.put("id", creature.getTemplate().getID());
@@ -175,7 +177,7 @@ public class Area implements EffectTarget, Saveable {
 		data.put("creatures", creaturesData.toArray());
 		
 		// write encounter coords
-		Map<String, ArrayList<int[]>> encountersData = new LinkedHashMap<String, ArrayList<int[]>>();
+		Map<String, ArrayList<int[]>> encountersData = new LinkedHashMap<>();
 		
 		for (Encounter encounter : encounters) {
 			int[] coords = new int[2];
@@ -183,7 +185,7 @@ public class Area implements EffectTarget, Saveable {
 			coords[1] = encounter.getLocation().getY();
 			
 			if (!encountersData.containsKey(encounter.getTemplate().getID())) {
-				encountersData.put(encounter.getTemplate().getID(), new ArrayList<int[]>());
+				encountersData.put(encounter.getTemplate().getID(), new ArrayList<>());
 			}
 			
 			encountersData.get(encounter.getTemplate().getID()).add(coords);
@@ -197,7 +199,7 @@ public class Area implements EffectTarget, Saveable {
 		data.put("encounters", encountersOut);
 		
 		// write containers
-		List<JSONOrderedObject> containersData = new ArrayList<JSONOrderedObject>();
+		List<JSONOrderedObject> containersData = new ArrayList<>();
 		for (Container container : entityList.getAllContainers()) {
 			JSONOrderedObject containerData = new JSONOrderedObject();
 			containerData.put("id", container.getTemplate().getID());
@@ -209,7 +211,7 @@ public class Area implements EffectTarget, Saveable {
 		data.put("containers", containersData.toArray());
 		
 		// write doors
-		List<JSONOrderedObject> doorsData = new ArrayList<JSONOrderedObject>();
+		List<JSONOrderedObject> doorsData = new ArrayList<>();
 		for (Door door : entityList.getAllDoors()) {
 			JSONOrderedObject doorData = new JSONOrderedObject();
 			doorData.put("id", door.getTemplate().getID());
@@ -230,8 +232,8 @@ public class Area implements EffectTarget, Saveable {
 			triggerData.put("script", trigger.getScript().getScriptLocation());
 			
 			List<PointImmutable> points = trigger.getPoints();
-			if (points.size() > 0) {
-				List<int[]> pointsData = new ArrayList<int[]>();
+			if (!points.isEmpty()) {
+				List<int[]> pointsData = new ArrayList<>();
 				
 				for (PointImmutable p : points) {
 					int[] coords = new int[2];
@@ -310,16 +312,16 @@ public class Area implements EffectTarget, Saveable {
 		SimpleJSONParser parser = new SimpleJSONParser("areas/" + id + ResourceType.JSON.getExtension());
 		
 		if (parser.containsKey("name")) {
-			this.name = parser.get("name", null);
+            name = parser.get("name", null);
 		} else {
-			this.name = id;
+            name = id;
 		}
-		
-		this.width = parser.get("width", 0);
-		this.height = parser.get("height", 0);
-		this.tileset = parser.get("tileset", null);
-		this.visibilityRadius = parser.get("visibilityRadius", 0);
-		this.isExplored = parser.get("explored", false);
+
+        width = parser.get("width", 0);
+        height = parser.get("height", 0);
+        tileset = parser.get("tileset", null);
+        visibilityRadius = parser.get("visibilityRadius", 0);
+        isExplored = parser.get("explored", false);
 		
 		// initialize matrices
 		explored = new boolean[width][height];
@@ -337,7 +339,7 @@ public class Area implements EffectTarget, Saveable {
 		
 		// parse start locations
 		if (parser.containsKey("startLocations")) {
-			startLocations = new ArrayList<PointImmutable>();
+			startLocations = new ArrayList<>();
 			
 			SimpleJSONArray startLocationsIn = parser.getArray("startLocations");
 			
@@ -356,7 +358,7 @@ public class Area implements EffectTarget, Saveable {
 		
 		// parse triggers
 		if (parser.containsKey("triggers")) {
-			triggers = new HashMap<String, Trigger>();
+			triggers = new HashMap<>();
 			
 			SimpleJSONObject triggersIn = parser.getObject("triggers");
 			for (String triggerID : triggersIn.keySet()) {
@@ -381,7 +383,7 @@ public class Area implements EffectTarget, Saveable {
 			x = 0;
 			for (SimpleJSONArrayEntry rowEntry : rowIn) {
 				int value = rowEntry.getInt(0);
-				this.transparency[x][y] = (value == 0 ? true : false);
+                transparency[x][y] = (value == 0 ? true : false);
 				x++;
 			}
 			
@@ -397,7 +399,7 @@ public class Area implements EffectTarget, Saveable {
 			x = 0;
 			for (SimpleJSONArrayEntry rowEntry : rowIn) {
 				int value = rowEntry.getInt(0);
-				this.passable[x][y] = (value == 1 ? true : false);
+                passable[x][y] = (value == 1 ? true : false);
 				x++;
 			}
 			
@@ -413,7 +415,7 @@ public class Area implements EffectTarget, Saveable {
 			x = 0;
 			for (SimpleJSONArrayEntry rowEntry : rowIn) {
 				int value = rowEntry.getInt(0);
-				this.elevation.setElevation(x, y, (byte)value);
+                elevation.setElevation(x, y, (byte)value);
 				x++;
 			}
 			
@@ -433,13 +435,13 @@ public class Area implements EffectTarget, Saveable {
 					
 					int xPosition = iter.next().getInt(0);
 					int yPosition = iter.next().getInt(0);
-					
-					this.tileGrid.addTile(tileID, layerID, xPosition, yPosition);
+
+                    tileGrid.addTile(tileID, layerID, xPosition, yPosition);
 				}
 			}
 		}
 		
-		encounters = new ArrayList<Encounter>();
+		encounters = new ArrayList<>();
 		
 		if (loadedData != null) {
 			// we are loading from a saved game file
@@ -463,11 +465,11 @@ public class Area implements EffectTarget, Saveable {
 		}
 		
 		// get the list of transitions associated with this area
-		transitions = new ArrayList<String>();
+		transitions = new ArrayList<>();
 		for (Transition transition : Game.curCampaign.getAreaTransitions()) {
 			if (transition.isFromArea(this) || 
 					(transition.isTwoWay() && transition.isToArea(this)) ) {
-				this.transitions.add(transition.getID());
+                transitions.add(transition.getID());
 			}
 		}
 		
@@ -594,7 +596,7 @@ public class Area implements EffectTarget, Saveable {
 
 				Container container = EntityManager.getContainer(containerIn.get("id", null));
 				container.setLocation(this, containerIn.get("x", 0), containerIn.get("y", 0));
-				this.entityList.addContainer(container);
+                entityList.addContainer(container);
 			}
 		}
 
@@ -607,7 +609,7 @@ public class Area implements EffectTarget, Saveable {
 
 				Door door = EntityManager.getDoor(doorIn.get("id", null));
 				door.setLocation(this, doorIn.get("x", 0), doorIn.get("y", 0));
-				this.entityList.addEntity(door);
+                entityList.addEntity(door);
 			}
 		}
 
@@ -632,10 +634,10 @@ public class Area implements EffectTarget, Saveable {
 
 				if (item instanceof Trap) {
 					// arm traps added directly to the area
-					((Trap)item).setFaction(Game.ruleset.getFaction("Hostile"));
-					this.placeTrap((Trap)item);
+					item.setFaction(Game.ruleset.getFaction("Hostile"));
+                    placeTrap((Trap)item);
 				} else {
-					this.addItem(item, quantity);
+                    addItem(item, quantity);
 				}
 			}
 		}
@@ -650,7 +652,7 @@ public class Area implements EffectTarget, Saveable {
 	public boolean isValidPoint(Point p) {
 		if (p.x < 0 || p.y < 0) return false;
 		
-		if (p.x >= this.width || p.y >= this.height) return false;
+		if (p.x >= width || p.y >= height) return false;
 		
 		return true;
 	}
@@ -730,7 +732,7 @@ public class Area implements EffectTarget, Saveable {
 	}
 	
 	public List<Creature> getAffectedCreatures(Effect effect) {
-		return effects.getAffectedCreatures(effect, this.entityList);
+		return effects.getAffectedCreatures(effect, entityList);
 	}
 	
 	/**
@@ -754,9 +756,9 @@ public class Area implements EffectTarget, Saveable {
 	
 	public int getMovementBonus(Point p) { return getMovementBonus(p.x, p.y); }
 	
-	public int getMovementBonus(int x, int y) { return effects.getBonusAt(Bonus.Type.Movement, x, y); }
+	public int getMovementBonus(int x, int y) { return effects.getBonusAt(Type.Movement, x, y); }
 	
-	public boolean isSilenced(int x, int y) { return effects.hasBonusAt(Bonus.Type.Silence, x, y); }
+	public boolean isSilenced(int x, int y) { return effects.hasBonusAt(Type.Silence, x, y); }
 	
 	public boolean isSilenced(Point p) { return isSilenced(p.x, p.y); }
 	
@@ -780,12 +782,12 @@ public class Area implements EffectTarget, Saveable {
 		
 		int areaPathConcealment = 0;
 		for (Point p : minPath) {
-			areaPathConcealment += effects.getBonusAt(Bonus.Type.Concealment, p.x, p.y);
-			areaPathConcealment -= effects.getBonusAt(Bonus.Type.ConcealmentNegation, p.x, p.y);
+			areaPathConcealment += effects.getBonusAt(Type.Concealment, p.x, p.y);
+			areaPathConcealment -= effects.getBonusAt(Type.ConcealmentNegation, p.x, p.y);
 			
-			if (!this.transparency[p.x][p.y]) obstructionsInPathConcealment += 15;
+			if (!transparency[p.x][p.y]) obstructionsInPathConcealment += 15;
 			else {
-				Creature c = this.getCreatureAtGridPoint(p);
+				Creature c = getCreatureAtGridPoint(p);
 				if (c != null && c != defender) obstructionsInPathConcealment += 15;
 			}
 		}
@@ -801,13 +803,13 @@ public class Area implements EffectTarget, Saveable {
 		int defenderConcealment = 0;
 		
 		if (defender != null)
-			defenderConcealment += defender.stats.get(Bonus.Type.Concealment) -
-				defender.stats.get(Bonus.Type.ConcealmentNegation);
+			defenderConcealment += defender.stats.get(Type.Concealment) -
+				defender.stats.get(Type.ConcealmentNegation);
 		
-		if (attacker.stats.has(Bonus.Type.Blind)) defenderConcealment += 100;
+		if (attacker.stats.has(Type.Blind)) defenderConcealment += 100;
 		defenderConcealment = Math.min(100, defenderConcealment);
 		
-		int attackerIgnoring = attacker.stats.get(Bonus.Type.ConcealmentIgnoring);
+		int attackerIgnoring = attacker.stats.get(Type.ConcealmentIgnoring);
 		
 		int defenderBonus = Math.min(100, Math.max(0, defenderConcealment - attackerIgnoring));
 		
@@ -817,7 +819,7 @@ public class Area implements EffectTarget, Saveable {
 	}
 	
 	public int getConcealment(Creature attacker, Point position) {
-		Creature target = this.entityList.getCreature(position.x, position.y);
+		Creature target = entityList.getCreature(position.x, position.y);
 		
 		return getConcealment(attacker, target, position.x, position.y);
 	}
@@ -865,7 +867,7 @@ public class Area implements EffectTarget, Saveable {
 		for (String s : transitions) {
 			Transition transition = Game.curCampaign.getAreaTransition(s);
 			
-			Transition.EndPoint endPoint = transition.getEndPointInArea(this);
+			EndPoint endPoint = transition.getEndPointInArea(this);
 			
 			if (endPoint.getX() == x && endPoint.getY() == y) return transition;
 		}
@@ -954,7 +956,7 @@ public class Area implements EffectTarget, Saveable {
 	public final boolean isVisible(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) return false;
 		
-		return this.visibility[x][y];
+		return visibility[x][y];
 	}
 	
 	public final boolean isTransparent(Point p) {
@@ -964,7 +966,7 @@ public class Area implements EffectTarget, Saveable {
 	public final boolean isTransparent(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) return false;
 		
-		return this.transparency[x][y];
+		return transparency[x][y];
 	}
 	
 	public boolean[][] getCurrentPassable() {
@@ -976,7 +978,7 @@ public class Area implements EffectTarget, Saveable {
 				else {
 					Door d = entityList.getDoor(x, y);
 					if (d != null && !d.isOpen()) pass[x][y] = false;
-					else pass[x][y] = this.passable[x][y];
+					else pass[x][y] = passable[x][y];
 				}
 			}
 		}
@@ -1066,7 +1068,7 @@ public class Area implements EffectTarget, Saveable {
 	 */
 	
 	public List<PointImmutable> getPoints(int x, int y, int radius) {
-		List<PointImmutable> points = new ArrayList<PointImmutable>();
+		List<PointImmutable> points = new ArrayList<>();
 		
 		PointImmutable pCenter = new PointImmutable(x, y);
 		

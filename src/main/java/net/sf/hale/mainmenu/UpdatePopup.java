@@ -49,9 +49,9 @@ public class UpdatePopup extends PopupWindow {
 		super(parent);
 		
 		this.updater = updater;
-		
-		this.setCloseOnClickedOutside(false);
-		this.setCloseOnEscape(false);
+
+        setCloseOnClickedOutside(false);
+        setCloseOnEscape(false);
 		
 		content = new Content();
 		add(content);
@@ -74,7 +74,7 @@ public class UpdatePopup extends PopupWindow {
 	 */
 	
 	public void updateCurrentTask(String description) {
-		this.currentTaskUpdate = description;
+        currentTaskUpdate = description;
 	}
 	
 	private class Content extends Widget {

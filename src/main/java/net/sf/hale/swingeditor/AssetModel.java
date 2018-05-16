@@ -64,10 +64,10 @@ public class AssetModel<E> implements ListModel {
 			
 			switch (type) {
 			case Campaign:
-				this.elementID = assetID;
+                elementID = assetID;
 				break;
 			default:
-				this.elementID = "Core : " + assetID;
+                elementID = "Core : " + assetID;
 			}
 		}
 		
@@ -98,10 +98,10 @@ public class AssetModel<E> implements ListModel {
 	 */
 	
 	public AssetModel(AssetType type) {
-		this.assetType = type;
+        assetType = type;
 		
-		listeners = new ArrayList<ListDataListener>(2);
-		entries = new ArrayList<Entry>();
+		listeners = new ArrayList<>(2);
+		entries = new ArrayList<>();
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory(type.getContainingDirectory());
 		

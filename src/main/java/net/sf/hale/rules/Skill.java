@@ -224,6 +224,6 @@ public class Skill implements Comparable<Skill> {
 	public boolean isCraft() { return isCraft; }
 	
 	@Override public int compareTo(Skill other) {
-		return this.id.compareTo(other.id);
+		return id.compareTo(other.id);
 	}
 }

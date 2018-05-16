@@ -22,6 +22,7 @@ package net.sf.hale.loading;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * An object providing for better formatting of output file than the standard JSONObject
@@ -53,7 +54,7 @@ public class SaveWriter {
 			if (value == null)
 				out.append("null");
 			else
-				SaveWriter.writeJSONValue(value, out, indent);
+				writeJSONValue(value, out, indent);
 		}
 		out.append(']');
 	}
@@ -83,9 +84,9 @@ public class SaveWriter {
 		} else if (value instanceof Boolean) {
 			out.append(value.toString());
 		} else if (value instanceof Map<?, ?>) {
-			SaveWriter.writeJSON((Map<String, Object>) value, out, indent);
+			writeJSON((Map<String, Object>) value, out, indent);
 		} else if (value instanceof Iterable<?>) { // List
-			SaveWriter.writeJSONList((Iterable<Object>) value, out, indent);
+			writeJSONList((Iterable<Object>) value, out, indent);
 		} else if (value.getClass().isArray()) {
 			Class<?> arrayClz = value.getClass();
 			Class<?> c = arrayClz.getComponentType();
@@ -138,7 +139,7 @@ public class SaveWriter {
 							out.append(", ");
 						else
 							needSep = true;
-						out.append(Float.toString((float) b));
+						out.append(Float.toString(b));
 					}
 				} else if (c == double.class) {
 					for (double b : ((double[]) value)) {
@@ -146,7 +147,7 @@ public class SaveWriter {
 							out.append(", ");
 						else
 							needSep = true;
-						out.append(Double.toString((double) b));
+						out.append(Double.toString(b));
 					}
 				} else if (c == boolean.class) {
 					for (boolean b : ((boolean[]) value)) {
@@ -167,7 +168,7 @@ public class SaveWriter {
 					else
 						needSep = true;
 					
-					SaveWriter.writeJSONValue(o, out, indentPlusOne);
+					writeJSONValue(o, out, indentPlusOne);
 				}
 			}
 			
@@ -199,7 +200,7 @@ public class SaveWriter {
 		out.append('{');
 		out.println();
 		
-		for (Map.Entry<String, ? extends Object> entry : map.entrySet()) {
+		for (Entry<String, ? extends Object> entry : map.entrySet()) {
 			if (first)
 				first = false;
 			else {
@@ -218,7 +219,7 @@ public class SaveWriter {
 			}
 			out.append(" : ");
 			
-			SaveWriter.writeJSONValue(entry.getValue(), out, indentPlusOne);
+			writeJSONValue(entry.getValue(), out, indentPlusOne);
 		}
 		out.println();
 		out.append(indent);

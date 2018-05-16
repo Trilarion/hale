@@ -33,8 +33,8 @@ public interface IconRenderer {
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
-	
-	public void draw(int x, int y);
+
+    void draw(int x, int y);
 	
 	/**
 	 * Draws this icon centered on the specified position
@@ -43,6 +43,6 @@ public interface IconRenderer {
 	 * @param width the width of the region to center on
 	 * @param height the height of the region to center on
 	 */
-	
-	public void drawCentered(int x, int y, int width, int height);
+
+    void drawCentered(int x, int y, int width, int height);
 }

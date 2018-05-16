@@ -135,8 +135,8 @@ public class CreatedItemModel implements Saveable {
 	public CreatedItemModel(String baseItemID, String createdItemID) {
 		this.baseItemID = baseItemID;
 		this.createdItemID = createdItemID;
-		this.enchantments = new ArrayList<String>();
-		this.overlayIcon = IconFactory.emptyIcon;
+        enchantments = new ArrayList<>();
+        overlayIcon = IconFactory.emptyIcon;
 	}
 	
 	/**
@@ -145,14 +145,14 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	protected CreatedItemModel(CreatedItemModel other) {
-		this.baseItemID = other.baseItemID;
-		this.createdItemID = other.createdItemID;
-		this.enchantments = new ArrayList<String>(other.enchantments);
-		this.namePostfix = other.namePostfix;
-		this.namePrefix = other.namePrefix;
-		this.forceNotUnequippable = other.forceNotUnequippable;
-		this.valueModifier = other.valueModifier;
-		this.overlayIcon = other.overlayIcon;
+        baseItemID = other.baseItemID;
+        createdItemID = other.createdItemID;
+        enchantments = new ArrayList<>(other.enchantments);
+        namePostfix = other.namePostfix;
+        namePrefix = other.namePrefix;
+        forceNotUnequippable = other.forceNotUnequippable;
+        valueModifier = other.valueModifier;
+        overlayIcon = other.overlayIcon;
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public void setOverlayIcon(Icon icon) {
-		this.overlayIcon = icon;
+        overlayIcon = icon;
 	}
 	
 	/**
@@ -180,7 +180,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public void setForceNotUnequippable(boolean unequip) {
-		this.forceNotUnequippable = unequip;
+        forceNotUnequippable = unequip;
 	}
 	
 	/**
@@ -189,7 +189,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public void setNamePrefix(String prefix) {
-		this.namePrefix = prefix;
+        namePrefix = prefix;
 	}
 	
 	/**
@@ -198,7 +198,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public void setNamePostfix(String postfix) {
-		this.namePostfix = postfix;
+        namePostfix = postfix;
 	}
 	
 	/**
@@ -225,7 +225,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public void addEnchantment(String enchantment) {
-		this.enchantments.add(enchantment);
+        enchantments.add(enchantment);
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class CreatedItemModel implements Saveable {
 	 */
 	
 	public List<String> getEnchantments() {
-		return this.enchantments;
+		return enchantments;
 	}
 	
 	/**
@@ -252,7 +252,7 @@ public class CreatedItemModel implements Saveable {
 		}
 		
 		if (namePostfix != null) {
-			newName = newName + namePostfix;
+			newName += namePostfix;
 		}
 		
 		return newName;

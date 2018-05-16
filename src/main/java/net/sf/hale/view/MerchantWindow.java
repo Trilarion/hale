@@ -26,6 +26,7 @@ import net.sf.hale.rules.Merchant;
 
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ThemeInfo;
+import net.sf.hale.view.ItemListViewer.Mode;
 
 /**
  * A widget for displaying the list of wares and prices for a given Merchant
@@ -134,7 +135,7 @@ public class MerchantWindow extends GameSubWindow {
 	 */
 	
 	public void updateContent(PC creature) {
-		if (!this.isVisible()) return;
+		if (!isVisible()) return;
 		
 		this.creature = creature;
 		
@@ -144,10 +145,10 @@ public class MerchantWindow extends GameSubWindow {
 		
 		sellLabel.setText("You are buying items for " + merchant.getCurrentSellPercentage() + "% value.");
 		buyLabel.setText("You are selling items for " + merchant.getCurrentBuyPercentage() + "% value.");
+
+        setTitle(merchant.getName());
 		
-		this.setTitle(merchant.getName());
-		
-		viewer.updateContent(ItemListViewer.Mode.MERCHANT, this.creature, merchant, merchant.updateCurrentItems());
+		viewer.updateContent(Mode.MERCHANT, this.creature, merchant, merchant.updateCurrentItems());
 		
 		layout();
 	}

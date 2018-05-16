@@ -37,12 +37,12 @@ public class WorldMapPopup extends PopupWindow {
 	
 	public WorldMapPopup(Widget parent, Transition transition) {
 		super(parent);
-		
-		this.setCloseOnEscape(false);
-		this.setCloseOnClickedOutside(false);
+
+        setCloseOnEscape(false);
+        setCloseOnClickedOutside(false);
 		
 		content = new Content();
-		this.add(content);
+        add(content);
 		
 		viewer = new WorldMapViewer(transition);
 		viewer.setWorldMapPopup(this);
@@ -66,14 +66,14 @@ public class WorldMapPopup extends PopupWindow {
 	 */
 	
 	public void setShowAllLocations(boolean showAll) {
-		this.showAllLocations = showAll;
+        showAllLocations = showAll;
 		
 		createLocationsList();
 	}
 	
 	private void createLocationsList() {
 		// get the list of revealed locations
-		List<WorldMapLocation> mapLocations = new ArrayList<WorldMapLocation>();
+		List<WorldMapLocation> mapLocations = new ArrayList<>();
 		for (WorldMapLocation mapLocation : Game.curCampaign.worldMapLocations) {
 			if (showAllLocations || mapLocation.isRevealed())
 				mapLocations.add(mapLocation);

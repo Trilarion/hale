@@ -56,9 +56,9 @@ public class OpenGLThread extends Thread {
 	
 	public OpenGLThread(SwingEditor parent) {
 		this.parent = parent;
-		this.canvas = parent.getOpenGLCanvas();
-		this.draw = true;
-		this.resize = true;
+        canvas = parent.getOpenGLCanvas();
+        draw = true;
+        resize = true;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class OpenGLThread extends Thread {
 	 */
 	
 	public void setAreaViewer(AreaRenderer viewer) {
-		this.newViewer = viewer;
+        newViewer = viewer;
 	}
 	
 	/**

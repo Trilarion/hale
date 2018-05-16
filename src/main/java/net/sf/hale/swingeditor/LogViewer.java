@@ -32,7 +32,8 @@ import javax.swing.JTextArea;
  */
 
 public class LogViewer extends JFrame {
-	private JTextArea area;
+    private static final long serialVersionUID = -3584718115393019656L;
+    private JTextArea area;
 	
 	/**
 	 * Creates a new LogViewer and populates it with the log entries

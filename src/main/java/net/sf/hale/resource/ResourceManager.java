@@ -53,9 +53,9 @@ import net.sf.hale.util.Logger;
  */
 
 public class ResourceManager {
-	private static Map<String, String> cachedFiles = new HashMap<String, String>();
+	private static Map<String, String> cachedFiles = new HashMap<>();
 	
-	private static List<ResourcePackage> packages = new ArrayList<ResourcePackage>(2);
+	private static List<ResourcePackage> packages = new ArrayList<>(2);
 	
 	public static List<ResourcePackage> getPackages() {
 		return packages;
@@ -251,7 +251,7 @@ public class ResourceManager {
 	 */
 	
 	public static Set<String> getResourcesInDirectory(String directory) {
-		Set<String> resources = new LinkedHashSet<String>();
+		Set<String> resources = new LinkedHashSet<>();
 		
 		for (ResourcePackage resourcePackage : packages) {
 			Set<String> resourcesInPackage = resourcePackage.getResourcesIn(directory);
@@ -272,7 +272,7 @@ public class ResourceManager {
 	 */
 	
 	public static Set<String> getCoreResourcesInDirectory(String directory) {
-		Set<String> resources = new LinkedHashSet<String>();
+		Set<String> resources = new LinkedHashSet<>();
 		
 		for (ResourcePackage resourcePackage : packages) {
 			// only use Core ZIP and Core directory packages

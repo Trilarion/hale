@@ -44,7 +44,8 @@ import javax.swing.event.ListSelectionListener;
  */
 
 public class AssetEditor extends JFrame implements ListSelectionListener {
-	private AssetModel<?> listModel;
+    private static final long serialVersionUID = 1713341621255338207L;
+    private AssetModel<?> listModel;
 	private JList list;
 	private int currentIndex = -1;
 	
@@ -101,6 +102,7 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 	}
 	
 	private class SetModeAction extends AbstractAction {
+        private static final long serialVersionUID = -5589551401514122552L;
 		private AssetType mode;
 		
 		private SetModeAction(AssetType mode) {
@@ -114,6 +116,8 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 	}
 	
 	private class CloseEditorAction extends AbstractAction {
+        private static final long serialVersionUID = 8328251230910458938L;
+
 		private CloseEditorAction() { super("Close"); }
 
 		@Override public void actionPerformed(ActionEvent evt) {

@@ -61,7 +61,7 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public AIAbilitySlotSet(Map<String, List<AbilitySlot>> slots) {
-		sortedSlots = new ArrayList<AbilitySlot>();
+		sortedSlots = new ArrayList<>();
 		
 		for (String type : slots.keySet()) {
 			for (AbilitySlot slot : slots.get(type)) {
@@ -100,7 +100,7 @@ public class AIAbilitySlotSet {
 	
 	public List<AbilitySlot> getWithActionTypes(String[] actionTypes) {
 		// first construct the set of specified action types
-		Set<ActionType> types = new HashSet<ActionType>();
+		Set<ActionType> types = new HashSet<>();
 		
 		for (String typeString : actionTypes) {
 			try {
@@ -111,9 +111,9 @@ public class AIAbilitySlotSet {
 		}
 		
 		// now look through the list of sorted slots for slots with the right action type
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 
-		for (AbilitySlot slot : this.sortedSlots) {
+		for (AbilitySlot slot : sortedSlots) {
 			if (types.contains(slot.getAbility().getActionType())) {
 				slots.add(slot);
 			}
@@ -140,9 +140,9 @@ public class AIAbilitySlotSet {
 			return Collections.emptyList();
 		}
 		
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 		
-		for (AbilitySlot slot : this.sortedSlots) {
+		for (AbilitySlot slot : sortedSlots) {
 			if (slot.getAbility().getActionType() == actionType)
 				slots.add(slot);
 		}
@@ -168,9 +168,9 @@ public class AIAbilitySlotSet {
 			return Collections.emptyList();
 		}
 		
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 		
-		for (AbilitySlot slot : this.sortedSlots) {
+		for (AbilitySlot slot : sortedSlots) {
 			if (slot.getAbility().getGroupType() == groupType)
 				slots.add(slot);
 		}
@@ -196,9 +196,9 @@ public class AIAbilitySlotSet {
 			return Collections.emptyList();
 		}
 		
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 		
-		for (AbilitySlot slot : this.sortedSlots) {
+		for (AbilitySlot slot : sortedSlots) {
 			if (slot.getAbility().getRangeType() == rangeType)
 				slots.add(slot);
 		}
@@ -215,12 +215,15 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public void sortByRangeType(List<AbilitySlot> slots, String order) {
-		if (order.equals("CLOSEST")) {
-			Collections.sort(slots, new RangeSorter(+1));
-		} else if (order.equals("FURTHEST")) {
-			Collections.sort(slots, new RangeSorter(-1));
-		} else {
-			throw new IllegalArgumentException("Range type sort order must be either CLOSEST or FURTHEST");
+		switch (order) {
+			case "CLOSEST":
+				Collections.sort(slots, new RangeSorter(+1));
+				break;
+			case "FURTHEST":
+				Collections.sort(slots, new RangeSorter(-1));
+				break;
+			default:
+				throw new IllegalArgumentException("Range type sort order must be either CLOSEST or FURTHEST");
 		}
 	}
 	
@@ -232,12 +235,15 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public void sortByGroupType(List<AbilitySlot> slots, String order) {
-		if (order.equals("SINGLE")) {
-			Collections.sort(slots, new GroupSorter(+1));
-		} else if (order.equals("MULTIPLE")) {
-			Collections.sort(slots, new GroupSorter(-1));
-		} else {
-			throw new IllegalArgumentException("Group type sort order must be either SINGLE or MULTIPLE");
+		switch (order) {
+			case "SINGLE":
+				Collections.sort(slots, new GroupSorter(+1));
+				break;
+			case "MULTIPLE":
+				Collections.sort(slots, new GroupSorter(-1));
+				break;
+			default:
+				throw new IllegalArgumentException("Group type sort order must be either SINGLE or MULTIPLE");
 		}
 	}
 	
@@ -270,19 +276,17 @@ public class AIAbilitySlotSet {
 			
 			// attempt to select the specified menu selection
 			boolean activated = false;
-			for (int j = 0; j < menuSelections.length; j++) {
-				String menuSelection = menuSelections[j];
-				
+			for (String menuSelection : menuSelections) {
 				for (int i = 0; i < level.getNumSelections(); i++) {
 					String text = level.getSelectionText(i);
-				
+
 					if (text.equals(menuSelection)) {
 						level.activateSelection(i);
 						activated = true;
 						break;
 					}
 				}
-				
+
 				if (activated)
 					break;
 			}
@@ -359,7 +363,7 @@ public class AIAbilitySlotSet {
 		return Game.areaListener.getTargeterManager().getCurrentTargeter();
 	}
 	
-	private class GroupSorter implements Comparator<AbilitySlot> {
+	private static class GroupSorter implements Comparator<AbilitySlot> {
 		private int sense;
 		
 		/**
@@ -377,7 +381,7 @@ public class AIAbilitySlotSet {
 		}
 	}
 	
-	private class RangeSorter implements Comparator<AbilitySlot> {
+	private static class RangeSorter implements Comparator<AbilitySlot> {
 		private int sense;
 		
 		/**
@@ -396,7 +400,7 @@ public class AIAbilitySlotSet {
 		
 	}
 	
-	private class AbilityComparator implements Comparator<AbilitySlot> {
+	private static class AbilityComparator implements Comparator<AbilitySlot> {
 		@Override public int compare(AbilitySlot a, AbilitySlot b) {
 			return b.getAbility().getAIPriority() * b.getAbility().getUpgradedAIPower(b.getParent()) -
 					a.getAbility().getAIPriority() * a.getAbility().getUpgradedAIPower(a.getParent());

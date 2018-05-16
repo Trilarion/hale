@@ -52,10 +52,10 @@ import org.lwjgl.opengl.GL11;
  */
 
 public class SpriteManager {
-	private final static Map<String, Sprite> sprites = new HashMap<String, Sprite>();
-	private final static Map<String, Sprite> spriteSheets = new HashMap<String, Sprite>();
+	private final static Map<String, Sprite> sprites = new HashMap<>();
+	private final static Map<String, Sprite> spriteSheets = new HashMap<>();
 	
-	private final static Map<String, BufferedImage> sourceImages = new HashMap<String, BufferedImage>();
+	private final static Map<String, BufferedImage> sourceImages = new HashMap<>();
 	
 	private static boolean saveSourceImages = false;
 	
@@ -80,7 +80,7 @@ public class SpriteManager {
 		Set<String> resources = ResourceManager.getResourcesInDirectory("images");
 		for (String resource : resources) {
 			if (resource.endsWith(ResourceType.JSON.getExtension())) {
-				SpriteManager.readSpriteSheet(resource);
+				readSpriteSheet(resource);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class SpriteManager {
 	public static void loadAllPortraits() {
 		for (String resource : ResourceManager.getResourcesInDirectory("portraits")) {
 			if (resource.endsWith(ResourceType.PNG.getExtension())) {
-				SpriteManager.getImage(resource);
+				getImage(resource);
 			}
 		}
 	}
@@ -109,10 +109,10 @@ public class SpriteManager {
 	 */
 	
 	public static List<String> readSpriteSheet(String resource) {
-		List<Sprite> spritesToLoad = new ArrayList<Sprite>();
+		List<Sprite> spritesToLoad = new ArrayList<>();
 		ByteBufferSized pixelData = null;
 		String parent = new File(resource).getParent().replace('\\', '/');
-		List<String> images = new ArrayList<String>();
+		List<String> images = new ArrayList<>();
 		
 		SimpleJSONParser parser = new SimpleJSONParser(resource);
 		
@@ -122,7 +122,7 @@ public class SpriteManager {
 		// category is a mapping between source, and reference.
 		String category = parser.get("category", null);
 		String mapping = category != null ? category : source;
-		pixelData = SpriteManager.loadPixels(parent + "/" + source + ".png");
+		pixelData = loadPixels(parent + "/" + source + ".png");
 		Sprite spriteSheet = new Sprite(0, pixelData.width, pixelData.height);
 		spritesToLoad.add(spriteSheet);
 		
@@ -251,10 +251,10 @@ public class SpriteManager {
 	 */
 	
 	public static final Sprite getSpriteAnyExtension(String ref) {
-		Sprite sprite = SpriteManager.getImage("images/" + ref + ResourceType.PNG.getExtension());
+		Sprite sprite = getImage("images/" + ref + ResourceType.PNG.getExtension());
 		if (sprite != null) return sprite;
 		
-		sprite = SpriteManager.getImage("images/" + ref + ResourceType.JPEG.getExtension());
+		sprite = getImage("images/" + ref + ResourceType.JPEG.getExtension());
 		return sprite;
 	}
 	
@@ -267,7 +267,7 @@ public class SpriteManager {
 	 */
 	
 	public static final Sprite getSprite(String ref, ResourceType type) {
-		return SpriteManager.getImage("images/" + ref + type.getExtension());
+		return getImage("images/" + ref + type.getExtension());
 	}
 	
 	/**
@@ -279,7 +279,7 @@ public class SpriteManager {
 	 */
 	
 	public static final Sprite getSprite(String ref) {
-		return SpriteManager.getImage("images/" + ref + ResourceType.PNG.getExtension());
+		return getImage("images/" + ref + ResourceType.PNG.getExtension());
 	}
 	
 	/**
@@ -291,7 +291,7 @@ public class SpriteManager {
 	 */
 	
 	public static final Sprite getPortrait(String ref) {
-		return SpriteManager.getImage("portraits/" + ref + ResourceType.PNG.getExtension());
+		return getImage("portraits/" + ref + ResourceType.PNG.getExtension());
 	}
 	
 	/**
@@ -303,7 +303,7 @@ public class SpriteManager {
 	public static final Sprite getImage(String ref) {
 		if (!sprites.containsKey(ref)) {
 			if (ResourceManager.hasResource(ref)) {
-				sprites.put(ref, SpriteManager.loadImage(ref));
+				sprites.put(ref, loadImage(ref));
 			}
 		}
 		
@@ -345,7 +345,7 @@ public class SpriteManager {
 	}
 	
 	private static final Sprite loadImage(String ref) {
-		ByteBufferSized buffer = SpriteManager.loadPixels(ref);
+		ByteBufferSized buffer = loadPixels(ref);
 		
 		Sprite sprite = new Sprite(0, buffer.width, buffer.height);
 		List<Sprite> sprites = Collections.singletonList(sprite);
@@ -362,7 +362,7 @@ public class SpriteManager {
 	 */
 	
 	public static void clear() {
-		Set<Integer> deletedTextures = new HashSet<Integer>();
+		Set<Integer> deletedTextures = new HashSet<>();
 		
 		// free up all texture memory
 		for (String id : spriteSheets.keySet()) {
@@ -427,7 +427,7 @@ public class SpriteManager {
 	public static long getTextureMemoryUsage() {
 		long total = 0;
 		
-		Set<Integer> texturesAlreadyCounted = new HashSet<Integer>();
+		Set<Integer> texturesAlreadyCounted = new HashSet<>();
 		
 		for (String id : spriteSheets.keySet()) {
 			Sprite spriteSheet = spriteSheets.get(id);

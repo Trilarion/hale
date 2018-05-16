@@ -43,9 +43,8 @@ public class EntityAttackAnimation extends EntityOffsetAnimation {
 	 */
 	
 	public EntityAttackAnimation(Entity attacker, Entity target) {
-		super();
-		
-		halfDuration = Game.config.getCombatDelay() / 1000.0f;
+
+        halfDuration = Game.config.getCombatDelay() / 1000.0f;
 		elapsed = 0.0f;
 		
 		Point curScreen = attacker.getLocation().getScreenPoint();

@@ -22,13 +22,16 @@ package net.sf.hale.quickbar;
 import de.matthiasmann.twl.Button;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.entity.WeaponTemplate;
+import net.sf.hale.entity.WeaponTemplate.Handed;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.widgets.RightClickMenu;
@@ -138,12 +141,12 @@ public class ItemEquipSlot extends QuickbarSlot {
 	private boolean checkWeaponWeapon(Weapon main, Weapon offHand) {
 		if (!main.isMelee() || !offHand.isMelee()) return false;
 		
-		if (!parent.stats.has(Bonus.Type.DualWieldTraining)) return false;
+		if (!parent.stats.has(Type.DualWieldTraining)) return false;
 		
-		if (main.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+		if (main.getTemplate().getHanded() == Handed.TwoHanded)
 			return false;
 		
-		if (offHand.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+		if (offHand.getTemplate().getHanded() == Handed.TwoHanded)
 			return false;
 		
 		// checks are ok, so set the main and secondary items
@@ -154,7 +157,7 @@ public class ItemEquipSlot extends QuickbarSlot {
 	}
 	
 	private boolean checkWeaponShield(Weapon weapon, Armor shield) {
-		if (weapon.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+		if (weapon.getTemplate().getHanded() == Handed.TwoHanded)
 			return false;
 		
 		// checks are ok, so set the main and secondary items
@@ -218,7 +221,7 @@ public class ItemEquipSlot extends QuickbarSlot {
 			}
 		} else {
 			
-			Inventory.Slot slot = parent.inventory.getSlot(item);
+			Slot slot = parent.inventory.getSlot(item);
 			if (slot != null) {
 				parent.inventory.getUnequipCallback(slot).run();
 			} else if (parent.inventory.getUnequippedItems().contains(item)) {
@@ -327,7 +330,7 @@ public class ItemEquipSlot extends QuickbarSlot {
 		ItemEquipSlot slot = new ItemEquipSlot((EquippableItem)EntityManager.getItem(item.getTemplate().getID(),
 				item.getQuality()), parent);
 		
-		if (this.secondaryItem != null)
+		if (secondaryItem != null)
 			slot.setSecondaryItem((EquippableItem)EntityManager.getItem(secondaryItem.getTemplate().getID(),
 					secondaryItem.getQuality()));
 		

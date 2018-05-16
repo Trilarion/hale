@@ -27,7 +27,7 @@ public class AITargetSet {
 	 */
 	
 	public AITargetSet(Creature parent, List<Creature> possibleTargets) {
-		targets = new ArrayList<TargetInfo>();
+		targets = new ArrayList<>();
 		
 		int reach = parent.getMainHandWeapon().getTemplate().getMaxRange();
 		
@@ -139,7 +139,7 @@ public class AITargetSet {
 		}
 	}
 	
-	private class TargetInfo {
+	private static class TargetInfo {
 		private final Creature target;
 		private final int distance;
 		private final Path path;

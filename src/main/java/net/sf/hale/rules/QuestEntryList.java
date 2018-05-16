@@ -79,8 +79,8 @@ public class QuestEntryList implements Saveable {
 	}
 	
 	public QuestEntryList() {
-		activeEntries = new LinkedHashMap<String, QuestEntry>();
-		completedEntries = new LinkedHashMap<String, QuestEntry>();
+		activeEntries = new LinkedHashMap<>();
+		completedEntries = new LinkedHashMap<>();
 	}
 	
 	public void addEntry(QuestEntry entry) {

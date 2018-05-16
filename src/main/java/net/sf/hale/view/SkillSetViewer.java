@@ -22,6 +22,7 @@ package net.sf.hale.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Skill;
@@ -49,9 +50,9 @@ public class SkillSetViewer extends ScrollPane {
 	 */
 	
 	public SkillSetViewer() {
-		setFixed(ScrollPane.Fixed.HORIZONTAL);
+		setFixed(Fixed.HORIZONTAL);
 		
-		viewers = new ArrayList<SkillViewer>();
+		viewers = new ArrayList<>();
 		
 		content = new Content();
 		content.setTheme("content");
@@ -66,7 +67,7 @@ public class SkillSetViewer extends ScrollPane {
 	public void updateContent(Creature parent) {
 		if (parent != this.parent) {
 			this.parent = parent;
-			this.viewers.clear();
+			viewers.clear();
 
 			content.removeAllChildren();
 			

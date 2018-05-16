@@ -46,37 +46,37 @@ public class AnimatedIcon implements Icon {
 	 */
 	
 	public AnimatedIcon(SimpleJSONObject data) {
-		this.frameDuration = data.get("frameDuration", 0);
+        frameDuration = data.get("frameDuration", 0);
 		
 		SimpleJSONArray framesIn = data.getArray("frames");
 		
 		int index = 0;
-		this.frames = new SimpleIcon[framesIn.size()];
+        frames = new SimpleIcon[framesIn.size()];
 		for (SimpleJSONArrayEntry entry : framesIn) {
 			SimpleIcon frame = new SimpleIcon(entry.getObject());
-			this.frames[index] = frame;
+            frames[index] = frame;
 			index++;
 		}
-		
-		this.totalDuration = this.frames.length * frameDuration;
+
+        totalDuration = frames.length * frameDuration;
 	}
 	
 	private AnimatedIcon(int frameDuration, SimpleIcon[] frames) {
 		this.frameDuration = frameDuration;
 		this.frames = frames;
-		this.totalDuration = frameDuration * frames.length;
+        totalDuration = frameDuration * frames.length;
 	}
 	
 	@Override public void draw(int x, int y) {
 		int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
-		
-		this.frames[index].draw(x, y);
+
+        frames[index].draw(x, y);
 	}
 
 	@Override public void drawCentered(int x, int y, int width, int height) {
 		int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
-		
-		this.frames[index].drawCentered(x, y, width, height);
+
+        frames[index].drawCentered(x, y, width, height);
 	}
 
 	@Override public int getWidth() {
@@ -94,17 +94,17 @@ public class AnimatedIcon implements Icon {
 			frames[i] = this.frames[i].multiplyByColor(color);
 		}
 		
-		return new AnimatedIcon(this.frameDuration, frames);
+		return new AnimatedIcon(frameDuration, frames);
 	}
 
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject out = new JSONOrderedObject();
 		
-		out.put("frameDuration", this.frameDuration);
+		out.put("frameDuration", frameDuration);
 		
-		JSONOrderedObject[] framesOut = new JSONOrderedObject[this.frames.length];
-		for (int i = 0; i < this.frames.length; i++) {
-			framesOut[i] = this.frames[i].save();
+		JSONOrderedObject[] framesOut = new JSONOrderedObject[frames.length];
+		for (int i = 0; i < frames.length; i++) {
+			framesOut[i] = frames[i].save();
 		}
 		out.put("frames", framesOut);
 		

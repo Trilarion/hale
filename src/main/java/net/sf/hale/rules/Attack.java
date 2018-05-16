@@ -24,12 +24,15 @@ import java.util.List;
 import net.sf.hale.Game;
 import net.sf.hale.area.AreaEntityList;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Ammo;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.entity.WeaponTemplate;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -77,7 +80,7 @@ public class Attack {
 	private Creature attacker;
 	private Creature defender;
 	private Weapon weapon;
-	private Inventory.Slot inventorySlot;
+	private Slot inventorySlot;
 	
 	private StringBuilder message;
 	
@@ -148,10 +151,12 @@ public class Attack {
 	public Creature getAttacker() { return attacker; }
 	public Creature getDefender() { return defender; }
 	public Weapon getWeapon() { return weapon; }
-	public Inventory.Slot getSlot() { return inventorySlot; }
+	public Slot getSlot() { return inventorySlot; }
 	
-	public void addExtraAttack(int attack) { this.extraAttack += attack; }
-	public void addExtraDamage(int damage) { this.extraDamage += damage; }
+	public void addExtraAttack(int attack) {
+        extraAttack += attack; }
+	public void addExtraDamage(int damage) {
+        extraDamage += damage; }
 	
 	public void setAppliedDamage(int appliedDamage) { this.appliedDamage = appliedDamage; }
 	public void setDefenderAC(int defenderAC) { this.defenderAC = defenderAC; }
@@ -170,11 +175,11 @@ public class Attack {
 	    attackBonus = attacker.stats.get(Stat.LevelAttackBonus) + attacker.stats.get(Stat.TouchAttackBonus);
 		
 	    for (RacialType racialType : attacker.getTemplate().getRace().getRacialTypes()) {
-			defenderAC += defender.stats.get(racialType.getName(), Bonus.Type.ArmorClassVsRacialType);
+			defenderAC += defender.stats.get(racialType.getName(), Type.ArmorClassVsRacialType);
 		}
 		
 		for (RacialType racialType : defender.getTemplate().getRace().getRacialTypes()) {
-			attackBonus += attacker.stats.get(racialType.getName(), Bonus.Type.AttackVsRacialType);
+			attackBonus += attacker.stats.get(racialType.getName(), Type.AttackVsRacialType);
 		}
 	    
 		attackRoll = Game.dice.d100();
@@ -188,12 +193,12 @@ public class Attack {
 	}
 	
 	// Attack with a weapon
-	public Attack(Creature attacker, Creature defender, Inventory.Slot slot) {
+	public Attack(Creature attacker, Creature defender, Slot slot) {
 		this.attacker = attacker;
 		this.defender = defender;
-		this.message = new StringBuilder();
-		this.inventorySlot = slot;
-		this.baseAttackBonus = attacker.stats.get(Stat.LevelAttackBonus);
+        message = new StringBuilder();
+        inventorySlot = slot;
+        baseAttackBonus = attacker.stats.get(Stat.LevelAttackBonus);
 		
 		switch (inventorySlot) {
 		case MainHand:
@@ -207,39 +212,39 @@ public class Attack {
 		default:
 			throw new IllegalArgumentException("Attacks can only be made with main or off hand weapons");
 		}
-		
-		this.weapon = (Weapon)attacker.inventory.getEquippedItem(slot);
+
+        weapon = (Weapon)attacker.inventory.getEquippedItem(slot);
 		if (weapon == null) weapon = attacker.getDefaultWeapon();
 		
 		int concealment = Game.curCampaign.curArea.getConcealment(attacker, defender);
 		if (weapon.isRanged()) {
-			concealment = Math.max(0, concealment - attacker.stats.get(Bonus.Type.ConcealmentIgnoringRanged));
+			concealment = Math.max(0, concealment - attacker.stats.get(Type.ConcealmentIgnoringRanged));
 		}
 		
 		defenderAC = defender.stats.get(Stat.ArmorClass) + concealment;
 		
 		for (RacialType racialType : attacker.getTemplate().getRace().getRacialTypes()) {
-			defenderAC += defender.stats.get(racialType.getName(), Bonus.Type.ArmorClassVsRacialType);
+			defenderAC += defender.stats.get(racialType.getName(), Type.ArmorClassVsRacialType);
 		}
 		
 		for (RacialType racialType : defender.getTemplate().getRace().getRacialTypes()) {
-			attackBonus += attacker.stats.get(racialType.getName(), Bonus.Type.AttackVsRacialType);
-			damageBonus += (float)attacker.stats.get(racialType.getName(), Bonus.Type.DamageVsRacialType) / 100.0f; 
+			attackBonus += attacker.stats.get(racialType.getName(), Type.AttackVsRacialType);
+			damageBonus += (float)attacker.stats.get(racialType.getName(), Type.DamageVsRacialType) / 100.0f;
 		}
 		
-		Ammo quiver = (Ammo)attacker.inventory.getEquippedItem(Inventory.Slot.Quiver);
+		Ammo quiver = (Ammo)attacker.inventory.getEquippedItem(Slot.Quiver);
 		int quiverAttackBonus = 0;
 		int quiverDamageBonus = 0;
 		
 		if (!weapon.isMelee() && quiver != null) {
-			int weaponRangePenalty = weapon.getTemplate().getRangePenalty() * (100 - attacker.stats.get(Bonus.Type.RangePenalty)) / 100;
+			int weaponRangePenalty = weapon.getTemplate().getRangePenalty() * (100 - attacker.stats.get(Type.RangePenalty)) / 100;
 			
 			int distance = attacker.getLocation().getDistance(defender.getLocation());
 			rangePenalty += (distance * weaponRangePenalty) / 20;
 			
 			if (weapon.getTemplate().getWeaponType() != WeaponTemplate.Type.Thrown) {
-				quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Bonus.Type.WeaponAttack);
-				quiverDamageBonus = quiver.getQualityDamageBonus() + quiver.bonuses.get(Bonus.Type.WeaponDamage);
+				quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Type.WeaponAttack);
+				quiverDamageBonus = quiver.getQualityDamageBonus() + quiver.bonuses.get(Type.WeaponDamage);
 			} 
 		}
 
@@ -247,20 +252,20 @@ public class Attack {
 		damageRoll = Game.dice.rand(weapon.getTemplate().getMinDamage(), weapon.getTemplate().getMaxDamage());
 
 		damageBonus += ((float)attacker.stats.get(Stat.LevelDamageBonus)) / 100.0f;
-		damageBonus += (float)(weapon.getQualityDamageBonus() + weapon.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+		damageBonus += (float)(weapon.getQualityDamageBonus() + weapon.bonuses.get(Type.WeaponDamage)) / 100.0f;
 		damageBonus += (float)(quiverDamageBonus) / 100.0f;
 		
 		attackBonus += baseAttackBonus - rangePenalty;
-		attackBonus += weapon.bonuses.get(Bonus.Type.WeaponAttack) + weapon.getQualityAttackBonus() + quiverAttackBonus;
+		attackBonus += weapon.bonuses.get(Type.WeaponAttack) + weapon.getQualityAttackBonus() + quiverAttackBonus;
 		
-		damageBonus += (float)attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) / 100.0f;
-		attackBonus += attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType); 
+		damageBonus += (float)attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Type.DamageForWeaponType) / 100.0f;
+		attackBonus += attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Type.AttackForWeaponType);
 		
 		totalAttack = attackRoll + attackBonus;
-		totalDamage = (int)Math.round( ((float)damageRoll * damageBonus) );
+		totalDamage = Math.round( ((float)damageRoll * damageBonus) );
 
-		damageMin = (int)Math.round( ((float)weapon.getTemplate().getMinDamage() * damageBonus) );
-		damageMax = (int)Math.round( ((float)weapon.getTemplate().getMaxDamage() * damageBonus) );
+		damageMin = Math.round( ((float)weapon.getTemplate().getMinDamage() * damageBonus) );
+		damageMax = Math.round( ((float)weapon.getTemplate().getMaxDamage() * damageBonus) );
 		
 		damage = new Damage(defender, weapon.getTemplate().getDamageType(), totalDamage);
 		
@@ -282,7 +287,7 @@ public class Attack {
 			
 			if (!flanker.threatensLocation(defender.getLocation())) continue;
 			
-			if (flanker.getFaction().getRelationship(defender) != Faction.Relationship.Hostile) continue;
+			if (flanker.getFaction().getRelationship(defender) != Relationship.Hostile) continue;
 			
 			Point screenOth = AreaUtil.convertGridToScreenAndCenter(flanker.getLocation().getX(), flanker.getLocation().getY());
 
@@ -295,7 +300,7 @@ public class Attack {
 
 			double theta = Math.acos((a2 + b2 - c2) / (2 * a * b)) * 360.0 / (2.0 * Math.PI);
 			
-			if (theta > 140.0 - attacker.stats.get(Bonus.Type.FlankingAngle)) {
+			if (theta > 140.0 - attacker.stats.get(Type.FlankingAngle)) {
 				flankingBonus = 20;
 				flankingAttack = true;
 				Game.mainViewer.addMessage("green", attacker.getTemplate().getName() + " and " +
@@ -359,7 +364,7 @@ public class Attack {
 			attacker.inventory.remove(weapon);
 			
 		} else if (!weapon.isMelee()) {
-			Ammo quiver = (Ammo)attacker.inventory.getEquippedItem(Inventory.Slot.Quiver);
+			Ammo quiver = (Ammo)attacker.inventory.getEquippedItem(Slot.Quiver);
 			
 			// remove one of the specified ammo.  This will remove from unequipped items first,
 			// keeping the ammo equipped unless it is the last one
@@ -381,7 +386,7 @@ public class Attack {
 			}
 		}
 		
-		boolean criticalHitImmunity = defender.stats.has(Bonus.Type.CriticalHitImmunity);
+		boolean criticalHitImmunity = defender.stats.has(Type.CriticalHitImmunity);
 		
 		// critical hit immunity also grants immunity to extraAttack / extraDamage
 		if (!criticalHitImmunity) {
@@ -396,8 +401,8 @@ public class Attack {
 			hit = true;
 			
 			int threatRange = weapon.getTemplate().getCriticalThreat() -
-				attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-				weapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - attacker.stats.get(Bonus.Type.CriticalChance);
+				attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalChance) -
+				weapon.bonuses.get(Type.WeaponCriticalChance) - attacker.stats.get(Type.CriticalChance);
 			
 			if ( attackRoll >= threatRange && !criticalHitImmunity ) {
 				threatRoll = Game.dice.d100();
@@ -416,8 +421,8 @@ public class Attack {
 					message.append(". Critical Hit" );
 
 					int multiplier = weapon.getTemplate().getCriticalMultiplier() +
-							attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-							weapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + attacker.stats.get(Bonus.Type.CriticalMultiplier);
+							attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalMultiplier) +
+							weapon.bonuses.get(Type.WeaponCriticalMultiplier) + attacker.stats.get(Type.CriticalMultiplier);
 
 					damage.add(weapon.getTemplate().getDamageType(), totalDamage * (multiplier - 1));
 					damageRoll *= multiplier;
@@ -455,7 +460,7 @@ public class Attack {
 	}
 	
 	public int computeAppliedDamage() {
-		this.appliedDamage = damage.computeAppliedDamage();
+        appliedDamage = damage.computeAppliedDamage();
 		
 		return appliedDamage;
 	}

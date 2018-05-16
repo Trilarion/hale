@@ -49,7 +49,7 @@ public enum ResourceType {
 	
 	ResourceType(String extension) {
 		this.extension = extension;
-		this.length = extension.length();
+        length = extension.length();
 	}
 	
 	/**

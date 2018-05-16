@@ -23,13 +23,16 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.utils.TintAnimator.GUITimeSource;
 import net.sf.hale.Game;
+import net.sf.hale.characterbuilder.ColorSelectorPopup.Callback;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.widgets.BasePortraitViewer;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Color;
@@ -125,7 +128,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 			i++;
 		} while(SpriteManager.hasSprite(currentValue));
 
-		this.hairStyleMax = i - 2;
+        hairStyleMax = i - 2;
 		
 		hairValid = new boolean[hairStyleMax + 1];
 
@@ -137,7 +140,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 			i++;
 		} while(SpriteManager.hasSprite(currentValue));
 
-		this.beardStyleMax = i - 2;
+        beardStyleMax = i - 2;
 		
 		beardsValid = new boolean[beardStyleMax + 1];
 		
@@ -170,7 +173,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		randomName.addCallback(new Runnable() {
 			@Override public void run() {
 				// setting the name field text will fire the nameField callback
-				if (workingCopy.getTemplate().getGender() == Ruleset.Gender.Male) {
+				if (workingCopy.getTemplate().getGender() == Gender.Male) {
 					nameField.setText(workingCopy.getTemplate().getRace().getRandomMaleName());
 				} else {
 					nameField.setText(workingCopy.getTemplate().getRace().getRandomFemaleName());
@@ -183,9 +186,9 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		genderLabel.setTheme("genderlabel");
 		add(genderLabel);
 		
-		genderSelectors = new ArrayList<GenderSelector>();
-		for (Ruleset.Gender gender : Ruleset.Gender.values()) {
-			String iconRule = gender.toString() + "Icon";
+		genderSelectors = new ArrayList<>();
+		for (Gender gender : Gender.values()) {
+			String iconRule = gender + "Icon";
 			
 			GenderSelector g = new GenderSelector(gender, Game.ruleset.getString(iconRule));
 			g.setTheme("genderselector");
@@ -444,7 +447,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		
 		// set editing buttons state
 		boolean editEnabled = getCharacter().getSelectedGender() != null;
-		boolean hasBeard = getCharacter().getSelectedGender() != Ruleset.Gender.Female;
+		boolean hasBeard = getCharacter().getSelectedGender() != Gender.Female;
 		
 		if (beardColorPicker != null) beardColorPicker.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
 		if (hairColorPicker != null) hairColorPicker.setEnabled(editEnabled && getCharacter().getSelectedRace().hasHair());
@@ -465,15 +468,15 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	
 	private void createHairBeardAndSkinPickers() {
 		if (hairColorPicker != null) {
-			this.removeChild(hairColorPicker);
+            removeChild(hairColorPicker);
 		}
 		
 		if (skinColorPicker != null) {
-			this.removeChild(skinColorPicker);
+            removeChild(skinColorPicker);
 		}
 		
 		if (beardColorPicker != null) {
-			this.removeChild(beardColorPicker);
+            removeChild(beardColorPicker);
 		}
 		
 		List<String> hairBeardColorsList = workingRace.getHairAndBeardColors();
@@ -582,7 +585,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		updateWorkingCopy();
 	}
 	
-	private void setGender(Ruleset.Gender gender) {
+	private void setGender(Gender gender) {
 		getCharacter().setSelectedGender(gender);
 
 		getCharacter().setSelectedSkinColor(currentSkinColor);
@@ -591,7 +594,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		getCharacter().setSelectedHairIcon("subIcons/hair" + numberFormat.format(currentHairStyle));
 		getCharacter().setSelectedHairColor(currentHairColor);
 		
-		if (gender == Ruleset.Gender.Female) {
+		if (gender == Gender.Female) {
 			getCharacter().setSelectedBeardIcon(null);
 			getCharacter().setSelectedBeardColor(null);
 			currentBeardStyle = getCharacter().getSelectedRace().getDefaultBeardIndex();
@@ -709,7 +712,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		}
 	}
 	
-	private class PortraitViewer extends BasePortraitViewer {
+	private static class PortraitViewer extends BasePortraitViewer {
 		private PortraitViewer(Creature creature) {
 			super(creature);
 		}
@@ -724,12 +727,12 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private class GenderSelector extends BuildablePropertySelector {
-		private Ruleset.Gender gender;
+		private Gender gender;
 		
-		private GenderSelector(Ruleset.Gender gender, String icon) {
+		private GenderSelector(Gender gender, String icon) {
 			super(gender.toString(), IconFactory.createIcon(icon), false);
 			this.gender = gender;
-			this.setSelectable(true);
+            setSelectable(true);
 		}
 		
 		@Override protected void onMouseClick() {
@@ -738,8 +741,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 			for (GenderSelector g : genderSelectors) {
 				g.setSelected(false);
 			}
-			
-			this.setSelected(true);
+
+            setSelected(true);
 		}
 	}
 	
@@ -753,16 +756,16 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		private ColorPicker(ColorCallback callback, Color[] buttonColors) {
 			this.callback = callback;
 			
-			colorButtons = new ArrayList<ColorButton>();
+			colorButtons = new ArrayList<>();
 			for (Color color : buttonColors) {
-				colorButtons.add( new ColorButton(color, callback) );
+				colorButtons.add(new ColorButton(color, callback));
 			}
 			
 			otherColorButton = new Button("Other...");
 			otherColorButton.addCallback(new Runnable() {
 				@Override public void run() {
 					ColorSelectorPopup popup = new ColorSelectorPopup(BuilderPaneCosmetic.this);
-					popup.addCallback(new ColorSelectorPopup.Callback() {
+					popup.addCallback(new Callback() {
 						@Override public void colorSelected(Color color) {
 							ColorPicker.this.callback.colorSet(color);
 						}
@@ -805,8 +808,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
-			
-			this.numColumns = themeInfo.getParameter("numcolumns", 0);
+
+            numColumns = themeInfo.getParameter("numcolumns", 0);
 		}
 		
 		@Override public int getPreferredWidth() {
@@ -819,17 +822,17 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private interface ColorCallback {
-		public void colorSet(Color color);
+		void colorSet(Color color);
 		
-		public Color getCurrentColor();
+		Color getCurrentColor();
 	}
 	
-	private class ColorButton extends Button implements Runnable {
+	private static class ColorButton extends Button implements Runnable {
 		private Color color;
 		private ColorCallback callback;
 		
 		private ColorButton(Color color, ColorCallback callback) {
-			setTintAnimator(new TintAnimator(new TintAnimator.GUITimeSource(this), color));
+			setTintAnimator(new TintAnimator(new GUITimeSource(this), color));
 			addCallback(this);
 			
 			this.color = color;
@@ -841,7 +844,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		}
 	}
 	
-	private class CharacterViewer extends Widget {
+	private static class CharacterViewer extends Widget {
 		private PC character;
 		
 		@Override protected void paintWidget(GUI gui) {

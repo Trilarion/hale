@@ -26,10 +26,13 @@ import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.Weight;
+import net.sf.hale.view.ItemListViewer.Mode;
 import net.sf.hale.widgets.ItemIconViewer;
+import net.sf.hale.widgets.ItemIconViewer.Listener;
 import net.sf.hale.widgets.RightClickMenu;
 
 import de.matthiasmann.twl.Button;
@@ -46,11 +49,11 @@ import de.matthiasmann.twl.renderer.Image;
  *
  */
 
-public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Listener {
+public class InventoryWindow extends GameSubWindow implements Listener {
 	private int gridSize;
 	private int labelGap;
 	
-	private final Map<Inventory.Slot, EquippedItemIconViewer> equipped;
+	private final Map<Slot, EquippedItemIconViewer> equipped;
 	private final CreatureViewer creatureViewer;
 	private final ItemListViewer viewer;
 	
@@ -68,12 +71,12 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	 */
 	
 	public InventoryWindow() {
-		this.currency = new Label();
-		this.currency.setTheme("currencylabel");
+        currency = new Label();
+        currency.setTheme("currencylabel");
 		add(currency);
-        
-		this.weight = new Label();
-		this.weight.setTheme("weightlabel");
+
+        weight = new Label();
+        weight.setTheme("weightlabel");
 		add(weight);
 		
 		organize = new Button();
@@ -89,8 +92,8 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		creatureViewer = new CreatureViewer();
 		add(creatureViewer);
 		
-		equipped = new HashMap<Inventory.Slot, EquippedItemIconViewer>();
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		equipped = new HashMap<>();
+		for (Slot slot : Slot.values()) {
 			EquippedItemIconViewer viewer = new EquippedItemIconViewer(slot);
 			viewer.setListener(this);
 			viewer.setTheme(slot.toString().toLowerCase() + "viewer");
@@ -99,7 +102,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		}
 		
 		viewer = new ItemListViewer();
-		this.add(viewer);
+        add(viewer);
 	}
 	
 	@Override public void setVisible(boolean visible) {
@@ -108,7 +111,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		viewer.clearAllItemHovers();
 	}
 	
-	public EquippedItemIconViewer getEquippedViewer(Inventory.Slot slot) {
+	public EquippedItemIconViewer getEquippedViewer(Slot slot) {
 		return equipped.get(slot);
 	}
 	
@@ -206,7 +209,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 			viewer.setItem(creature.inventory.getEquippedItem(viewer.slot), 1, creature, null, null);
 		}
 		
-		viewer.updateContent(ItemListViewer.Mode.INVENTORY, creature, merchant,
+		viewer.updateContent(Mode.INVENTORY, creature, merchant,
 				creature.inventory.getUnequippedItems());
 	}
 	
@@ -263,14 +266,14 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	}
 	
 	private class EquippedItemIconViewer extends ItemIconViewer {
-		private Inventory.Slot slot;
+		private Slot slot;
 		
 		private int gridX, gridY;
 		private String emptyTooltip;
 		private Image emptyImage;
 		private int emptyImageX, emptyImageY;
 		
-		private EquippedItemIconViewer(Inventory.Slot slot) {
+		private EquippedItemIconViewer(Slot slot) {
 			super(null);
 			
 			this.slot = slot;
@@ -313,7 +316,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 			return true;
 		}
 		
-		@Override public Inventory.Slot getItemEquipSlot() { return slot; }
+		@Override public Slot getItemEquipSlot() { return slot; }
 		
 		@Override public void dragAndDropStartHover(DragTarget target) {
 			if (validateTarget(target))

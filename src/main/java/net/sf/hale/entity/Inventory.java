@@ -27,6 +27,9 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.entity.ItemList.Entry;
+import net.sf.hale.entity.ItemList.Listener;
+import net.sf.hale.entity.WeaponTemplate.Handed;
 import net.sf.hale.icon.SubIcon;
 import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -43,6 +46,7 @@ import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
 import net.sf.hale.widgets.MultipleItemPopup;
+import net.sf.hale.widgets.MultipleItemPopup.Callback;
 import net.sf.hale.widgets.RightClickMenu;
 
 /**
@@ -51,7 +55,7 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class Inventory implements ItemList.Listener, Saveable {
+public class Inventory implements Listener, Saveable {
 	private final Creature parent;
 	
 	private final ItemList unequippedItems;
@@ -65,30 +69,30 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 *
 	 */
 	
-	public static enum Slot {
-		MainHand(new MainHandSlotValidator(), new NormalSubIconGetter(SubIcon.Type.MainHandWeapon)),
+	public enum Slot {
+		MainHand(new MainHandSlotValidator(), new NormalSubIconGetter(Type.MainHandWeapon)),
 		OffHand(new OffHandSlotValidator(), new OffHandSubIconGetter()),
-		Armor(EquippableItemTemplate.Type.Armor, new NormalSubIconGetter(SubIcon.Type.Torso)),
-		Gloves(EquippableItemTemplate.Type.Gloves, new NormalSubIconGetter(SubIcon.Type.Gloves)),
-		Helmet(EquippableItemTemplate.Type.Helmet, new NormalSubIconGetter(SubIcon.Type.Head)),
-		Cloak(EquippableItemTemplate.Type.Cloak, new NormalSubIconGetter(SubIcon.Type.Cloak)),
-		Boots(EquippableItemTemplate.Type.Boots, new NormalSubIconGetter(SubIcon.Type.Boots)),
+		Armor(EquippableItemTemplate.Type.Armor, new NormalSubIconGetter(Type.Torso)),
+		Gloves(EquippableItemTemplate.Type.Gloves, new NormalSubIconGetter(Type.Gloves)),
+		Helmet(EquippableItemTemplate.Type.Helmet, new NormalSubIconGetter(Type.Head)),
+		Cloak(EquippableItemTemplate.Type.Cloak, new NormalSubIconGetter(Type.Cloak)),
+		Boots(EquippableItemTemplate.Type.Boots, new NormalSubIconGetter(Type.Boots)),
 		Belt(EquippableItemTemplate.Type.Belt, new NormalSubIconGetter()),
 		Amulet(EquippableItemTemplate.Type.Amulet, new NormalSubIconGetter()),
 		RightRing(EquippableItemTemplate.Type.Ring, new NormalSubIconGetter()),
 		LeftRing(EquippableItemTemplate.Type.Ring, new NormalSubIconGetter()),
-		Quiver(EquippableItemTemplate.Type.Ammo, new NormalSubIconGetter(SubIcon.Type.Quiver));
+		Quiver(EquippableItemTemplate.Type.Ammo, new NormalSubIconGetter(Type.Quiver));
 		
 		private final SlotValidator slotValidator;
 		private final SubIconGetter subIconGetter;
 		
-		private Slot(EquippableItemTemplate.Type type, SubIconGetter subIconGetter) {
-			this.slotValidator = new GenericSlotValidator(type);
+		Slot(EquippableItemTemplate.Type type, SubIconGetter subIconGetter) {
+            slotValidator = new GenericSlotValidator(type);
 			this.subIconGetter = subIconGetter;
 		}
 		
-		private Slot(SlotValidator validator, SubIconGetter subIconGetter) {
-			this.slotValidator = validator;
+		Slot(SlotValidator validator, SubIconGetter subIconGetter) {
+            slotValidator = validator;
 			this.subIconGetter = subIconGetter;
 		}
 		
@@ -101,7 +105,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		 */
 		
 		public boolean matchesItemType(EquippableItem item) {
-			return this.slotValidator.matchesItemType(item);
+			return slotValidator.matchesItemType(item);
 		}
 		
 		/**
@@ -110,7 +114,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		 * @return the SubIconType
 		 */
 		
-		public SubIcon.Type getSubIconType(EquippableItem item) {
+		public Type getSubIconType(EquippableItem item) {
 			return subIconGetter.getType(item);
 		}
 	}
@@ -122,17 +126,17 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	private interface SubIconGetter {
-		public SubIcon.Type getType(EquippableItem item);
+		Type getType(EquippableItem item);
 	}
 	
 	private static class NormalSubIconGetter implements SubIconGetter {
-		private final SubIcon.Type type;
+		private final Type type;
 		
 		private NormalSubIconGetter() {
-			this.type = null;
+            type = null;
 		}
 		
-		private NormalSubIconGetter(SubIcon.Type type) {
+		private NormalSubIconGetter(Type type) {
 			this.type = type;
 		}
 
@@ -145,9 +149,9 @@ public class Inventory implements ItemList.Listener, Saveable {
 		@Override public Type getType(EquippableItem item) {
 			switch (item.getTemplate().getType()) {
 			case Shield:
-				return SubIcon.Type.Shield;
+				return Type.Shield;
 			case Weapon:
-				return SubIcon.Type.OffHandWeapon;
+				return Type.OffHandWeapon;
 			default:
 				return null;
 			}
@@ -161,7 +165,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	private interface SlotValidator {
-		public boolean matchesItemType(EquippableItem item);
+		boolean matchesItemType(EquippableItem item);
 	}
 	
 	private static class MainHandSlotValidator implements SlotValidator {
@@ -178,7 +182,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 			case Shield:
 				return true;
 			case Weapon:
-				return ( ((Weapon)item).getTemplate().getHanded() != WeaponTemplate.Handed.TwoHanded );
+				return ( ((Weapon)item).getTemplate().getHanded() != Handed.TwoHanded );
 			default:
 				return false;
 			}
@@ -201,7 +205,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		JSONOrderedObject out = new JSONOrderedObject();
 		
 		JSONOrderedObject equippedOut = new JSONOrderedObject();
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = equippedItems.get(slot);
 			
 			if (item == null) continue;
@@ -251,7 +255,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		if (data.containsKey("equipped")) {
 			SimpleJSONObject equipped = data.getObject("equipped");
 			
-			for (Inventory.Slot slot : Inventory.Slot.values()) {
+			for (Slot slot : Slot.values()) {
 				if (!equipped.containsKey(slot.toString())) continue;
 				
 				SimpleJSONObject slotData = equipped.getObject(slot.toString());
@@ -300,7 +304,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		unequippedItems.addListener(this);
 		
 		// set up empty equipment slots
-		equippedItems = new HashMap<Slot, EquippableItem>();
+		equippedItems = new HashMap<>();
 	}
 	
 	/**
@@ -316,8 +320,8 @@ public class Inventory implements ItemList.Listener, Saveable {
 		unequippedItems = new ItemList(other.unequippedItems);
 		unequippedItems.addListener(this);
 		
-		equippedItems = new HashMap<Slot, EquippableItem>();
-		for (Inventory.Slot key : other.equippedItems.keySet()) {
+		equippedItems = new HashMap<>();
+		for (Slot key : other.equippedItems.keySet()) {
 			EquippableItem otherItem = other.equippedItems.get(key);
 			
 			equip((EquippableItem)EntityManager.getItem(otherItem.getTemplate().getID(), otherItem.getQuality()), key, false);
@@ -329,7 +333,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public void endAllAnimations() {
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = equippedItems.get(slot);
 			
 			if (item != null) {
@@ -622,7 +626,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	private Slot getDefaultSlot(EquippableItem item) {
 		switch (item.getTemplate().getType()) {
 		case Weapon:
-			Weapon mainHand = this.getEquippedMainHand();
+			Weapon mainHand = getEquippedMainHand();
 			
 			if (mainHand != null && !mainHand.isTwoHanded() && getEquippedOffHand() == null &&
 					parent.stats.has(Bonus.Type.DualWieldTraining) && !((Weapon)item).isTwoHanded()) {
@@ -841,7 +845,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public EquippableItem getEquippedItem(Slot slot) {
-		return this.equippedItems.get(slot);
+		return equippedItems.get(slot);
 	}
 	
 	/**
@@ -891,8 +895,8 @@ public class Inventory implements ItemList.Listener, Saveable {
 	public boolean isEmptyOtherThanDefaultClothes() {
 		if (unequippedItems.size() > 0) return false;
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
-			if ( equippedItems.get(slot) != null && (slot != Inventory.Slot.Armor ||
+		for (Slot slot : Slot.values()) {
+			if ( equippedItems.get(slot) != null && (slot != Slot.Armor ||
 					!equippedItems.get(slot).getTemplate().getID().equals(Game.ruleset.getString("DefaultClothes")) ) ) {
 				return false;
 			}
@@ -922,7 +926,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	public Weight getTotalWeight() {
 		int grams = unequippedItems.getTotalWeight().grams;
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = equippedItems.get(slot);
 			if (item == null) continue;
 			
@@ -959,7 +963,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	public int getTotalQuantity(Item item) {
 		int quantity = unequippedItems.getQuantity(item);
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			if ( item.equals(equippedItems.get(slot)) )
 				quantity++;
 		}
@@ -977,7 +981,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	public int getTotalQuantity(String itemID) {
 		int quantity = unequippedItems.getQuantity(itemID);
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			Item item = equippedItems.get(slot);
 			if (item == null) continue;
 			
@@ -1017,7 +1021,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		
 		int qtyRemovedFromEquipped = 0;
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			if ( item.equals(equippedItems.get(slot)) ) {
 				qtyRemovedFromEquipped++;
 				unequip(slot, false);
@@ -1062,7 +1066,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		
 		int qtyRemovedFromEquipped = 0;
 		
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			if (equippedItems.get(slot) == null) continue;
 			
 			if ( itemID.equals(equippedItems.get(slot).getTemplate().getID()) ) {
@@ -1086,7 +1090,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public Slot getSlot(Item item) {
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			if ( item.equals(equippedItems.get(slot)) )
 				return slot;
 		}
@@ -1111,7 +1115,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public void elapseTime(int numRounds) {
-		for (Inventory.Slot slot : Inventory.Slot.values()) {
+		for (Slot slot : Slot.values()) {
 			EquippableItem item = equippedItems.get(slot);
 			if (item == null) continue;
 			
@@ -1228,7 +1232,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 * @return a drop equipped item callback
 	 */
 	
-	public Runnable getDropEquippedCallback(Inventory.Slot slot) {
+	public Runnable getDropEquippedCallback(Slot slot) {
 		return new DropEquippedCallback(slot);
 	}
 	
@@ -1296,7 +1300,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 * @return a callback for selling an equipped item
 	 */
 	
-	public Runnable getSellEquippedCallback(Inventory.Slot slot, Merchant merchant) {
+	public Runnable getSellEquippedCallback(Slot slot, Merchant merchant) {
 		return new SellEquippedCallback(slot, merchant);
 	}
 	
@@ -1372,7 +1376,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		@Override public void run() {
 			ItemList list = container.getCurrentItems();
 			
-			for (ItemList.Entry entry : list) {
+			for (Entry entry : list) {
 				if (!parent.timer.performAction(Game.ruleset.getValue("PickUpItemCost")))
 					return;
 				
@@ -1413,7 +1417,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		}
 	}
 	
-	private abstract class MultipleCallback implements MultipleItemPopup.Callback {
+	private abstract static class MultipleCallback implements Callback {
 		protected final Item item;
 		private final int maxQuantity;
 		private final String labelText;
@@ -1657,7 +1661,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 		}
 	}
 	
-	@Override public boolean itemListEntryRemoved(ItemList.Entry entry) {
+	@Override public boolean itemListEntryRemoved(Entry entry) {
 		return false;
 	}
 }

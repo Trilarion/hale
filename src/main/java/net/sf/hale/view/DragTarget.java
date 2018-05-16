@@ -22,6 +22,7 @@ package net.sf.hale.view;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.Icon;
@@ -39,54 +40,54 @@ public interface DragTarget {
 	 * Gets the icon that is drawn under the cursor while dragging
 	 * @return the icon to draw under the drag cursor
 	 */
-	
-	public Icon getDragIcon();
+
+    Icon getDragIcon();
 	
 	/**
 	 * Returns the item that this drag target can drag, or null
 	 * if this drag target does not drag an item
 	 * @return the item that is dragged by this drag target
 	 */
-	
-	public Item getItem();
+
+    Item getItem();
 	
 	/**
 	 * Returns the parent of the item or ability that this drag target can drag, or null
 	 * if the drag target does not drag an item or the item does not have a parent creature
 	 * @return the parent of the item being dragged
 	 */
-	
-	public PC getParentPC();
+
+    PC getParentPC();
 	
 	/**
 	 * Returns the container of the item that this drag target can drag, or null
 	 * if the drag target does not drag an item or the item does not have a parent container
 	 * @return the parent container of the item being dragged
 	 */
-	
-	public Container getItemContainer();
+
+    Container getItemContainer();
 	
 	/**
 	 * Returns the merchant owning the item that this drag target can drag, or null
 	 * if the drag target does not drag an item or the item does not have a parent merchant
 	 * @return the parent merchant of the item being dragged
 	 */
-	
-	public Merchant getItemMerchant();
+
+    Merchant getItemMerchant();
 	
 	/**
 	 * Returns the equipment slot that the item being dragged currently resides in, or null
 	 * if the item is not an equipped item
 	 * @return the equipment slot
 	 */
-	
-	public Inventory.Slot getItemEquipSlot();
+
+    Slot getItemEquipSlot();
 	
 	/**
 	 * Returns the ability that this drag target can drag, or null
 	 * if this drag target does not drag an ability
 	 * @return the ability that is dragged by this drag target
 	 */
-	
-	public Ability getAbility();
+
+    Ability getAbility();
 }

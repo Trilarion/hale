@@ -66,7 +66,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	private enum ClassType {
-		PC, NPC, Container, Door, Item, Trap, EquippableItem, Ammo, Armor, Weapon;
+		PC, NPC, Container, Door, Item, Trap, EquippableItem, Ammo, Armor, Weapon
 	}
 	
 	private Entity createEntity(SimpleJSONObject entryData) {
@@ -125,7 +125,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	
 	public AreaEntityList(int width, int height) {
 		entities = new EntityList[width][height];
-		entitiesSet = new LinkedHashSet<Entity>();
+		entitiesSet = new LinkedHashSet<>();
 	}
 	
 	/**
@@ -324,7 +324,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 		
 		entities[x][y].remove(entity);
 		
-		if (entities[x][y].size() == 0) entities[x][y] = null;
+		if (entities[x][y].isEmpty()) entities[x][y] = null;
 	}
 	
 	public void moveEntity(Entity entity, Location lastLocation) {
@@ -336,7 +336,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public List<Entity> getEntitiesWithID(String id) {
-		List<Entity> entities = new ArrayList<Entity>();
+		List<Entity> entities = new ArrayList<>();
 		
 		for (Entity e : entitiesSet) {
 			if (e.getTemplate().getID().equals(id)) entities.add(e);
@@ -394,9 +394,9 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public final List<Creature> getCreatures(int x, int y) {
-		if (entities[x][y] == null) return new ArrayList<Creature>(0);
+		if (entities[x][y] == null) return new ArrayList<>(0);
 		
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		for (Entity entity : entities[x][y]) {
 			if (entity instanceof Creature)
@@ -407,11 +407,11 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public final List<Entity> getEntities(int x, int y) {
-		if (x < 0 || x >= entities.length || y < 0 || y >= entities[0].length) return new ArrayList<Entity>(0);
+		if (x < 0 || x >= entities.length || y < 0 || y >= entities[0].length) return new ArrayList<>(0);
 		
-		if (entities[x][y] == null) return new ArrayList<Entity>(0);
+		if (entities[x][y] == null) return new ArrayList<>(0);
 		
-		List<Entity> foundEntities = new ArrayList<Entity>(entities[x][y].size());
+		List<Entity> foundEntities = new ArrayList<>(entities[x][y].size());
 		
 		for (Entity entity : entities[x][y]) {
 			foundEntities.add(entity);
@@ -438,7 +438,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	 */
 	
 	public final List<Creature> getAllCreatures() {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		for (Entity entity : entitiesSet) {
 			if (entity instanceof Creature) creatures.add((Creature)entity);
@@ -453,7 +453,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	 */
 	
 	public final List<Container> getAllContainers() {
-		List<Container> containers = new ArrayList<Container>();
+		List<Container> containers = new ArrayList<>();
 		
 		for (Entity entity : entitiesSet) {
 			if (entity instanceof Container) containers.add((Container)entity);
@@ -468,7 +468,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	 */
 	
 	public List<Door> getAllDoors() {
-		List<Door> doors = new ArrayList<Door>();
+		List<Door> doors = new ArrayList<>();
 		
 		for (Entity entity : entitiesSet) {
 			if (entity instanceof Door) doors.add((Door)entity);
@@ -478,7 +478,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public List<Trap> getVisibleTraps(boolean[][] visibility) {
-		List<Trap> traps = new LinkedList<Trap>();
+		List<Trap> traps = new LinkedList<>();
 		
 		for (int i = 0; i < entities.length; i++) {
 			for (int j = 0; j < entities[0].length; j++) {
@@ -493,7 +493,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public List<Creature> getVisibleCreatures(boolean[][] visibility) {
-		List<Creature> creatures = new LinkedList<Creature>();
+		List<Creature> creatures = new LinkedList<>();
 		
 		for (int i = 0; i < entities.length; i++) {
 			for (int j = 0; j < entities[0].length; j++) {
@@ -515,7 +515,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	 */
 	
 	public List<Creature> getVisibleCreatures(Creature parent) {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		for (int i = 0; i < entities.length; i++) {
 			for (int j = 0; j < entities[0].length; j++) {
@@ -531,7 +531,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	public List<Creature> getCreaturesWithinRadius(int x, int y, int radius) {
-		List<Creature> creatures = new LinkedList<Creature>();
+		List<Creature> creatures = new LinkedList<>();
 		
 		Creature current = getCreature(x, y);
 		if (current != null) creatures.add(current);
@@ -570,21 +570,21 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	
 	public void resize(int newWidth, int newHeight) {
 		EntityList[][] newEntities = new EntityList[newWidth][newHeight];
-		HashSet<Entity> newHash = new HashSet<Entity>();
+		Set<Entity> newHash = new HashSet<>();
 		
-		int width = Math.min(this.entities.length, newWidth);
-		int height = Math.min(this.entities[0].length, newHeight);
+		int width = Math.min(entities.length, newWidth);
+		int height = Math.min(entities[0].length, newHeight);
 		
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				newEntities[i][j] = this.entities[i][j];
+				newEntities[i][j] = entities[i][j];
 				
 				if (entities[i][j] != null) newHash.addAll(entities[i][j]);
 			}
 		}
-		
-		this.entities = newEntities;
-		this.entitiesSet = newHash;
+
+        entities = newEntities;
+        entitiesSet = newHash;
 	}
 	
 	@Override public Iterator<Entity> iterator() {
@@ -596,7 +596,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 		private Entity last;
 		
 		private EntityIterator() {
-			this.hashSetIterator = entitiesSet.iterator();
+            hashSetIterator = entitiesSet.iterator();
 			last = null;
 		}
 		
@@ -614,7 +614,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 		}
 	}
 	
-	private class EntityList extends ArrayList<Entity> {
+	private static class EntityList extends ArrayList<Entity> {
 		private static final long serialVersionUID = 7587119408526288199L;
 
 		private EntityList() {

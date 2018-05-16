@@ -48,17 +48,17 @@ public class TrapTemplate extends ItemTemplate {
 	
 	public TrapTemplate(String id, SimpleJSONObject data) {
 		super(id, data);
-		
-		this.damageType = Game.ruleset.getDamageType(data.get("damageType", null));
-		
-		this.minDamage = data.get("minDamage", 0);
-		this.maxDamage = data.get("maxDamage", 0);
-		
-		this.findDifficulty = data.get("findDifficulty", 0);
-		this.placeDifficulty = data.get("placeDifficulty", 0);
-		this.disarmDifficulty = data.get("disarmDifficulty", 0);
-		this.recoverDifficulty = data.get("recoverDifficulty", 0);
-		this.reflexDifficulty = data.get("reflexDifficulty", 0);
+
+        damageType = Game.ruleset.getDamageType(data.get("damageType", null));
+
+        minDamage = data.get("minDamage", 0);
+        maxDamage = data.get("maxDamage", 0);
+
+        findDifficulty = data.get("findDifficulty", 0);
+        placeDifficulty = data.get("placeDifficulty", 0);
+        disarmDifficulty = data.get("disarmDifficulty", 0);
+        recoverDifficulty = data.get("recoverDifficulty", 0);
+        reflexDifficulty = data.get("reflexDifficulty", 0);
 	}
 	
 	@Override public Trap createInstance() {

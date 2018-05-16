@@ -27,6 +27,8 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.ability.AbilitySelectionList.Connector;
+import net.sf.hale.characterbuilder.AbilitySelectorButton.Callback;
+import net.sf.hale.characterbuilder.AbilitySelectorButton.HoverHolder;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.PC;
 import net.sf.hale.util.Pointf;
@@ -66,22 +68,22 @@ public class AbilitySelectionListPane extends Widget {
 	 */
 	
 	public AbilitySelectionListPane(AbilitySelectionList list, PC parentPC,
-			AbilitySelectorButton.HoverHolder parent, boolean showSelectable, List<String> listIDsNotToAdd) {
+			HoverHolder parent, boolean showSelectable, List<String> listIDsNotToAdd) {
 		this.parentPC = parentPC;
 		this.list = list;
 		this.showSelectable = showSelectable;
 		
 		Set<Ability> abilities = list.getAbilities();
 		Set<String> subLists = list.getSubListIDs();
-		List<AbilitySelectionList.Connector> connectors = list.getConnectors(); 
+		List<Connector> connectors = list.getConnectors();
 		
-		buttons = new ArrayList<AbilitySelectorButton>(abilities.size());
-		subListPanes = new ArrayList<AbilitySelectionListPane>(subLists.size());
-		subListLabels = new ArrayList<Label>(subLists.size());
-		connectorViewers = new ArrayList<ConnectorViewer>(connectors.size());
+		buttons = new ArrayList<>(abilities.size());
+		subListPanes = new ArrayList<>(subLists.size());
+		subListLabels = new ArrayList<>(subLists.size());
+		connectorViewers = new ArrayList<>(connectors.size());
 		
 		// create the connectors
-		for (AbilitySelectionList.Connector connector : list.getConnectors()) {
+		for (Connector connector : list.getConnectors()) {
 			ConnectorViewer viewer = new ConnectorViewer(connector);
 
 			connectorViewers.add(viewer);
@@ -128,7 +130,7 @@ public class AbilitySelectionListPane extends Widget {
 	 * @param callback the callback to add
 	 */
 	
-	public void addAbilitySelectorCallback(AbilitySelectorButton.Callback callback) {
+	public void addAbilitySelectorCallback(Callback callback) {
 		for (AbilitySelectorButton button : buttons) {
 			button.addCallback(callback);
 		}
@@ -140,8 +142,8 @@ public class AbilitySelectionListPane extends Widget {
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
-		
-		this.gridSize = themeInfo.getParameter("gridSize", 0);
+
+        gridSize = themeInfo.getParameter("gridSize", 0);
 		
 		String alreadyOwnedText = themeInfo.getParameter("alreadyOwnedText", "");
 		String prereqsNotMetText = themeInfo.getParameter("prereqsNotMetText", "");
@@ -172,7 +174,7 @@ public class AbilitySelectionListPane extends Widget {
 		
 		// layout the top level buttons
 		for (AbilitySelectorButton button : buttons) {
-			Pointf position = this.list.getGridPosition(button.getAbility());
+			Pointf position = list.getGridPosition(button.getAbility());
 			
 			button.setPosition(getInnerX() + (int)(gridSize * position.x),
 					getInnerY() + (int)(gridSize * position.y));
@@ -186,7 +188,7 @@ public class AbilitySelectionListPane extends Widget {
 			AbilitySelectionListPane pane = subListPanes.get(i);
 			Label paneLabel = subListLabels.get(i);
 			
-			Pointf position = this.list.getGridPosition(pane.list);
+			Pointf position = list.getGridPosition(pane.list);
 			
 			pane.setPosition(getInnerX() + (int)(gridSize * position.x),
 					getInnerY() + (int)(gridSize * position.y));
@@ -204,7 +206,7 @@ public class AbilitySelectionListPane extends Widget {
 		
 		//figure out button size for connectors
 		int buttonWidth, buttonHeight;
-		if (buttons.size() > 0) {
+		if (!buttons.isEmpty()) {
 			buttonWidth = buttons.get(0).getWidth();
 			buttonHeight = buttons.get(0).getHeight();
 		} else {
@@ -218,7 +220,7 @@ public class AbilitySelectionListPane extends Widget {
 			
 			Pointf point = viewer.connector.getPoint();
 			
-			float posX = gridSize * point.x + (buttonWidth - viewer.getWidth()) / 2.0f;;
+			float posX = gridSize * point.x + (buttonWidth - viewer.getWidth()) / 2.0f;
 			float posY = gridSize * point.y;
 			
 			switch (viewer.connector.getType()) {
@@ -241,7 +243,7 @@ public class AbilitySelectionListPane extends Widget {
 		
 		private ConnectorViewer(Connector connector) {
 			this.connector = connector;
-			this.setTheme("connector");
+            setTheme("connector");
 		}
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {

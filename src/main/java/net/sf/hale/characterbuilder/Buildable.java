@@ -35,9 +35,12 @@ import net.sf.hale.entity.PC;
 import net.sf.hale.entity.PCTemplate;
 import net.sf.hale.icon.ComposedCreatureIcon;
 import net.sf.hale.icon.SubIcon;
+import net.sf.hale.icon.SubIcon.Factory;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Role;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
 
@@ -64,7 +67,7 @@ public class Buildable {
 	private List<Ability> selectedAbilities;
 	
 	private String selectedName;
-	private Ruleset.Gender selectedGender;
+	private Gender selectedGender;
 	private String selectedHairIcon;
 	private Color selectedHairColor;
 	private String selectedPortrait;
@@ -83,15 +86,15 @@ public class Buildable {
 	 */
 	
 	public Buildable() {
-		PCTemplate template = new PCTemplate("temp", "temp", null, Ruleset.Gender.Male, null, null);
+		PCTemplate template = new PCTemplate("temp", "temp", null, Gender.Male, null, null);
 		creature = new PC(template);
 		
-		selectableRaces = new ArrayList<Race>();
+		selectableRaces = new ArrayList<>();
 		for (Race race : Game.ruleset.getAllRaces()) {
 			if (race.isPlayerSelectable()) selectableRaces.add(race);
 		}
 		
-		selectedAbilities = new ArrayList<Ability>();
+		selectedAbilities = new ArrayList<>();
 		
 		newCharacter = true;
 	}
@@ -107,10 +110,10 @@ public class Buildable {
 		
 		newCharacter = false;
 		
-		selectableRaces = new ArrayList<Race>();
+		selectableRaces = new ArrayList<>();
 		selectableRaces.add(creature.getTemplate().getRace());
 		
-		selectedAbilities = new ArrayList<Ability>();
+		selectedAbilities = new ArrayList<>();
 	}
 	
 	/**
@@ -158,8 +161,8 @@ public class Buildable {
 			selectedSkinColor = null;
 			selectedClothingColor = null;
 		}
-		
-		this.selectedRace = race;
+
+        selectedRace = race;
 	}
 	
 	/**
@@ -186,9 +189,9 @@ public class Buildable {
 			selectedSkinColor = null;
 			selectedClothingColor = null;
 		}
-		
-		this.selectedSkills = skills;
-		this.selectedUnspentSkillPoints = pointsUnspent;
+
+        selectedSkills = skills;
+        selectedUnspentSkillPoints = pointsUnspent;
 	}
 	
 	/**
@@ -197,7 +200,7 @@ public class Buildable {
 	 */
 	
 	public SkillSet getSelectedSkills() {
-		return this.selectedSkills;
+		return selectedSkills;
 	}
 	
 	/**
@@ -207,7 +210,7 @@ public class Buildable {
 	 */
 	
 	public int getSelectedUnspentSkillPoints() {
-		return this.selectedUnspentSkillPoints;
+		return selectedUnspentSkillPoints;
 	}
 	
 	/**
@@ -249,8 +252,8 @@ public class Buildable {
 			selectedSkinColor = null;
 			selectedClothingColor = null;
 		}
-		
-		this.selectedAttributes = attributes;
+
+        selectedAttributes = attributes;
 	}
 	
 	/**
@@ -293,8 +296,8 @@ public class Buildable {
 			selectedSkinColor = null;
 			selectedClothingColor = null;
 		}
-		
-		this.selectedRole = role;
+
+        selectedRole = role;
 	}
 	
 	/**
@@ -305,7 +308,7 @@ public class Buildable {
 	 */
 	
 	public void addSelectedAbility(Ability ability) {
-		this.selectedAbilities.add(ability);
+        selectedAbilities.add(ability);
 	}
 	
 	/**
@@ -314,7 +317,7 @@ public class Buildable {
 	 */
 	
 	public void clearSelectedAbilities() {
-		this.selectedAbilities.clear();
+        selectedAbilities.clear();
 		
 		selectedName = null;
 		selectedGender = null;
@@ -364,8 +367,8 @@ public class Buildable {
 	 * @param gender the gender for this Buildable character
 	 */
 	
-	public void setSelectedGender(Ruleset.Gender gender) {
-		this.selectedGender = gender;
+	public void setSelectedGender(Gender gender) {
+        selectedGender = gender;
 	}
 	
 	/**
@@ -374,7 +377,7 @@ public class Buildable {
 	 * @return the gender selected for this Buildable
 	 */
 	
-	public Ruleset.Gender getSelectedGender() {
+	public Gender getSelectedGender() {
 		return selectedGender;
 	}
 	
@@ -384,7 +387,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedHairIcon(String hairIcon) {
-		this.selectedHairIcon = hairIcon;
+        selectedHairIcon = hairIcon;
 	}
 	
 	/**
@@ -403,7 +406,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedHairColor(Color hairColor) {
-		this.selectedHairColor = hairColor;
+        selectedHairColor = hairColor;
 	}
 	
 	/**
@@ -422,7 +425,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedBeardIcon(String beardIcon) {
-		this.selectedBeardIcon = beardIcon;
+        selectedBeardIcon = beardIcon;
 	}
 	
 	/**
@@ -441,7 +444,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedBeardColor(Color beardColor) {
-		this.selectedBeardColor = beardColor;
+        selectedBeardColor = beardColor;
 	}
 	
 	/**
@@ -460,7 +463,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedSkinColor(Color color) {
-		this.selectedSkinColor = color;
+        selectedSkinColor = color;
 	}
 	
 	/**
@@ -479,7 +482,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedClothingColor(Color color) {
-		this.selectedClothingColor = color;
+        selectedClothingColor = color;
 	}
 	
 	/**
@@ -498,7 +501,7 @@ public class Buildable {
 	 */
 	
 	public void setSelectedPortrait(String portrait) {
-		this.selectedPortrait = portrait;
+        selectedPortrait = portrait;
 	}
 	
 	/**
@@ -545,17 +548,17 @@ public class Buildable {
 		
 		PCTemplate template;
 		if (newCharacter) {
-			List<SubIcon> subIcons = new ArrayList<SubIcon>();
+			List<SubIcon> subIcons = new ArrayList<>();
 			
 			// set up the character's icon
 			if (selectedHairIcon != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Hair, selectedRace, selectedGender);
+				Factory factory = new Factory(Type.Hair, selectedRace, selectedGender);
 				factory.setPrimaryIcon(selectedHairIcon, selectedHairColor);
 				subIcons.add(factory.createSubIcon());
 			}
 			
 			if (selectedBeardIcon != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Beard, selectedRace, selectedGender);
+				Factory factory = new Factory(Type.Beard, selectedRace, selectedGender);
 				factory.setPrimaryIcon(selectedBeardIcon, selectedBeardColor);
 				subIcons.add(factory.createSubIcon());
 			}
@@ -621,7 +624,7 @@ public class Buildable {
 	 */
 	
 	public List<Skill> getSelectableSkills() {
-		List<Skill> skills = new ArrayList<Skill>();
+		List<Skill> skills = new ArrayList<>();
 		
 		for (Skill skill : Game.ruleset.getAllSkills()) {
 			if (skill.canUse(creature)) {
@@ -656,7 +659,7 @@ public class Buildable {
 	 */
 	
 	public List<Role> getSelectableRoles() {
-		List<Role> roles = new ArrayList<Role>();
+		List<Role> roles = new ArrayList<>();
 		
 		for (Role role : Game.ruleset.getAllRoles()) {
 			if (!role.isPlayer()) continue;
@@ -678,7 +681,7 @@ public class Buildable {
 	 */
 	
 	public List<Role> getFutureOrPastSelectableRoles() {
-		List<Role> roles = new ArrayList<Role>();
+		List<Role> roles = new ArrayList<>();
 		
 		for (Role role : Game.ruleset.getAllRoles()) {
 			if (!role.isPlayer()) continue;

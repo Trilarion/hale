@@ -22,6 +22,7 @@ package net.sf.hale.defaultability;
 import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.PC;
@@ -46,7 +47,7 @@ public class DisarmTrap implements DefaultAbility {
 	@Override public boolean canActivate(PC parent, Location targetPosition) {
 		if (!parent.timer.canPerformAction("DisarmTrapCost")) return false;
 		
-		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Type.TrapHandling)) return false;
 		
 		trap = targetPosition.getTrap();
 		if (trap == null || !trap.isSpotted()) return false;
@@ -92,7 +93,7 @@ public class DisarmTrap implements DefaultAbility {
 		
 		if (!parent.timer.canPerformAction("DisarmTrapCost")) return false;
 		
-		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Type.TrapHandling)) return false;
 		
 		parent.timer.performAction("DisarmTrapCost");
 		

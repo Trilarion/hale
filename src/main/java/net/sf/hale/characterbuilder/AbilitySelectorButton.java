@@ -22,6 +22,8 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.Event.Type;
+import de.matthiasmann.twl.utils.TintAnimator.GUITimeSource;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.Icon;
@@ -77,14 +79,14 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	public AbilitySelectorButton(Ability ability, PC parent, HoverHolder widgetToAddHoverTo, boolean showSelectable) {
 		this.ability = ability;
 		this.parent = parent;
-		this.icon = ability.getIcon();
+        icon = ability.getIcon();
 		this.showSelectable = showSelectable;
 		
 		this.widgetToAddHoverTo = widgetToAddHoverTo;
-		this.addCallback(this);
-		this.setSize(ability.getIcon().getWidth(), ability.getIcon().getHeight());
+        addCallback(this);
+        setSize(ability.getIcon().getWidth(), ability.getIcon().getHeight());
 		
-		callbacks = new ArrayList<Callback>();
+		callbacks = new ArrayList<>();
 	}
 	
 	/**
@@ -119,8 +121,8 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	 */
 	
 	protected void setHoverText(String text, Color color) {
-		this.hoverText = text;
-		this.hoverTextColor = color;
+        hoverText = text;
+        hoverTextColor = color;
 	}
 	
 	/**
@@ -129,7 +131,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	 */
 	
 	protected void setWidgetToAddWindowsTo(Widget widget) {
-		this.widgetToAddWindowsTo = widget;
+        widgetToAddWindowsTo = widget;
 	}
 	
 	/**
@@ -157,7 +159,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	
 	private void handleHover(Event evt) {
 		if (evt.isMouseEvent()) {
-			boolean hover = (evt.getType() != Event.Type.MOUSE_EXITED) &&
+			boolean hover = (evt.getType() != Type.MOUSE_EXITED) &&
 			(isMouseInside(evt)  || abilityHoverDetails.isInside(evt.getMouseX(), evt.getMouseY()) );
 			
 			if (hover && !isHovering) {
@@ -214,7 +216,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		 * Called whenever the widget is left clicked
 		 * @param ability the ability that has been selected
 		 */
-		public void selectionMade(Ability ability);
+        void selectionMade(Ability ability);
 	}
 	
 	private class AbilityHover extends Widget {
@@ -224,13 +226,13 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		private AbilityHover() {
 			abilityNameLabel = new HoverLabel(ability.getName());
 			abilityNameLabel.setTheme("abilitynamelabel");
-			this.add(abilityNameLabel);
+            add(abilityNameLabel);
 			
 			hoverMessageLabel = new HoverLabel(hoverText);
 			hoverMessageLabel.setTheme("hovermessagelabel");
-			this.add(hoverMessageLabel);
+            add(hoverMessageLabel);
 			
-			hoverMessageLabel.setTintAnimator(new TintAnimator(new TintAnimator.GUITimeSource(this), hoverTextColor));
+			hoverMessageLabel.setTintAnimator(new TintAnimator(new GUITimeSource(this), hoverTextColor));
 		}
 		
 		@Override protected boolean handleEvent(Event evt) {
@@ -276,8 +278,8 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		 * @param hoverTop the top hover widget
 		 * @param hoverBottom the bottom hover widget
 		 */
-		
-		public void setHoverWidgets(Widget hoverTop, Widget hoverBottom);
+
+        void setHoverWidgets(Widget hoverTop, Widget hoverBottom);
 		
 		/**
 		 * Removes the specified widgets if they are still the hover widgets for the
@@ -285,10 +287,10 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		 * @param hoverTop the top hover widget
 		 * @param hoverBottom the bottom hover widget
 		 */
+
+        void removeHoverWidgets(Widget hoverTop, Widget hoverBottom);
 		
-		public void removeHoverWidgets(Widget hoverTop, Widget hoverBottom);
-		
-		public GUI getGUI();
+		GUI getGUI();
 	}
 	
 	private class HoverLabel extends Label {

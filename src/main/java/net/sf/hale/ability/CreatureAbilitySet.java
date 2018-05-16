@@ -62,7 +62,7 @@ public class CreatureAbilitySet implements Saveable {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		if (tempAbilitySlots.size() > 0) {
+		if (!tempAbilitySlots.isEmpty()) {
 			Object[] tempSlots = new Object[tempAbilitySlots.size()];
 			
 			int i = 0;
@@ -74,7 +74,7 @@ public class CreatureAbilitySet implements Saveable {
 			data.put("tempSlots", tempSlots);
 		}
 		
-		List<Object> slotsData = new ArrayList<Object>();
+		List<Object> slotsData = new ArrayList<>();
 		for (String key : abilitySlots.keySet()) {
 			for (AbilitySlot slot : abilitySlots.get(key)) {
 				slotsData.add(slot.save());
@@ -85,7 +85,7 @@ public class CreatureAbilitySet implements Saveable {
 			data.put("slots", slotsData.toArray());
 		
 		// save abilities
-		List<JSONOrderedObject> abilitiesData = new ArrayList<JSONOrderedObject>();
+		List<JSONOrderedObject> abilitiesData = new ArrayList<>();
 		for (String key : abilities.keySet()) {
 			for (String abilityID : abilities.get(key).keySet()) {
 				AbilityInstance instance = abilities.get(key).get(abilityID);
@@ -127,7 +127,7 @@ public class CreatureAbilitySet implements Saveable {
 		
 		if (data.containsKey("slots")) {
 			for (SimpleJSONArrayEntry entry : data.getArray("slots")) {
-				this.add( AbilitySlot.load(entry.getObject(), refHandler, parent) );
+				add( AbilitySlot.load(entry.getObject(), refHandler, parent) );
 			}
 		}
 	}
@@ -139,14 +139,14 @@ public class CreatureAbilitySet implements Saveable {
 	
 	public CreatureAbilitySet(Creature parent) {
 		this.parent = parent;
-		abilities = new HashMap<String, Map<String, AbilityInstance>>();
-		activateableAbilities = new HashMap<String, Map<String, AbilityWithActiveCount>>();
+		abilities = new HashMap<>();
+		activateableAbilities = new HashMap<>();
 		
-		abilitySlots = new HashMap<String, List<AbilitySlot>>();
+		abilitySlots = new HashMap<>();
 		
-		tempAbilitySlots = new ArrayList<AbilitySlot>(2);
+		tempAbilitySlots = new ArrayList<>(2);
 		
-		listeners = new ArrayList<Listener>(1);
+		listeners = new ArrayList<>(1);
 	}
 	
 	/**
@@ -160,45 +160,45 @@ public class CreatureAbilitySet implements Saveable {
 	public CreatureAbilitySet(CreatureAbilitySet other, Creature parent) {
 		this.parent = parent;
 		
-		abilities = new HashMap<String, Map<String, AbilityInstance>>();
-		activateableAbilities = new HashMap<String, Map<String, AbilityWithActiveCount>>();
-		abilitySlots = new HashMap<String, List<AbilitySlot>>();
-		listeners = new ArrayList<Listener>(1);
+		abilities = new HashMap<>();
+		activateableAbilities = new HashMap<>();
+		abilitySlots = new HashMap<>();
+		listeners = new ArrayList<>(1);
 		
 		// copy abilities from other
 		for (String type : other.abilities.keySet()) {
-			Map<String, AbilityInstance> newAbilitiesOfType = new HashMap<String, AbilityInstance>(other.abilities.get(type));
-			this.abilities.put(type, newAbilitiesOfType);
+			Map<String, AbilityInstance> newAbilitiesOfType = new HashMap<>(other.abilities.get(type));
+			abilities.put(type, newAbilitiesOfType);
 		}
 		
 		// copy activateable abilities from other
 		for (String type : other.activateableAbilities.keySet()) {
 			// AbilityWithActiveCount is mutable so do a deep copy
-			Map<String, AbilityWithActiveCount> newAbilitiesOfType = new HashMap<String, AbilityWithActiveCount>();
+			Map<String, AbilityWithActiveCount> newAbilitiesOfType = new HashMap<>();
 			for (String abilityID : other.activateableAbilities.get(type).keySet()) {
 				AbilityWithActiveCount awac = other.activateableAbilities.get(type).get(abilityID);
 				
 				newAbilitiesOfType.put(abilityID, new AbilityWithActiveCount(awac.abilityID, awac.count));
 			}
 
-			this.activateableAbilities.put(type, newAbilitiesOfType);
+			activateableAbilities.put(type, newAbilitiesOfType);
 		}
 		
 		// copy abilitySlots from other
 		for (String type : other.abilitySlots.keySet()) {
 			List<AbilitySlot> otherSlots = other.abilitySlots.get(type);
 			
-			List<AbilitySlot> newSlots = new ArrayList<AbilitySlot>(2);
+			List<AbilitySlot> newSlots = new ArrayList<>(2);
 			for (AbilitySlot slot : otherSlots) {
 				newSlots.add(new AbilitySlot(slot, parent));
 			}
-			
-			this.abilitySlots.put(type, newSlots);
+
+			abilitySlots.put(type, newSlots);
 		}
-		
-		this.tempAbilitySlots = new ArrayList<AbilitySlot>();
+
+		tempAbilitySlots = new ArrayList<>();
 		for (AbilitySlot slot : other.tempAbilitySlots) {
-			this.tempAbilitySlots.add(new AbilitySlot(slot, parent));
+			tempAbilitySlots.add(new AbilitySlot(slot, parent));
 		}
 	}
 	
@@ -219,7 +219,7 @@ public class CreatureAbilitySet implements Saveable {
 	}
 	
 	/**
-	 * Adds this Ability as a Racial Ability.  See {@link CreatureAbilitySet.AbilityInstance}
+	 * Adds this Ability as a Racial Ability.  See {@link AbilityInstance}
 	 * 
 	 * @param ability the ability to add
 	 */
@@ -229,7 +229,7 @@ public class CreatureAbilitySet implements Saveable {
 	}
 	
 	/**
-	 * Adds this Ability as a Role Ability.  See {@link CreatureAbilitySet.AbilityInstance}
+	 * Adds this Ability as a Role Ability.  See {@link AbilityInstance}
 	 * 
 	 * @param ability the ability to add
 	 * @param level the level at which the ability was added
@@ -254,7 +254,7 @@ public class CreatureAbilitySet implements Saveable {
 		if (!abilities.containsKey(type)) {
 			//create a new LinkedList to put in the Map if one does not
 			//already exist
-			abilitiesOfType = new HashMap<String, AbilityInstance>(4);
+			abilitiesOfType = new HashMap<>(4);
 			abilities.put(type, abilitiesOfType);
 		} else {
 			abilitiesOfType = abilities.get(type);
@@ -267,7 +267,7 @@ public class CreatureAbilitySet implements Saveable {
 		// list if it is activateable
 		if (ability.isActivateable()) {
 			if (!activateableAbilities.containsKey(type)) {
-				activateableAbilitiesOfType = new HashMap<String, AbilityWithActiveCount>(4);
+				activateableAbilitiesOfType = new HashMap<>(4);
 				activateableAbilities.put(type, activateableAbilitiesOfType);
 			} else {
 				activateableAbilitiesOfType = activateableAbilities.get(type);
@@ -292,7 +292,7 @@ public class CreatureAbilitySet implements Saveable {
 
 		if (ability.isActivateable() && ability.isFixed()) {
 			AbilitySlot slot = new AbilitySlot(ability, parent);
-			this.add(slot);
+			add(slot);
 		}
 
 		// notify listeners of added abilities
@@ -335,7 +335,7 @@ public class CreatureAbilitySet implements Saveable {
 	public void remove(Ability ability) {
 		// remove from the activateable list
 		if (ability.isActivateable()) {
-			Map<String, AbilityWithActiveCount> abilitiesOfType = this.activateableAbilities.get(ability.getType());
+			Map<String, AbilityWithActiveCount> abilitiesOfType = activateableAbilities.get(ability.getType());
 			
 			// the ability isn't in this list if the type isn't present
 			if (abilitiesOfType == null) return;
@@ -346,7 +346,7 @@ public class CreatureAbilitySet implements Saveable {
 			abilitiesOfType.remove(ability.getID());
 		}
 		
-		Map<String, AbilityInstance> instances = this.abilities.get(ability.getType());
+		Map<String, AbilityInstance> instances = abilities.get(ability.getType());
 		
 		// the ability isn't in this list if the type isn't present
 		if (instances == null) return;
@@ -435,7 +435,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<String> getAllTypes() {
-		List<String> types = new ArrayList<String>(abilities.size());
+		List<String> types = new ArrayList<>(abilities.size());
 		
 		for (String type : abilities.keySet()) {
 			types.add(type);
@@ -452,7 +452,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<String> getActivateableTypes() {
-		List<String> types = new ArrayList<String>(activateableAbilities.size());
+		List<String> types = new ArrayList<>(activateableAbilities.size());
 		
 		for (String type : activateableAbilities.keySet()) {
 			types.add(type);
@@ -469,7 +469,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<Ability> getActivateableAbilities() {
-		List<Ability> abilities = new ArrayList<Ability>();
+		List<Ability> abilities = new ArrayList<>();
 		
 		for (String type : activateableAbilities.keySet()) {
 			for (String abilityID : activateableAbilities.get(type).keySet()) {
@@ -493,7 +493,7 @@ public class CreatureAbilitySet implements Saveable {
 		if (abilitySlots.containsKey(type)) {
 			abilitySlots.get(type).add(slot);
 		} else {
-			List<AbilitySlot> listOfSlots = new ArrayList<AbilitySlot>(2);
+			List<AbilitySlot> listOfSlots = new ArrayList<>(2);
 			listOfSlots.add(slot);
 			abilitySlots.put(type, listOfSlots);
 		}
@@ -501,7 +501,7 @@ public class CreatureAbilitySet implements Saveable {
 		if (!slot.isEmpty()) {
 			Ability ability = slot.getAbility();
 			
-			AbilityWithActiveCount awac = this.activateableAbilities.get(ability.getType()).get(ability.getID());
+			AbilityWithActiveCount awac = activateableAbilities.get(ability.getType()).get(ability.getID());
 			awac.count++;
 		}
 		
@@ -535,9 +535,9 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<Ability> getAbilitiesOfType(String type) {
-		if (!abilities.containsKey(type)) return new ArrayList<Ability>(0);
+		if (!abilities.containsKey(type)) return new ArrayList<>(0);
 		
-		List<Ability> abilitiesOfType = new ArrayList<Ability>(abilities.get(type).size());
+		List<Ability> abilitiesOfType = new ArrayList<>(abilities.get(type).size());
 		
 		for (String abilityID : abilities.get(type).keySet()) {
 			abilitiesOfType.add(abilities.get(type).get(abilityID).getAbility());
@@ -553,7 +553,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<Ability> getAllAbilities() {
-		List<Ability> abilities = new ArrayList<Ability>();
+		List<Ability> abilities = new ArrayList<>();
 		
 		for (String type : this.abilities.keySet()) {
 			for (String abilityID : this.abilities.get(type).keySet()) {
@@ -571,7 +571,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilityInstance> getAllAbilityInstances() {
-		List<AbilityInstance> instances = new ArrayList<AbilityInstance>();
+		List<AbilityInstance> instances = new ArrayList<>();
 		
 		for (String type : abilities.keySet()) {
 			for (String abilityID : abilities.get(type).keySet()) {
@@ -592,9 +592,9 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilityInstance> getAbilityInstancesOfType(String type) {
-		if (!abilities.containsKey(type)) return new ArrayList<AbilityInstance>(0);
+		if (!abilities.containsKey(type)) return new ArrayList<>(0);
 		
-		List<AbilityInstance> abilitiesOfType = new ArrayList<AbilityInstance>(abilities.get(type).size());
+		List<AbilityInstance> abilitiesOfType = new ArrayList<>(abilities.get(type).size());
 		
 		for (String abilityID : abilities.get(type).keySet()) {
 			abilitiesOfType.add(abilities.get(type).get(abilityID));
@@ -613,9 +613,9 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilitySlot> getSlotsOfType(String type) {
-		if (!this.abilitySlots.containsKey(type)) return new ArrayList<AbilitySlot>(0);
+		if (!abilitySlots.containsKey(type)) return new ArrayList<>(0);
 		
-		List<AbilitySlot> slotsOfType = new ArrayList<AbilitySlot>(abilitySlots.get(type).size());
+		List<AbilitySlot> slotsOfType = new ArrayList<>(abilitySlots.get(type).size());
 		
 		for (AbilitySlot slot : abilitySlots.get(type)) {
 			slotsOfType.add(slot);
@@ -634,7 +634,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public int getNumberOfEmptySlotsOfType(String type) {
-		if (!this.abilitySlots.containsKey(type)) return 0;
+		if (!abilitySlots.containsKey(type)) return 0;
 		
 		int slotsEmpty = 0;
 		
@@ -655,7 +655,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilitySlot> getEmptySlotsOfType(String type) {
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 		
 		if (!abilitySlots.containsKey(type)) return slots;
 		
@@ -677,7 +677,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public AbilitySlot getFirstEmptySlotOfType(String type) {
-		if (!this.abilitySlots.containsKey(type)) return null;
+		if (!abilitySlots.containsKey(type)) return null;
 		
 		for (AbilitySlot slot : abilitySlots.get(type)) {
 			if (slot.isEmpty()) return slot;
@@ -738,7 +738,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilitySlot> getSlotsWithReadiedAbility(Ability ability) {
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> slots = new ArrayList<>();
 		
 		if (!abilitySlots.containsKey(ability.getType())) return slots;
 		
@@ -791,7 +791,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public List<AbilitySlot> cancelAllAuras() {
-		List<AbilitySlot> canceledSlots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> canceledSlots = new ArrayList<>();
 		
 		for (String type : abilitySlots.keySet()) {
 			for (AbilitySlot slot : abilitySlots.get(type)) {
@@ -868,7 +868,7 @@ public class CreatureAbilitySet implements Saveable {
 			
 			// get the sorted list of activateable abilities of the specified type
 			List<AbilityWithActiveCount> awacs =
-				new ArrayList<AbilityWithActiveCount>(activateableAbilities.get(type).size());
+					new ArrayList<>(activateableAbilities.get(type).size());
 			awacs.addAll(activateableAbilities.get(type).values());
 			
 			// remove all fixed abilities from the list, as these cannot be added
@@ -955,7 +955,7 @@ public class CreatureAbilitySet implements Saveable {
 			return;
 		}
 		
-		AbilitySlot slot = this.getFirstEmptySlotOfType(ability.getType());
+		AbilitySlot slot = getFirstEmptySlotOfType(ability.getType());
 		if (slot == null) {
 			Logger.appendToWarningLog("Attempted to ready ability " + ability.getID() + " on " +
 					parent.getTemplate().getID() + " but no empty slots available.");
@@ -971,7 +971,7 @@ public class CreatureAbilitySet implements Saveable {
 	 */
 	
 	public void removeRacialAbilities() {
-		List<Ability> abilitiesToRemove = new ArrayList<Ability>();
+		List<Ability> abilitiesToRemove = new ArrayList<>();
 		
 		for (String type : abilities.keySet()) {
 			for (String abilityID : abilities.get(type).keySet()) {
@@ -1034,7 +1034,7 @@ public class CreatureAbilitySet implements Saveable {
 	public String getUpgradedName(String abilityID) {
 		Ability ability = Game.ruleset.getAbility(abilityID);
 		
-		return ability.getUpgradedName(this.parent);
+		return ability.getUpgradedName(parent);
 	}
 	
 	/**
@@ -1047,16 +1047,16 @@ public class CreatureAbilitySet implements Saveable {
 	public Icon getUpgradedIcon(String abilityID) {
 		Ability ability = Game.ruleset.getAbility(abilityID);
 		
-		return ability.getUpgradedIcon(this.parent);
+		return ability.getUpgradedIcon(parent);
 	}
 	
-	private class AbilityWithActiveCount implements Comparable<AbilityWithActiveCount> {
+	private static class AbilityWithActiveCount implements Comparable<AbilityWithActiveCount> {
 		private final String abilityID;
 		private int count;
 		
 		private AbilityWithActiveCount(Ability ability) {
-			this.abilityID = ability.getID();
-			this.count = 0;
+			abilityID = ability.getID();
+			count = 0;
 		}
 		
 		private AbilityWithActiveCount(String abilityID, int count) {
@@ -1077,14 +1077,14 @@ public class CreatureAbilitySet implements Saveable {
 	 * this class are immutable.
 	 */
 	
-	public class AbilityInstance {
+	public static class AbilityInstance {
 		private final String abilityID;
 		private final int level;
 		private final boolean race;
 		private final boolean role;
 		
 		private AbilityInstance(Ability ability, int level, boolean race, boolean role) {
-			this.abilityID = ability.getID();
+			abilityID = ability.getID();
 			this.level = level;
 			this.race = race;
 			this.role = role;
@@ -1146,6 +1146,6 @@ public class CreatureAbilitySet implements Saveable {
 		 * Called whenever an Ability or AbilitySlot is added or removed from
 		 * this CreatureAbilitySet
 		 */
-		public void abilitySetModified();
+		void abilitySetModified();
 	}
 }

@@ -71,7 +71,7 @@ public class MiniMapWindow extends GameSubWindow {
 		content = new Content();
 		scrollPane = new ScrollPane(content);
 		scrollPane.setTheme("mappane");
-		this.add(scrollPane);
+        add(scrollPane);
 		
 		legend = new Button();
 		legend.setTheme("legendbutton");
@@ -82,7 +82,7 @@ public class MiniMapWindow extends GameSubWindow {
 				popup.openPopup();
 			}
 		});
-		this.add(legend);
+        add(legend);
 	}
 	
 	@Override protected void layout() {
@@ -149,9 +149,9 @@ public class MiniMapWindow extends GameSubWindow {
 	public void updateContent(Area area) {
 		if (this.area != area && area != null) {
 			this.area = area;
-			this.setTitle(area.getName());
-			
-			this.setSize( Math.min(Game.areaViewer.getInnerWidth(), getMaxWidth()),
+            setTitle(area.getName());
+
+            setSize( Math.min(Game.areaViewer.getInnerWidth(), getMaxWidth()),
 					Math.min(Game.areaViewer.getInnerHeight(), getMaxHeight()) );
 			
 			if (getWidth() > getMaxWidth() || getHeight() > getMaxHeight()) {
@@ -321,8 +321,8 @@ public class MiniMapWindow extends GameSubWindow {
 			
 			@Override protected void applyTheme(ThemeInfo themeInfo) {
 				super.applyTheme(themeInfo);
-				
-				this.labelGap = themeInfo.getParameter("labelgap", 0);
+
+                labelGap = themeInfo.getParameter("labelgap", 0);
 			}
 			
 			@Override protected void layout() {

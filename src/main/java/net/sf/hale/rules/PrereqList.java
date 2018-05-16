@@ -62,15 +62,15 @@ public class PrereqList {
 	 */
 	
 	public PrereqList() {
-		skillPrereqs = new HashMap<String, Integer>();
-		abilityPrereqs = new ArrayList<String>();
-		statPrereqs = new HashMap<Stat, Integer>();
+		skillPrereqs = new HashMap<>();
+		abilityPrereqs = new ArrayList<>();
+		statPrereqs = new HashMap<>();
 		
-		weaponProficiencyPrereqs = new ArrayList<String>();
-		armorProficiencyPrereqs = new ArrayList<String>();
+		weaponProficiencyPrereqs = new ArrayList<>();
+		armorProficiencyPrereqs = new ArrayList<>();
 		
-		rolePrereqs = new ArrayList<String>();
-		roleLevelPrereqs = new ArrayList<Integer>();
+		rolePrereqs = new ArrayList<>();
+		roleLevelPrereqs = new ArrayList<>();
 	}
 	
 	/**
@@ -99,11 +99,11 @@ public class PrereqList {
 	 */
 	
 	public boolean hasRolePrereqs(Creature c) {
-		if (rolePrereqs.size() == 0) return true;
-		
-		for (int i = 0; i < rolePrereqs.size(); i++) {
-			Role cc = Game.ruleset.getRole(rolePrereqs.get(i));
-			
+		if (rolePrereqs.isEmpty()) return true;
+
+		for (String rolePrereq : rolePrereqs) {
+			Role cc = Game.ruleset.getRole(rolePrereq);
+
 			if (cc != null) {
 				if (c.roles.getLevel(cc) >= 1) {
 					return true;
@@ -123,7 +123,7 @@ public class PrereqList {
 	 */
 	
 	public boolean meetsRolePrereqs(Creature c) {
-		if (rolePrereqs.size() == 0) return true;
+		if (rolePrereqs.isEmpty()) return true;
 		
 		for (int i = 0; i < rolePrereqs.size(); i++) {
 			Role cc = Game.ruleset.getRole(rolePrereqs.get(i));
@@ -155,7 +155,7 @@ public class PrereqList {
 			if (meetsSkillPrereq(c, skillID)) return false;
 		}
 		
-		if (meetsRolePrereqs(c) && rolePrereqs.size() > 0) return false;
+		if (meetsRolePrereqs(c) && !rolePrereqs.isEmpty()) return false;
 		
 		for (String abilityID : abilityPrereqs) {
 			if (meetsAbilityPrereq(c, abilityID)) return false;
@@ -250,7 +250,7 @@ public class PrereqList {
 		if (!rolePrereqs.isEmpty()) return false;
 		if (!statPrereqs.isEmpty()) return false;
 		
-		return (skillPrereqs.size() == 0);
+		return (skillPrereqs.isEmpty());
 	}
 	
 	private void appendMetOrNotMet(Creature c, boolean isMet, StringBuilder sb) {
@@ -303,7 +303,7 @@ public class PrereqList {
 			sb.append(skill.getNoun()).append("</span></td></tr>");
 		}
 		
-		if (rolePrereqs.size() > 0) {
+		if (!rolePrereqs.isEmpty()) {
 			appendMetOrNotMet(c, c != null && meetsRolePrereqs(c), sb);
 		}
 		
@@ -362,9 +362,9 @@ public class PrereqList {
 		weapons(new WeaponParser()),
 		armor(new ArmorParser());
 		
-		private PrereqParser parser;
+		private final PrereqParser parser;
 		
-		private PrereqType(PrereqParser parser) {
+		PrereqType(PrereqParser parser) {
 			this.parser = parser;
 		}
 		
@@ -376,7 +376,7 @@ public class PrereqList {
 	}
 	
 	private interface PrereqParser {
-		public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList);
+		void parse(SimpleJSONArrayEntry entry, PrereqList prereqList);
 	}
 	
 	private static class ArmorParser implements PrereqParser {

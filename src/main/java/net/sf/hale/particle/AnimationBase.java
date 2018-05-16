@@ -97,29 +97,39 @@ public abstract class AnimationBase implements Saveable {
 	public AnimationBase(int halfWidth, int halfHeight) {
 		this.halfWidth = halfWidth;
 		this.halfHeight = halfHeight;
-		this.rotation = 0.0f;
+        rotation = 0.0f;
 	}
 	
 	public AnimationBase(AnimationBase other) {
-		this.halfWidth = other.halfWidth;
-		this.halfHeight = other.halfHeight;
-		
-		this.r = other.r; this.g = other.g; this.b = other.b; this.a = other.a;
-		this.vr = other.vr; this.vg = other.vg; this.vb = other.vb; this.va = other.va;
-		
-		this.r2 = other.r2; this.g2 = other.g2; this.b2 = other.b2;
-		this.vr2 = other.vr2; this.vg2 = other.vg2; this.vb2 = other.vb2;
-		
-		this.positionX = other.positionX;
-		this.positionY = other.positionY;
-		
-		this.velocityX = other.velocityX;
-		this.velocityY = other.velocityY;
-		
-		this.speed = other.speed;
-		this.velocityAngle = other.velocityAngle;
-		
-		this.secondsRemaining = other.secondsRemaining;
+        halfWidth = other.halfWidth;
+        halfHeight = other.halfHeight;
+
+        r = other.r;
+        g = other.g;
+        b = other.b;
+        a = other.a;
+        vr = other.vr;
+        vg = other.vg;
+        vb = other.vb;
+        va = other.va;
+
+        r2 = other.r2;
+        g2 = other.g2;
+        b2 = other.b2;
+        vr2 = other.vr2;
+        vg2 = other.vg2;
+        vb2 = other.vb2;
+
+        positionX = other.positionX;
+        positionY = other.positionY;
+
+        velocityX = other.velocityX;
+        velocityY = other.velocityY;
+
+        speed = other.speed;
+        velocityAngle = other.velocityAngle;
+
+        secondsRemaining = other.secondsRemaining;
 	}
 	
 	public boolean elapseTime(float seconds) {
@@ -143,50 +153,50 @@ public abstract class AnimationBase implements Saveable {
 	}
 	
 	public final void setRotation(float angle) {
-		this.rotation = angle;
+        rotation = angle;
 	}
 	
 	public final void setRotationSpeed(float angle) {
-		this.rotationSpeed = angle;
+        rotationSpeed = angle;
 	}
 	
 	public final void offsetPosition(float x, float y) {
-		this.positionX += x;
-		this.positionY += y;
+        positionX += x;
+        positionY += y;
 	}
 	
 	public final void setPosition(Point screenPoint) {
-		this.positionX = screenPoint.x;
-		this.positionY = screenPoint.y;
+        positionX = screenPoint.x;
+        positionY = screenPoint.y;
 	}
 	
 	public final void setPosition(float x, float y) {
-		this.positionX = x;
-		this.positionY = y;
+        positionX = x;
+        positionY = y;
 	}
 	
 	public final void setSecondaryRed(float r) {
-		this.r2 = r;
+        r2 = r;
 	}
 	
 	public final void setSecondaryGreen(float g) {
-		this.g2 = g;
+        g2 = g;
 	}
 	
 	public final void setSecondaryBlue(float b) {
-		this.b2 = b;
+        b2 = b;
 	}
 	
 	public final void setSecondaryRedSpeed(float vr) {
-		this.vr2 = vr;
+        vr2 = vr;
 	}
 	
 	public final void setSecondaryGreenSpeed(float vg) {
-		this.vg2 = vg;
+        vg2 = vg;
 	}
 	
 	public final void setSecondaryBlueSpeed(float vb) {
-		this.vb2 = vb;
+        vb2 = vb;
 	}
 	
 	public final void setRed(float r) {
@@ -222,33 +232,33 @@ public abstract class AnimationBase implements Saveable {
 	}
 	
 	public void setDuration(float lifetime) {
-		this.secondsRemaining = lifetime;
+        secondsRemaining = lifetime;
 	}
 	
 	public final void setVelocity(float[] vector) {
-		this.velocityX = vector[0];
-		this.velocityY = vector[1];
-		this.speed = vector[2];
-		this.velocityAngle = vector[3];
+        velocityX = vector[0];
+        velocityY = vector[1];
+        speed = vector[2];
+        velocityAngle = vector[3];
 	}
 	
 	public final void setVelocity(float vx, float vy) {
-		this.velocityX = vx;
-		this.velocityY = vy;
-		this.speed = (float)Math.sqrt(vx * vx + vy * vy);
-		this.velocityAngle = (float)Math.atan(vy / vx);
+        velocityX = vx;
+        velocityY = vy;
+        speed = (float)Math.sqrt(vx * vx + vy * vy);
+        velocityAngle = (float)Math.atan(vy / vx);
 	}
 	
 	public final void setVelocityMagnitudeAngle(float magnitude, float angle) {
-		this.speed = magnitude;
-		this.velocityAngle = angle;
-		this.velocityX = (float)Math.cos(angle) * magnitude;
-		this.velocityY = (float)Math.sin(angle) * magnitude;
+        speed = magnitude;
+        velocityAngle = angle;
+        velocityX = (float)Math.cos(angle) * magnitude;
+        velocityY = (float)Math.sin(angle) * magnitude;
 		
 	}
 	
 	public void finish() {
-		this.secondsRemaining = 0.0f;
+        secondsRemaining = 0.0f;
 	}
 	
 	public final int getHalfWidth() { return halfWidth; }

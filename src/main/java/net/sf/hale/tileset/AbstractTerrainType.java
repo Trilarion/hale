@@ -61,8 +61,8 @@ public abstract class AbstractTerrainType implements Iterable<TerrainTile> {
 		for (TerrainTile tile : tiles) {
 			prob += tile.getProbability();
 		}
-		
-		this.totalProbability = prob;
+
+        totalProbability = prob;
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public abstract class AbstractTerrainType implements Iterable<TerrainTile> {
 	 */
 	
 	public static List<TerrainTile> parseTiles(SimpleJSONObject data) {
-		ArrayList<TerrainTile> tiles = new ArrayList<TerrainTile>();
+		ArrayList<TerrainTile> tiles = new ArrayList<>();
 		
 		for (SimpleJSONArrayEntry entry : data.getArray("tiles")) {
 			SimpleJSONObject tileObject = entry.getObject();

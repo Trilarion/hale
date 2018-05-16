@@ -26,6 +26,7 @@ import de.matthiasmann.twl.Color;
 
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Attack;
 
@@ -55,8 +56,8 @@ public class DelayedAttackCallback extends Thread{
 		
 		this.mainAttack = mainAttack;
 		this.offHandAttack = offHandAttack;
-		
-		this.callbacks = new ArrayList<Runnable>();
+
+        callbacks = new ArrayList<>();
 	}
 	
 	/**
@@ -139,7 +140,7 @@ public class DelayedAttackCallback extends Thread{
 		}
 		
 		// other creatures get an AoO for ranged attacks
-		if (attack.isRanged() && !attacker.stats.has(Bonus.Type.AoOFromRangedImmunity)) {
+		if (attack.isRanged() && !attacker.stats.has(Type.AoOFromRangedImmunity)) {
 			Game.areaListener.getCombatRunner().provokeAttacksOfOpportunity(attacker, null);
 		}
 		
@@ -153,7 +154,7 @@ public class DelayedAttackCallback extends Thread{
 	
 	@Override public void run() {
 		try {
-			if (delayMillis != 0l)
+			if (delayMillis != 0L)
 				Thread.sleep(delayMillis);
 			
 			if (mainAttack != null) performAttack(mainAttack);
@@ -170,7 +171,7 @@ public class DelayedAttackCallback extends Thread{
 		}
 		
 		synchronized(this) {
-			this.notifyAll();
+            notifyAll();
 		}
 	}
 }

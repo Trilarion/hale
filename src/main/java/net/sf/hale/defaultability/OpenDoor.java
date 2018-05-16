@@ -54,8 +54,8 @@ public class OpenDoor implements DefaultAbility {
 		door = targetPosition.getDoor();
 		
 		if (door != null) {
-			if (door.isOpen()) actionName = OpenDoor.doorCloseAction;
-			else actionName = OpenDoor.doorOpenAction;
+			if (door.isOpen()) actionName = doorCloseAction;
+			else actionName = doorOpenAction;
 			
 			move = new Move();
 			

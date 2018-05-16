@@ -54,10 +54,10 @@ public class Tile {
 	 */
 	
 	public void cacheSprite() {
-		this.sprite = SpriteManager.getImage(spriteID);
-		
-		this.offsetX = (Game.TILE_SIZE - sprite.getWidth()) / 2;
-		this.offsetY = (Game.TILE_SIZE - sprite.getHeight()) / 2;
+        sprite = SpriteManager.getImage(spriteID);
+
+        offsetX = (Game.TILE_SIZE - sprite.getWidth()) / 2;
+        offsetY = (Game.TILE_SIZE - sprite.getHeight()) / 2;
 	}
 	
 	/**

@@ -26,11 +26,11 @@ public class ProficiencyList {
 	private Set<String> proficiencies;
 	
 	public ProficiencyList() {
-		proficiencies = new LinkedHashSet<String>();
+		proficiencies = new LinkedHashSet<>();
 	}
 	
 	public ProficiencyList(ProficiencyList other) {
-		proficiencies = new LinkedHashSet<String>(other.proficiencies);
+		proficiencies = new LinkedHashSet<>(other.proficiencies);
 	}
 	
 	public void add(String proficiency) {

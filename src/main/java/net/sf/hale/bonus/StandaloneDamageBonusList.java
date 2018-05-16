@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Damage;
 
@@ -34,13 +35,13 @@ public class StandaloneDamageBonusList {
 	public StandaloneDamageBonusList(StandaloneDamageBonusList other) {
 		
 		if (other.bonuses != null)
-			bonuses = new LinkedList<StandaloneDamageBonus>(other.bonuses);
+			bonuses = new LinkedList<>(other.bonuses);
 	}
 	
 	public void add(Bonus bonus) {
-		if (bonuses == null) bonuses = new LinkedList<StandaloneDamageBonus>();
+		if (bonuses == null) bonuses = new LinkedList<>();
 		
-		if (bonus.getType() == Bonus.Type.StandaloneDamage) {
+		if (bonus.getType() == Type.StandaloneDamage) {
 			bonuses.add((StandaloneDamageBonus)bonus);
 		}
 	}
@@ -50,7 +51,7 @@ public class StandaloneDamageBonusList {
 	}
 	
 	public boolean isEmpty() {
-		return bonuses != null && bonuses.size() > 0;
+		return bonuses != null && !bonuses.isEmpty();
 	}
 	
 	public void clear() {

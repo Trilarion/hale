@@ -66,9 +66,9 @@ public class Aura extends Effect {
 	
 	public Aura(String scriptID) {
 		super(scriptID);
-		
-		this.minRadius = 0;
-		this.maxRadius = 0;
+
+        minRadius = 0;
+        maxRadius = 0;
 	}
 	
 	/**
@@ -79,9 +79,9 @@ public class Aura extends Effect {
 	
 	public Aura(Aura other, EffectTarget target) {
 		super(other, target);
-		
-		this.maxRadius = other.maxRadius;
-		this.minRadius = other.minRadius;
+
+        maxRadius = other.maxRadius;
+        minRadius = other.minRadius;
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class Aura extends Effect {
 	 */
 	
 	public void setAuraMinRadius(int radius) {
-		this.minRadius = radius;
+        minRadius = radius;
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class Aura extends Effect {
 	 */
 	
 	public void setAuraMaxRadius(int radius) {
-		this.maxRadius = radius;
+        maxRadius = radius;
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class Aura extends Effect {
 		int width = Game.curCampaign.curArea.getWidth();
 		Point center = ((Entity)getTarget()).getLocation().toPoint();
 		
-		ArrayList<Point> points = new ArrayList<Point>();
+		List<Point> points = new ArrayList<>();
 		
 		if (minRadius <= 0) points.add(center);
 		

@@ -50,7 +50,8 @@ import net.sf.hale.util.Logger;
  */
 
 public class EditorMenuBar extends JMenuBar {
-	private SwingEditor frame;
+    private static final long serialVersionUID = 4598856247854294461L;
+    private SwingEditor frame;
 	
 	private JMenu areasMenu;
 	private JMenuItem createAreaItem;
@@ -90,13 +91,13 @@ public class EditorMenuBar extends JMenuBar {
 		
 		File campaignDir = new File("campaigns");
 		String[] fileList = campaignDir.list();
-		for (int i = 0; i < fileList.length; i++) {
-			File f = new File("campaigns/" + fileList[i]);
-			if (f.isDirectory() && !f.getName().equals(".svn")) {
-				JMenuItem openItem = new JMenuItem(new OpenAction(fileList[i]));
-				openMenu.add(openItem);
-			}
-		}
+        for (String aFileList : fileList) {
+            File f = new File("campaigns/" + aFileList);
+            if (f.isDirectory() && !".svn".equals(f.getName())) {
+                JMenuItem openItem = new JMenuItem(new OpenAction(aFileList));
+                openMenu.add(openItem);
+            }
+        }
 
 		JMenuItem extractItem = new JMenuItem("Extract Zip", KeyEvent.VK_E);
 		extractItem.setEnabled(false);
@@ -190,24 +191,30 @@ public class EditorMenuBar extends JMenuBar {
 		}
 	}
 	
-	private class ShowLogViewerAction extends AbstractAction {
-		private ShowLogViewerAction() { super("Show Log Viewer"); }
+	private static class ShowLogViewerAction extends AbstractAction {
+        private static final long serialVersionUID = -3611878058486723106L;
+
+        private ShowLogViewerAction() { super("Show Log Viewer"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			EditorManager.showLogViewer();
 		}
 	}
 	
-	private class CreateEditorAction extends AbstractAction {
-		private CreateEditorAction() { super("Create New Editor"); }
+	private static class CreateEditorAction extends AbstractAction {
+        private static final long serialVersionUID = -5714162841035187430L;
+
+        private CreateEditorAction() { super("Create New Editor"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			EditorManager.createNewEditor();
 		}
 	}
 	
-	private class CloseEditorsAction extends AbstractAction {
-		private CloseEditorsAction() { super("Close All Editors"); }
+	private static class CloseEditorsAction extends AbstractAction {
+        private static final long serialVersionUID = -1906343608215693699L;
+
+        private CloseEditorsAction() { super("Close All Editors"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			EditorManager.closeAllEditors();
@@ -215,7 +222,9 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class CreateAreaAction extends AbstractAction {
-		private CreateAreaAction() { super("Create"); }
+        private static final long serialVersionUID = 5002980950021254492L;
+
+        private CreateAreaAction() { super("Create"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			CreateAreaDialog dialog = new CreateAreaDialog(frame);
@@ -224,7 +233,8 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class OpenAreaAction extends AbstractAction {
-		private String areaID;
+        private static final long serialVersionUID = -1924177985489346230L;
+        private String areaID;
 		
 		private OpenAreaAction(String areaID) {
 			super(areaID);
@@ -245,8 +255,10 @@ public class EditorMenuBar extends JMenuBar {
 		}
 	}
 	
-	private class NewAction extends AbstractAction {
-		private NewAction() { super("New"); }
+	private static class NewAction extends AbstractAction {
+        private static final long serialVersionUID = 5624286329069345214L;
+
+        private NewAction() { super("New"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			
@@ -254,7 +266,9 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class SaveAction extends AbstractAction {
-		private SaveAction() {
+        private static final long serialVersionUID = 6545714628966761638L;
+
+        private SaveAction() {
 			super("Save");
 		}
 		
@@ -283,11 +297,12 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class OpenAction extends AbstractAction {
-		private String campaignID;
+        private static final long serialVersionUID = 2282772406817617325L;
+        private String campaignID;
 		
 		private OpenAction(String id) {
 			super(id);
-			this.campaignID = id;
+            campaignID = id;
 		}
 		
 		@Override public void actionPerformed(ActionEvent e) {
@@ -299,7 +314,9 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class ExitAction extends AbstractAction {
-		private ExitAction() { super("Exit"); }
+        private static final long serialVersionUID = 1111936164372344122L;
+
+        private ExitAction() { super("Exit"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			WindowEvent wev = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);

@@ -41,8 +41,7 @@ public class CampaignLoadingTaskList extends LoadingTaskList {
 	 */
 	
 	public CampaignLoadingTaskList() {
-		super();
-		
+
 		SpriteManager.clear();
 		
 		Runnable registerCampaign = new Runnable() {
@@ -97,7 +96,7 @@ public class CampaignLoadingTaskList extends LoadingTaskList {
 		f.delete();
 	}
 	
-	private class SpriteSheetLoader implements Runnable {
+	private static class SpriteSheetLoader implements Runnable {
 		private String resource;
 		
 		private SpriteSheetLoader(String resource) {

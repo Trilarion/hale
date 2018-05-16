@@ -29,7 +29,7 @@ public abstract class ResourcePackage implements Comparable<ResourcePackage> {
 	 */
 	
 	public ResourcePackage(PackageType type) {
-		entries = new TreeSet<String>();
+		entries = new TreeSet<>();
 		this.type = type;
 	}
 	
@@ -137,6 +137,6 @@ public abstract class ResourcePackage implements Comparable<ResourcePackage> {
 	 */
 	
 	@Override public int compareTo(ResourcePackage other) {
-		return this.type.compareTo(other.type);
+		return type.compareTo(other.type);
 	}
 }

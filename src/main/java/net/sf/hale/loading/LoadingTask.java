@@ -49,9 +49,9 @@ public class LoadingTask {
 	public LoadingTask(Runnable task, String description) {
 		this.task = task;
 		this.description = description;
-		this.taskWeight = 1;
-		
-		this.subTasks = new ArrayList<SubTask>();
+        taskWeight = 1;
+
+        subTasks = new ArrayList<>();
 	}
 	
 	/**
@@ -64,9 +64,9 @@ public class LoadingTask {
 	public LoadingTask(Runnable task, String description, int weight) {
 		this.task = task;
 		this.description = description;
-		this.taskWeight = weight;
-		
-		this.subTasks = new ArrayList<SubTask>();
+        taskWeight = weight;
+
+        subTasks = new ArrayList<>();
 	}
 	
 	/**
@@ -79,8 +79,8 @@ public class LoadingTask {
 		SubTask subTask = new SubTask();
 		subTask.task = task;
 		subTask.weight = weight;
-		
-		this.subTasks.add(subTask);
+
+        subTasks.add(subTask);
 		taskWeight += subTask.weight;
 	}
 	
@@ -139,7 +139,7 @@ public class LoadingTask {
 		return task != null || subTasksIter.hasNext();
 	}
 	
-	private class SubTask {
+	private static class SubTask {
 		private Runnable task;
 		private int weight;
 	}

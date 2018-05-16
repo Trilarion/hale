@@ -107,7 +107,6 @@ public class SimpleJSONParser {
 			reader.close();
 		} catch (ParseException e) {
 			Logger.appendToErrorLog("JSON Parsing error in " + id, e);
-			return;
 		} catch (IOException e) {
 			Logger.appendToErrorLog("I/O Error in " + id, e);
 		}

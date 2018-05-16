@@ -58,11 +58,11 @@ public class SimpleJSONObject {
 	public SimpleJSONObject(JSONObject object, String objectID) {
 		this.object = object;
 		this.objectID = objectID;
-		this.warnOnMissingKeys = false;
-		
-		this.subObjects = new ArrayList<SimpleJSONObject>(1);
-		this.subArrays = new ArrayList<SimpleJSONArray>(1);
-		this.usedKeys = new HashSet<String>();
+		warnOnMissingKeys = false;
+
+		subObjects = new ArrayList<>(1);
+		subArrays = new ArrayList<>(1);
+		usedKeys = new HashSet<>();
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class SimpleJSONObject {
 	 */
 	
 	public void setWarnOnMissingKeys(boolean warn) {
-		this.warnOnMissingKeys = warn;
+		warnOnMissingKeys = warn;
 		
 		for (SimpleJSONObject subObject : subObjects) {
 			subObject.setWarnOnMissingKeys(warn);
@@ -102,7 +102,7 @@ public class SimpleJSONObject {
 			if (usedKeys.contains(key)) continue;
 			
 			// ignore comment keys
-			if (key.equals("comment")) continue;
+			if ("comment".equals(key)) continue;
 			
 			Logger.appendToWarningLog("In " + objectID + " unused key \"" + key + "\"");
 		}
@@ -229,7 +229,7 @@ public class SimpleJSONObject {
 			return defaultValue;
 		} else if (obj instanceof Integer) {
 			usedKeys.add(key);
-			return ((Integer)obj).intValue();
+			return (Integer) obj;
 		} else {
 			Logger.appendToWarningLog("In resource " + objectID + ": \"" + key + "\" is not an int.");
 			return defaultValue;
@@ -253,7 +253,7 @@ public class SimpleJSONObject {
 			return defaultValue;
 		} else if (obj instanceof Boolean) {
 			usedKeys.add(key);
-			return ((Boolean)obj).booleanValue();
+			return (Boolean) obj;
 		} else {
 			Logger.appendToWarningLog("In resource " + objectID + ": \"" + key + "\" is not a boolean.");
 			return defaultValue;

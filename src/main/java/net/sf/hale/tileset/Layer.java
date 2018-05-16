@@ -59,8 +59,8 @@ public class Layer {
 		this.id = id;
 		this.directory = directory;
 		this.spriteSheets = spriteSheets;
-		this.tiles = new LinkedHashSet<String>();
-		this.textureSprites = new ArrayList<String>();
+        tiles = new LinkedHashSet<>();
+        textureSprites = new ArrayList<>();
 	}
 	
 	/**

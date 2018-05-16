@@ -102,12 +102,12 @@ public class Trigger implements Saveable {
 		
 		String scriptFile = data.get("script", null);
 		String scriptContents = ResourceManager.getScriptResourceAsString(scriptFile);
-		this.script = new Scriptable(scriptContents, scriptFile, false);
+        script = new Scriptable(scriptContents, scriptFile, false);
 		
 		int smallestX = Integer.MAX_VALUE, smallestY = Integer.MAX_VALUE;
 		int largestX = 0, largestY = 0;
 		
-		points = new ArrayList<PointImmutable>();
+		points = new ArrayList<>();
 		
 		if (data.containsKey("points")) {
 			SimpleJSONArray pointsIn = data.getArray("points");
@@ -128,20 +128,20 @@ public class Trigger implements Saveable {
 			}
 
 			// create the offset & array combination to store the points efficiently
-			this.pointsOffsetX = smallestX;
-			this.pointsOffsetY = smallestY;
-			this.pointsArray = new boolean[largestX - smallestX + 1][largestY - smallestY + 1];
+            pointsOffsetX = smallestX;
+            pointsOffsetY = smallestY;
+            pointsArray = new boolean[largestX - smallestX + 1][largestY - smallestY + 1];
 			for (PointImmutable point : points) {
 				pointsArray[point.x - pointsOffsetX][point.y - pointsOffsetY] = true;
 			}
 			
 		} else {
-			this.pointsOffsetX = Integer.MAX_VALUE;
-			this.pointsOffsetY = Integer.MAX_VALUE;
-			this.pointsArray = null;
+            pointsOffsetX = Integer.MAX_VALUE;
+            pointsOffsetY = Integer.MAX_VALUE;
+            pointsArray = null;
 		}
-		
-		this.entitiesCurrentlyInside = new ArrayList<Entity>();
+
+        entitiesCurrentlyInside = new ArrayList<>();
 	}
 	
 	/**
@@ -242,7 +242,7 @@ public class Trigger implements Saveable {
 	
 	private void checkPlayerEnter(Entity entity) {
 		if (entitiesCurrentlyInside.contains(entity)) return;
-		if (!this.containsPoint(entity.getLocation())) return;
+		if (!containsPoint(entity.getLocation())) return;
 
 		entitiesCurrentlyInside.add(entity);
 		script.executeFunction(ScriptFunctionType.onPlayerEnter, entity, this);
@@ -250,7 +250,7 @@ public class Trigger implements Saveable {
 	
 	private void checkPlayerExit(Entity entity) {
 		if (!entitiesCurrentlyInside.contains(entity)) return;
-		if (this.containsPoint(entity.getLocation())) return;
+		if (containsPoint(entity.getLocation())) return;
 		
 		entitiesCurrentlyInside.remove(entity);
 		script.executeFunction(ScriptFunctionType.onPlayerExit, entity, this);

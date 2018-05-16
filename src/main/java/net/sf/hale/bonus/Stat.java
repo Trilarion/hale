@@ -35,13 +35,13 @@ public enum Stat {
 	OffHandAttackBonus("Off Hand Attack Bonus"), OffHandDamageBonus("Off Hand Damage Bonus"),
 	TouchAttackBonus("Touch Attack Bonus");
 	
-	private Stat() {
+	Stat() {
 		name = toString();
 	}
 	
-	private Stat(String name) {
+	Stat(String name) {
 		this.name = name;
 	}
 	
 	public final String name;
-};
+}

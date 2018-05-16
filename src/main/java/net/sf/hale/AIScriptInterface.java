@@ -32,7 +32,9 @@ import net.sf.hale.entity.Encounter;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.Path;
 import net.sf.hale.interfacelock.MovementHandler;
+import net.sf.hale.interfacelock.MovementHandler.Mover;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -145,7 +147,7 @@ public class AIScriptInterface {
 			return false;
 		}
 		
-		MovementHandler.Mover mover = move.getMover();
+		Mover mover = move.getMover();
 		if (mover == null) return false;
 		
 		try {
@@ -304,7 +306,7 @@ public class AIScriptInterface {
 	
 	public Creature findNearestCreature(Creature parent, String relationship) {
 		// list of creatures tied for closest
-		List<Creature> closest = new ArrayList<Creature>();
+		List<Creature> closest = new ArrayList<>();
 
 		List<Creature> creatures = getLiveVisibleCreatures(parent, relationship);
 
@@ -324,7 +326,7 @@ public class AIScriptInterface {
 			}
 		}
 
-		if (closest.size() == 0) return null;
+		if (closest.isEmpty()) return null;
 		else {
 			// return randomly chosen target from list of closest
 			return closest.get(Game.dice.rand(0, closest.size() - 1));
@@ -339,7 +341,7 @@ public class AIScriptInterface {
 	 */
 	
 	public  AITargetSet getPotentialAttackTargets(Creature parent) {
-		List<Creature> creatures = getLiveVisibleCreatures(parent, Faction.Relationship.Hostile.toString());
+		List<Creature> creatures = getLiveVisibleCreatures(parent, Relationship.Hostile.toString());
 		
 		return new AITargetSet(parent, creatures);
 	}
@@ -354,7 +356,7 @@ public class AIScriptInterface {
 	 */
 	
 	public List<Creature> getAttackableCreatures(Creature parent) {
-		ArrayList<Creature> attackable = new ArrayList<Creature>();
+		List<Creature> attackable = new ArrayList<>();
 		
 		List<Creature> creatures;
 		Encounter encounter = parent.getEncounter();
@@ -390,20 +392,20 @@ public class AIScriptInterface {
 	 */
 	
 	public List<Creature> getTouchableCreatures(Creature parent, String relationship) {
-		ArrayList<Creature> creatures = new ArrayList<Creature>();
+		ArrayList<Creature> creatures = new ArrayList<>();
 		
 		Faction activeFaction = parent.getFaction();
 		
-		Faction.Relationship rel = null;
+		Relationship rel = null;
 		
-		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
+		if (relationship != null) rel = Relationship.valueOf(relationship);
 		
 		Point[] positions = AreaUtil.getAdjacentTiles(parent.getLocation().getX(), parent.getLocation().getY());
 		
 		for (Point p : positions) {
 			Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(p);
 			if (c != null) {
-				Faction.Relationship curRel = activeFaction.getRelationship(c.getFaction());
+				Relationship curRel = activeFaction.getRelationship(c.getFaction());
 				if (rel == null || curRel == rel) {
 					creatures.add(c);
 				}
@@ -433,8 +435,8 @@ public class AIScriptInterface {
 	 */
 	
 	public List<Creature> getVisibleCreaturesWithinRange(Creature parent, String relationship, int range) {
-		Faction.Relationship rel = null;
-		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
+		Relationship rel = null;
+		if (relationship != null) rel = Relationship.valueOf(relationship);
 		
 		List<Creature> creatures = AreaUtil.getVisibleCreatures(parent, rel);
 		
@@ -464,8 +466,8 @@ public class AIScriptInterface {
 	 */
 	
 	public List<Creature> getAllCreaturesWithinRange(Creature parent, String relationship, int range) {
-		Faction.Relationship rel = null;
-		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
+		Relationship rel = null;
+		if (relationship != null) rel = Relationship.valueOf(relationship);
 		
 		List<Creature> creatures =
 			Game.curCampaign.curArea.getEntities().getCreaturesWithinRadius(parent.getLocation().getX(),
@@ -494,13 +496,13 @@ public class AIScriptInterface {
 	 */
 	
 	public List<Creature> getLiveVisibleCreatures(Creature parent, String relationship) {
-		Faction.Relationship rel = null;
-		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
+		Relationship rel = null;
+		if (relationship != null) rel = Relationship.valueOf(relationship);
 		
 		Encounter encounter = parent.getEncounter();
 		List<Creature> creatures;
 		
-		if (rel == Faction.Relationship.Hostile && encounter != null) {
+		if (rel == Relationship.Hostile && encounter != null) {
 			creatures = encounter.getHostiles();
 		} else {
 			creatures = AreaUtil.getVisibleCreatures(parent, rel);
@@ -521,7 +523,7 @@ public class AIScriptInterface {
 		Collections.sort(creatures, new CreatureSorter(parent));
 	}
 	
-	private class CreatureSorter implements Comparator<Creature> {
+	private static class CreatureSorter implements Comparator<Creature> {
 		private Creature parent;
 		
 		private CreatureSorter(Creature parent) {

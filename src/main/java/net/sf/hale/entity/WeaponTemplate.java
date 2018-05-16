@@ -71,7 +71,7 @@ public class WeaponTemplate extends EquippableItemTemplate {
 	 */
 	
 	public enum Type {
-		Melee, Thrown, Ranged;
+		Melee, Thrown, Ranged
 	}
 	
 	/**
@@ -83,11 +83,11 @@ public class WeaponTemplate extends EquippableItemTemplate {
 	public enum Handed {
 		Light("Light"), OneHanded("One Handed"), TwoHanded("Two Handed");
 		
-		private Handed(String name) {
+		Handed(String name) {
 			this.name = name;
 		}
 		
-		public String name;
+		public final String name;
 	}
 	
 	/**
@@ -98,29 +98,29 @@ public class WeaponTemplate extends EquippableItemTemplate {
 	
 	public WeaponTemplate(String id, SimpleJSONObject data) {
 		super(id, data);
-		
-		this.type = Type.valueOf(data.get("weaponType", null));
-		this.handed = Handed.valueOf(data.get("handed", null));
-		this.baseWeapon = Game.ruleset.getBaseWeapon(data.get("baseWeapon", null));
-		
-		this.threatensAoOs = data.get("threatensAoOs", false);
-		
-		this.minRange = data.get("minRange", 0);
-		this.maxRange = data.get("maxRange", 0);
-		
-		this.damageType = Game.ruleset.getDamageType(data.get("damageType", null));
-		
-		this.minDamage = data.get("minDamage", 0);
-		this.maxDamage = data.get("maxDamage", 0);
-		
-		this.criticalThreat = data.get("criticalThreat", 0);
-		this.criticalMultiplier = data.get("criticalMultiplier", 0);
-		
-		this.attackCost = data.get("attackCost", 0);
-		
-		this.rangePenalty = data.get("rangePenalty", 0);
-		this.maxStrengthBonus = data.get("maxStrengthBonus", 0);
-		this.minStrengthBonus = data.get("minStrengthBonus", -100);
+
+		type = Type.valueOf(data.get("weaponType", null));
+		handed = Handed.valueOf(data.get("handed", null));
+		baseWeapon = Game.ruleset.getBaseWeapon(data.get("baseWeapon", null));
+
+		threatensAoOs = data.get("threatensAoOs", false);
+
+		minRange = data.get("minRange", 0);
+		maxRange = data.get("maxRange", 0);
+
+		damageType = Game.ruleset.getDamageType(data.get("damageType", null));
+
+		minDamage = data.get("minDamage", 0);
+		maxDamage = data.get("maxDamage", 0);
+
+		criticalThreat = data.get("criticalThreat", 0);
+		criticalMultiplier = data.get("criticalMultiplier", 0);
+
+		attackCost = data.get("attackCost", 0);
+
+		rangePenalty = data.get("rangePenalty", 0);
+		maxStrengthBonus = data.get("maxStrengthBonus", 0);
+		minStrengthBonus = data.get("minStrengthBonus", -100);
 		
 		if (data.containsKey("projectileIcon") && type == Type.Thrown) {
 			// the projectile icon must be a simple icon for animation purposes
@@ -128,31 +128,31 @@ public class WeaponTemplate extends EquippableItemTemplate {
 		} else {
 			projectileIcon = null;
 		}
-		
-		this.averageDamagePerAP = computeAverageDamagePerAP();
+
+		averageDamagePerAP = computeAverageDamagePerAP();
 	}
 	
 	private WeaponTemplate(String id, WeaponTemplate other, CreatedItem createdItem) {
 		super(id, other, createdItem);
-		
-		this.type = other.type;
-		this.handed = other.handed;
-		this.baseWeapon = other.baseWeapon;
-		this.projectileIcon = other.projectileIcon;
-		this.threatensAoOs = other.threatensAoOs;
-		this.minRange = other.minRange;
-		this.maxRange = other.maxRange;
-		this.damageType = other.damageType;
-		this.minDamage = other.minDamage;
-		this.maxDamage = other.maxDamage;
-		this.criticalThreat = other.criticalThreat;
-		this.criticalMultiplier = other.criticalMultiplier;
-		this.attackCost = other.attackCost;
-		this.rangePenalty = other.rangePenalty;
-		this.maxStrengthBonus = other.maxStrengthBonus;
-		this.minStrengthBonus = other.minStrengthBonus;
-		
-		this.averageDamagePerAP = computeAverageDamagePerAP();
+
+		type = other.type;
+		handed = other.handed;
+		baseWeapon = other.baseWeapon;
+		projectileIcon = other.projectileIcon;
+		threatensAoOs = other.threatensAoOs;
+		minRange = other.minRange;
+		maxRange = other.maxRange;
+		damageType = other.damageType;
+		minDamage = other.minDamage;
+		maxDamage = other.maxDamage;
+		criticalThreat = other.criticalThreat;
+		criticalMultiplier = other.criticalMultiplier;
+		attackCost = other.attackCost;
+		rangePenalty = other.rangePenalty;
+		maxStrengthBonus = other.maxStrengthBonus;
+		minStrengthBonus = other.minStrengthBonus;
+
+		averageDamagePerAP = computeAverageDamagePerAP();
 	}
 	
 	private double computeAverageDamagePerAP() {

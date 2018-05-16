@@ -157,5 +157,4 @@ public enum ScriptFunctionType {
 	
 	/** AI helper used to determine if it is valid / useful to use an ability on a given target */
 	aiCheckTargetValid
-	;
 }

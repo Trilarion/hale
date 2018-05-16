@@ -21,6 +21,7 @@ package net.sf.hale.widgets;
 
 import net.sf.hale.Game;
 import net.sf.hale.area.Transition;
+import net.sf.hale.area.Transition.EndPoint;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Creature;
@@ -55,11 +56,11 @@ public class EntityMouseover extends Widget {
 	public EntityMouseover() {
 		name = new Label();
 		name.setTheme("namelabel");
-		this.add(name);
+        add(name);
 		
 		status = new Label();
 		status.setTheme("statuslabel");
-		this.add(status);
+        add(status);
 	}
 	
 	/**
@@ -102,7 +103,7 @@ public class EntityMouseover extends Widget {
 		if (transition != null && transition.isActivated()) {
 			selectedEntity = null;
 			name.setText("Travel to");
-			Transition.EndPoint endPoint = transition.getEndPointForCreaturesInCurrentArea();
+			EndPoint endPoint = transition.getEndPointForCreaturesInCurrentArea();
 			status.setText(endPoint.getLabel());
 			
 		} else if (creature != null) {
@@ -136,7 +137,7 @@ public class EntityMouseover extends Widget {
 			
 		} else {
 			this.gridPoint = null;
-			this.selectedEntity = null;
+            selectedEntity = null;
 		}
 		
 		setVisible(this.gridPoint != null);

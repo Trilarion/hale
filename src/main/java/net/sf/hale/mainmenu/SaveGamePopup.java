@@ -22,6 +22,8 @@ package net.sf.hale.mainmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.mainmenu.AbstractSaveGamePopup.Selector;
+import net.sf.hale.mainmenu.AbstractSaveGamePopup.SelectorCallback;
 import net.sf.hale.util.SaveGameUtil;
 
 import de.matthiasmann.twl.EditField;
@@ -84,9 +86,9 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 	}
 	
 	@Override protected List<Selector> getValidSelectors() {
-		currentSaves = new ArrayList<String>();
+		currentSaves = new ArrayList<>();
 		
-		List<Selector> selectors = new ArrayList<Selector>();
+		List<Selector> selectors = new ArrayList<>();
 		
 		newSaveSelector = new NewSaveSelector();
 		selectors.add(newSaveSelector);
@@ -96,7 +98,7 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 			if (SaveGameUtil.isQuickSave(saveGame)) continue;
 			
 			SaveGameSelector selector = new SaveGameSelector(saveGame, getDateFormat());
-			selector.addCallback(new AbstractSaveGamePopup.SelectorCallback(selector));
+			selector.addCallback(new SelectorCallback(selector));
 			selectors.add(selector);
 			
 			currentSaves.add(saveGame);
@@ -118,10 +120,10 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 		 * accept button
 		 * @param saveGame the saveGame String ID that the user has selected
 		 */
-		public void saveGameAccepted(String saveGame);
+        void saveGameAccepted(String saveGame);
 	}
 	
-	private class NewSaveSelector extends AbstractSaveGamePopup.Selector implements Runnable {
+	private class NewSaveSelector extends Selector implements Runnable {
 		private Label name;
 		private EditField editField;
 		private Label error;
@@ -131,8 +133,8 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 		
 		private NewSaveSelector() {
 			addCallback(this);
-			
-			this.name = new Label();
+
+            name = new Label();
 			name.setTheme("namelabel");
 			add(name);
 			
@@ -143,7 +145,7 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 					switch (key) {
 					case Event.KEY_RETURN:
 						if (editFieldHasValidSaveName())
-							SaveGamePopup.this.selectionAccepted(NewSaveSelector.this);
+                            selectionAccepted(NewSaveSelector.this);
 						break;
 					default:
 						if (editFieldHasValidSaveName()) {

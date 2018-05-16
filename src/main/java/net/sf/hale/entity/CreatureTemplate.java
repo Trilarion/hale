@@ -23,6 +23,7 @@ import net.sf.hale.Game;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
@@ -33,7 +34,7 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public abstract class CreatureTemplate extends EntityTemplate {
 
-	private final Ruleset.Gender gender;
+	private final Gender gender;
 	private final Race race;
 	private final String portrait;
 	private final int initiativeTickerHeight;
@@ -49,13 +50,13 @@ public abstract class CreatureTemplate extends EntityTemplate {
 	 * @param portrait
 	 */
 	
-	public CreatureTemplate(String id, String name, Icon icon, Ruleset.Gender gender, Race race, String portrait) {
+	public CreatureTemplate(String id, String name, Icon icon, Gender gender, Race race, String portrait) {
 		super(id, name, icon);
 		
 		this.gender = gender;
 		this.race = race;
 		this.portrait = portrait;
-		this.initiativeTickerHeight = Game.TILE_SIZE;
+        initiativeTickerHeight = Game.TILE_SIZE;
 	}
 	
 	/**
@@ -70,18 +71,18 @@ public abstract class CreatureTemplate extends EntityTemplate {
 		
 		String gender = data.get("gender", null);
 		
-		this.gender = Ruleset.Gender.valueOf(gender);
+		this.gender = Gender.valueOf(gender);
 		
 		String race = data.get("race", null);
 		
 		this.race = Game.ruleset.getRace(race);
-		
-		this.portrait = data.get("portrait", null);
+
+        portrait = data.get("portrait", null);
 		
 		if (data.containsKey("initiativeTickerHeight")) {
-			this.initiativeTickerHeight = data.get("initiativeTickerHeight", 0);
+            initiativeTickerHeight = data.get("initiativeTickerHeight", 0);
 		} else {
-			this.initiativeTickerHeight = Game.TILE_SIZE;
+            initiativeTickerHeight = Game.TILE_SIZE;
 		}
 	}
 	
@@ -100,7 +101,7 @@ public abstract class CreatureTemplate extends EntityTemplate {
 	 * @return the gender of this creature
 	 */
 	
-	public Ruleset.Gender getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 	

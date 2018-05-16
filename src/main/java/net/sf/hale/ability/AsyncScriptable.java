@@ -40,7 +40,7 @@ public class AsyncScriptable extends Thread {
 	 */
 	
 	public void setDelayMillis(long delay) {
-		this.delayMillis = delay;
+        delayMillis = delay;
 	}
 	
 	/**
@@ -55,17 +55,17 @@ public class AsyncScriptable extends Thread {
 	public void executeAsync(String function, Object... arguments) {
 		this.function = function;
 		this.arguments = arguments;
-		this.readyToExecute = true;
-		
-		this.start();
+        readyToExecute = true;
+
+        start();
 	}
 	
 	public void executeAsync(ScriptFunctionType type, Object... arguments) {
 		this.type = type;
 		this.arguments = arguments;
-		this.readyToExecute = true;
-		
-		this.start();
+        readyToExecute = true;
+
+        start();
 	}
 	
 	@Override public void run() {
@@ -73,7 +73,7 @@ public class AsyncScriptable extends Thread {
 			throw new IllegalStateException("Cannot use start() method of AsyncScriptable directly.  " +
 					"Use executeAsync instead.");
 		
-		if (delayMillis != 0l) {
+		if (delayMillis != 0L) {
 			try {
 				Thread.sleep(delayMillis);
 			} catch (InterruptedException e) {

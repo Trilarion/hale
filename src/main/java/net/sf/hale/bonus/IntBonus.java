@@ -19,6 +19,8 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -35,13 +37,13 @@ public class IntBonus extends Bonus {
 	
 	public static IntBonus load(SimpleJSONObject data) {
 		int value = data.get("value", 0);
-		Bonus.Type type = Type.valueOf(data.get("type", null));
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		Type type = Type.valueOf(data.get("type", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		
 		return new IntBonus(type, stackType, value);
 	}
 	
-	public IntBonus(Bonus.Type type, Bonus.StackType stackType, int value) {
+	public IntBonus(Type type, StackType stackType, int value) {
 		super(type, stackType);
 		
 		this.value = value;
@@ -51,7 +53,7 @@ public class IntBonus extends Bonus {
 	@Override public int getValue() { return value; }
 	
 	@Override public IntBonus cloneWithReduction(int reduction) {
-		return new IntBonus(this.getType(), this.getStackType(), this.value - reduction);
+		return new IntBonus(getType(), getStackType(), value - reduction);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

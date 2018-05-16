@@ -90,7 +90,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	 */
 	
 	public List<String> getAllCampaignIDs() {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		
 		for (CampaignDescriptor descriptor : group.entries) {
 			ids.add(descriptor.id);
@@ -104,7 +104,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	 */
 	
 	public void deselect() {
-		this.setActive(false);
+        setActive(false);
 		
 		removeAllChildren();
 		add(groupNameArea);
@@ -192,7 +192,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	 */
 	
 	public void setCallback(CampaignPopup popup) {
-		this.callback = popup;
+        callback = popup;
 	}
 	
 	@Override public int getPreferredHeight() {
@@ -278,26 +278,26 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 		private final List<CampaignDescriptor> entries;
 		
 		private CampaignGroup(CampaignDescriptor entry) {
-			this.name = entry.name;
-			this.defaultEntry = entry;
-			this.entries = Collections.singletonList(entry);
+            name = entry.name;
+            defaultEntry = entry;
+            entries = Collections.singletonList(entry);
 		}
 		
 		private CampaignGroup(String id, Map<String, CampaignDescriptor> campaigns) {
 			SimpleJSONParser parser = new SimpleJSONParser(new File("campaigns/" + id + ResourceType.JSON.getExtension()));
-			
-			this.name = parser.get("name", id);
+
+            name = parser.get("name", id);
 			
 			String defaultEntry = parser.get("defaultCampaign", null);
 			this.defaultEntry = campaigns.get(defaultEntry);
-			
-			this.entries = new ArrayList<CampaignDescriptor>();
+
+            entries = new ArrayList<>();
 			
 			SimpleJSONArray array = parser.getArray("campaigns");
 			for (SimpleJSONArrayEntry entry : array) {
 				String entryID = entry.getString();
-				
-				this.entries.add(campaigns.get(entryID));
+
+                entries.add(campaigns.get(entryID));
 			}
 		}
 	}

@@ -74,9 +74,9 @@ public class QuestSubEntry implements Saveable {
 	
 	public QuestSubEntry(String title) {
 		this.title = title;
-		this.description = new StringBuilder();
-		this.completed = false;
-		this.showTitle = true;
+        description = new StringBuilder();
+        completed = false;
+        showTitle = true;
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class QuestSubEntry implements Saveable {
 	 */
 	
 	public void setCompleted() {
-		this.completed = true;
+        completed = true;
 	}
 	
 	/**

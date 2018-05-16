@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import net.sf.hale.Config;
 import net.sf.hale.Game;
+import net.sf.hale.Game.OSType;
 import net.sf.hale.loading.AsyncTextureLoader;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.Dice;
@@ -44,8 +45,9 @@ import net.sf.hale.util.JSEngineManager;
 
 public class SwingEditor extends JFrame implements ComponentListener {
 	public static final String NewLine = System.getProperty("line.separator");
-	
-	/**
+    private static final long serialVersionUID = -7859364367684081584L;
+
+    /**
 	 * The main entry point for the editor.  Any arguments are ignored
 	 * @param args
 	 */
@@ -54,10 +56,10 @@ public class SwingEditor extends JFrame implements ComponentListener {
 		// determine system type
 		String osString = System.getProperty("os.name").toLowerCase();
 
-		Game.OSType osType;
-		if (osString.contains("win")) osType = Game.OSType.Windows;
-		else if (osString.contains("mac")) osType = Game.OSType.Mac;
-		else osType = Game.OSType.Unix;
+		OSType osType;
+		if (osString.contains("win")) osType = OSType.Windows;
+		else if (osString.contains("mac")) osType = OSType.Mac;
+		else osType = OSType.Unix;
 
 		Game.initializeOSSpecific(osType);
 		
@@ -96,7 +98,9 @@ public class SwingEditor extends JFrame implements ComponentListener {
 		
 		// set up the OpenGL canvas
 		canvas = new Canvas() {
-			@Override public void addNotify() {
+			private static final long serialVersionUID = -7707592117754000398L;
+
+            @Override public void addNotify() {
 				super.addNotify();
 				glThread = new OpenGLThread(SwingEditor.this);
 				glThread.start();

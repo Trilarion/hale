@@ -25,6 +25,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.icon.SimpleIcon;
 import net.sf.hale.icon.SubIcon;
 import net.sf.hale.util.SimpleJSONArrayEntry;
@@ -65,7 +66,7 @@ public class EquippableItemTemplate extends ItemTemplate {
 	 *
 	 */
 	
-	public static enum Type {
+	public enum Type {
 		Weapon,
 		Armor,
 		Gloves,
@@ -76,30 +77,30 @@ public class EquippableItemTemplate extends ItemTemplate {
 		Amulet,
 		Ring,
 		Ammo,
-		Shield;
-	}
+		Shield
+    }
 	
-	public static final Map<Type, Inventory.Slot[]> validSlotsForType = new EnumMap<Type, Inventory.Slot[]>(Type.class);
+	public static final Map<Type, Slot[]> validSlotsForType = new EnumMap<>(Type.class);
 	
 	/**
 	 * Initializes the map of inventory slots to equippable item types
 	 */
 	
 	public static final void initializeTypesMap() {
-		putInTypeMap(Type.Weapon, Inventory.Slot.MainHand, Inventory.Slot.OffHand);
-		putInTypeMap(Type.Armor, Inventory.Slot.Armor);
-		putInTypeMap(Type.Gloves, Inventory.Slot.Gloves);
-		putInTypeMap(Type.Helmet, Inventory.Slot.Helmet);
-		putInTypeMap(Type.Cloak, Inventory.Slot.Cloak);
-		putInTypeMap(Type.Boots, Inventory.Slot.Boots);
-		putInTypeMap(Type.Belt, Inventory.Slot.Belt);
-		putInTypeMap(Type.Amulet, Inventory.Slot.Amulet);
-		putInTypeMap(Type.Ring, Inventory.Slot.RightRing, Inventory.Slot.LeftRing);
-		putInTypeMap(Type.Ammo, Inventory.Slot.Quiver);
-		putInTypeMap(Type.Shield, Inventory.Slot.OffHand);
+		putInTypeMap(Type.Weapon, Slot.MainHand, Slot.OffHand);
+		putInTypeMap(Type.Armor, Slot.Armor);
+		putInTypeMap(Type.Gloves, Slot.Gloves);
+		putInTypeMap(Type.Helmet, Slot.Helmet);
+		putInTypeMap(Type.Cloak, Slot.Cloak);
+		putInTypeMap(Type.Boots, Slot.Boots);
+		putInTypeMap(Type.Belt, Slot.Belt);
+		putInTypeMap(Type.Amulet, Slot.Amulet);
+		putInTypeMap(Type.Ring, Slot.RightRing, Slot.LeftRing);
+		putInTypeMap(Type.Ammo, Slot.Quiver);
+		putInTypeMap(Type.Shield, Slot.OffHand);
 	}
 	
-	private static final void putInTypeMap(Type type, Inventory.Slot... slots) {
+	private static final void putInTypeMap(Type type, Slot... slots) {
 		validSlotsForType.put(type, slots);
 	}
 	
@@ -111,43 +112,43 @@ public class EquippableItemTemplate extends ItemTemplate {
 	
 	public EquippableItemTemplate(String id, SimpleJSONObject data) {
 		super(id, data);
-		
-		this.type = Type.valueOf(data.get("type", null));
+
+        type = Type.valueOf(data.get("type", null));
 		
 		if (data.containsKey("coversHair")) {
-			this.coversHair = data.get("coversHair", false);
+            coversHair = data.get("coversHair", false);
 		} else {
-			this.coversHair = false;
+            coversHair = false;
 		}
 		
 		if (data.containsKey("coversBeard"))
-			this.coversBeard = data.get("coversBeard", false);
+            coversBeard = data.get("coversBeard", false);
 		else
-			this.coversBeard = false;
+            coversBeard = false;
 		
 		if (data.containsKey("isUnequippable")) {
-			this.isUnequippable = data.get("isUnequippable", true);
+            isUnequippable = data.get("isUnequippable", true);
 		} else {
-			this.isUnequippable = true;
+            isUnequippable = true;
 		}
 		
 		if (data.containsKey("subIcon")) {
 			SimpleJSONObject subIconObject = data.getObject("subIcon");
 			
 			if (subIconObject.containsKey("type")) {
-				this.subIconType = SubIcon.Type.valueOf(subIconObject.get("type", null));
+                subIconType = SubIcon.Type.valueOf(subIconObject.get("type", null));
 			} else {
-				this.subIconType = null;
+                subIconType = null;
 			}
-			
-			this.subIcon = new SimpleIcon(subIconObject);
+
+            subIcon = new SimpleIcon(subIconObject);
 		} else {
-			this.subIcon = null;
-			this.subIconType = null;
+            subIcon = null;
+            subIconType = null;
 		}
 		
 		if (data.containsKey("enchantments")) {
-			List<Enchantment> enchantments = new ArrayList<Enchantment>(1);
+			List<Enchantment> enchantments = new ArrayList<>(1);
 			
 			for (SimpleJSONArrayEntry entry : data.getArray("enchantments")) {
 				enchantments.add(new Enchantment(entry.getString(), false));
@@ -155,7 +156,7 @@ public class EquippableItemTemplate extends ItemTemplate {
 			
 			this.enchantments = Collections.unmodifiableList(enchantments);
 		} else {
-			this.enchantments = Collections.emptyList();
+            enchantments = Collections.emptyList();
 		}
 	}
 	
@@ -169,16 +170,16 @@ public class EquippableItemTemplate extends ItemTemplate {
 	
 	protected EquippableItemTemplate(String id, EquippableItemTemplate other, CreatedItem createdItem) {
 		super(id, other, createdItem);
-		
-		this.coversHair = other.coversHair;
-		this.coversBeard = other.coversBeard;
-		this.subIcon = other.subIcon;
-		this.subIconType = other.subIconType;
-		this.type = other.type;
-		
-		this.enchantments = createdItem.getEnchantments();
-		
-		this.isUnequippable = createdItem.getIsUnequippable(other);
+
+        coversHair = other.coversHair;
+        coversBeard = other.coversBeard;
+        subIcon = other.subIcon;
+        subIconType = other.subIconType;
+        type = other.type;
+
+        enchantments = createdItem.getEnchantments();
+
+        isUnequippable = createdItem.getIsUnequippable(other);
 	}
 	
 	/**
@@ -214,7 +215,7 @@ public class EquippableItemTemplate extends ItemTemplate {
 	 */
 	
 	public SubIcon.Type getSubIconTypeOverride() {
-		return this.subIconType;
+		return subIconType;
 	}
 	
 	/**

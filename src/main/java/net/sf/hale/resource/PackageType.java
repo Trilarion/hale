@@ -31,5 +31,5 @@ package net.sf.hale.resource;
 public enum PackageType {
 	Campaign, // a campaign package, can be either zip or directory
 	CoreDirectory, // core package contained in a directory hierarchy
-	CoreZip; // core package contained in a zipFile
+	CoreZip // core package contained in a zipFile
 }

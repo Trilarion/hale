@@ -22,6 +22,8 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.GUI.AsyncCompletionListener;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Game;
@@ -103,7 +105,7 @@ public class PortraitSelector extends PopupWindow {
 		portraitPaneContent = new PortraitPaneContent();
 		portraitPane = new ScrollPane(portraitPaneContent);
 		portraitPane.setTheme("portraitpane");
-		portraitPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		portraitPane.setFixed(Fixed.HORIZONTAL);
 		content.add(portraitPane);
 		
 		setAcceptEnabled();
@@ -130,7 +132,7 @@ public class PortraitSelector extends PopupWindow {
 	private void accept() {
 		closePopup();
 
-		String portraitString = PortraitSelector.getPortraitString(selectedPortrait.portrait);
+		String portraitString = getPortraitString(selectedPortrait.portrait);
 		if (callback != null)
 			callback.portraitSelected(portraitString);
 	}
@@ -191,8 +193,8 @@ public class PortraitSelector extends PopupWindow {
 		 * Called when a selection is accepted
 		 * @param portrait the portrait that was accepted
 		 */
-		
-		public void portraitSelected(String portrait);
+
+        void portraitSelected(String portrait);
 	}
 	
 	private class PortraitLoader implements Runnable {
@@ -209,7 +211,7 @@ public class PortraitSelector extends PopupWindow {
 		}
 	}
 	
-	private class PortraitLoaderListener implements GUI.AsyncCompletionListener<PortraitLoader> {
+	private class PortraitLoaderListener implements AsyncCompletionListener<PortraitLoader> {
 		@Override public void completed(PortraitLoader loader) { }
 
 		@Override public void failed(Exception exception) {
@@ -225,17 +227,17 @@ public class PortraitSelector extends PopupWindow {
 		}
 		
 		private void updatePortraits(Race race) {
-			this.removeAllChildren();
+            removeAllChildren();
 			
 			String directory = "portraits/" + race.getID();
 			
-			List<PortraitViewer> viewers = new ArrayList<PortraitViewer>();
+			List<PortraitViewer> viewers = new ArrayList<>();
 			for (String resource : ResourceManager.getResourcesInDirectory(directory)) {
 				PortraitViewer viewer = new PortraitViewer(resource);
 				viewer.setScale(0.5f);
 				add(viewer);
 
-				String portrait = PortraitSelector.getPortraitString(resource);
+				String portrait = getPortraitString(resource);
 				if (portrait.equals(character.getSelectedPortrait())) {
 					viewer.setActive(true);
 					selectedPortrait = viewer;
@@ -291,11 +293,11 @@ public class PortraitSelector extends PopupWindow {
 		
 		private PortraitViewer(String portrait) {
 			this.portrait = portrait;
-			this.addCallback(this);
+            addCallback(this);
 		}
 		
 		private void loadSprite() {
-			this.sprite = SpriteManager.getImage(portrait);
+            sprite = SpriteManager.getImage(portrait);
 		}
 		
 		@Override public void run() {
@@ -304,14 +306,14 @@ public class PortraitSelector extends PopupWindow {
 			}
 			
 			selectedPortrait = this;
-			this.setActive(true);
+            setActive(true);
 			
 			setAcceptEnabled();
 		}
 		
 		private void setScale(float scale) {
 			this.scale = scale;
-			this.invScale = 1.0f / scale;
+            invScale = 1.0f / scale;
 		}
 		
 		@Override public int getPreferredWidth() {

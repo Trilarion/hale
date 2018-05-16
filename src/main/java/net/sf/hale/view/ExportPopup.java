@@ -125,15 +125,15 @@ public class ExportPopup extends PopupWindow {
 			close.setTheme("closebutton");
 			close.addCallback(new Runnable() {
 				@Override public void run() {
-					ExportPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			add(close);
 			
-			portraitNames = new ArrayList<Label>();
-			portraitExports = new ArrayList<Button>();
-			portraits = new ArrayList<BasePortraitViewer>();
-			exportedIDs = new ArrayList<String>();
+			portraitNames = new ArrayList<>();
+			portraitExports = new ArrayList<>();
+			portraits = new ArrayList<>();
+			exportedIDs = new ArrayList<>();
 			
 			minLevel = Integer.MAX_VALUE;
 			maxLevel = 0;

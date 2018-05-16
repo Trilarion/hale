@@ -58,15 +58,15 @@ public class ParticleManager {
 	private final List<EntityOffsetAnimation> entityOffsetAnimations;
 	
 	public ParticleManager() {
-		this.baseGenerators = new HashMap<String, ParticleGenerator>();
-		this.baseAnimations = new HashMap<String, Animation>();
-		
-		this.activeBelowAnimations = new LinkedList<Animated>();
-		this.activeAboveAnimations = new LinkedList<Animated>();
-		
-		this.animationsToAdd = new LinkedList<Animated>();
-		
-		this.entityOffsetAnimations = new LinkedList<EntityOffsetAnimation>();
+        baseGenerators = new HashMap<>();
+        baseAnimations = new HashMap<>();
+
+        activeBelowAnimations = new LinkedList<>();
+        activeAboveAnimations = new LinkedList<>();
+
+        animationsToAdd = new LinkedList<>();
+
+        entityOffsetAnimations = new LinkedList<>();
 		
 		lastTime = System.currentTimeMillis();
 	}
@@ -134,7 +134,7 @@ public class ParticleManager {
 	}
 	
 	public Animation getAnimation(String ref) {
-		Animation a = this.baseAnimations.get(ref);
+		Animation a = baseAnimations.get(ref);
 		
 		if (a == null) return null;
 		
@@ -142,14 +142,14 @@ public class ParticleManager {
 	}
 	
 	public ParticleGenerator getParticleGenerator(String ref) {
-		ParticleGenerator g = this.baseGenerators.get(ref);
+		ParticleGenerator g = baseGenerators.get(ref);
 		
 		if (g == null) return null;
 		
 		if (g instanceof LineParticleGenerator) return new LineParticleGenerator((LineParticleGenerator) g);
 		else if (g instanceof RectParticleGenerator) return new RectParticleGenerator((RectParticleGenerator) g);
 		else if (g instanceof CircleParticleGenerator) return new CircleParticleGenerator((CircleParticleGenerator) g);
-		else return new ParticleGenerator(this.baseGenerators.get(ref));
+		else return new ParticleGenerator(baseGenerators.get(ref));
 	}
 	
 	public void addEntityOffsetAnimation(EntityOffsetAnimation animation) {

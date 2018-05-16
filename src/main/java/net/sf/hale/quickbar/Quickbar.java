@@ -27,6 +27,7 @@ import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.entity.PC;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
@@ -57,7 +58,7 @@ public class Quickbar implements Saveable {
 		for (Integer key : slots.keySet()) {
 			QuickbarSlot slot = slots.get(key);
 			if (slot != null)
-				slotsData.put("slot" + key.toString(), slot.save());
+				slotsData.put("slot" + key, slot.save());
 		}
 		
 		data.put("slots", slotsData);
@@ -66,7 +67,7 @@ public class Quickbar implements Saveable {
 	}
 	
 	public void load(SimpleJSONObject data) {
-		this.clear();
+		clear();
 		
 		SimpleJSONObject slotsObject = data.getObject("slots");
 		
@@ -76,56 +77,62 @@ public class Quickbar implements Saveable {
 			SimpleJSONObject slotData = slotsObject.getObject(key);
 			
 			String type = slotData.get("type", null);
-			
-			if (type.equals("ability")) {
-				// legacy support for transitioning old saves; do nothing
-				
-			} else if (type.equals("use")) {
-				String itemID = slotData.get("itemID", null);
-				
-				String qualityID = null;
-				if (slotData.containsKey("itemQuality")) {
-					qualityID = slotData.get("itemQuality", null);
-				}
-				
-				ItemList.Entry entry = parent.inventory.getUnequippedItems().find(itemID, qualityID);
-				if (entry != null) {
-					putSlot(index, new ItemUseSlot(entry, parent));
-				} else {
-					Logger.appendToWarningLog("Warning, unable to find item in quickbar slot " + index +
-							" for " + parent.getTemplate().getID());
-				}
-				
-			} else if (type.equals("equip")) {
-				String itemID = slotData.get("itemID", null);
-				
-				String qualityID = null;
-				if (slotData.containsKey("itemQuality")) {
-					qualityID = slotData.get("itemQuality", null);
-				}
-				
-				try {
-					Item item = EntityManager.getItem(itemID, qualityID);
 
-					ItemEquipSlot slot = new ItemEquipSlot((EquippableItem)item, parent);
+			switch (type) {
+				case "ability":
+					// legacy support for transitioning old saves; do nothing
 
-					if (slotData.containsKey("secondaryItemID")) {
-						String secondaryItemID = slotData.get("secondaryItemID", null);
-						
-						String secondaryQualityID = null;
-						if (slotData.containsKey("secondaryItemQuality")) {
-							secondaryQualityID = slotData.get("secondaryItemQuality", null);
-						}
+					break;
+				case "use": {
+					String itemID = slotData.get("itemID", null);
 
-						Item secondaryItem = EntityManager.getItem(secondaryItemID, secondaryQualityID);
-
-						slot.setSecondaryItem((EquippableItem)secondaryItem);
+					String qualityID = null;
+					if (slotData.containsKey("itemQuality")) {
+						qualityID = slotData.get("itemQuality", null);
 					}
 
-					putSlot(index, slot);
+					Entry entry = parent.inventory.getUnequippedItems().find(itemID, qualityID);
+					if (entry != null) {
+						putSlot(index, new ItemUseSlot(entry, parent));
+					} else {
+						Logger.appendToWarningLog("Warning, unable to find item in quickbar slot " + index +
+								" for " + parent.getTemplate().getID());
+					}
 
-				} catch (Exception e) {
-					Logger.appendToWarningLog("Warning, unable to load item(s) in quickbar slot " + index);
+					break;
+				}
+				case "equip": {
+					String itemID = slotData.get("itemID", null);
+
+					String qualityID = null;
+					if (slotData.containsKey("itemQuality")) {
+						qualityID = slotData.get("itemQuality", null);
+					}
+
+					try {
+						Item item = EntityManager.getItem(itemID, qualityID);
+
+						ItemEquipSlot slot = new ItemEquipSlot((EquippableItem) item, parent);
+
+						if (slotData.containsKey("secondaryItemID")) {
+							String secondaryItemID = slotData.get("secondaryItemID", null);
+
+							String secondaryQualityID = null;
+							if (slotData.containsKey("secondaryItemQuality")) {
+								secondaryQualityID = slotData.get("secondaryItemQuality", null);
+							}
+
+							Item secondaryItem = EntityManager.getItem(secondaryItemID, secondaryQualityID);
+
+							slot.setSecondaryItem((EquippableItem) secondaryItem);
+						}
+
+						putSlot(index, slot);
+
+					} catch (Exception e) {
+						Logger.appendToWarningLog("Warning, unable to load item(s) in quickbar slot " + index);
+					}
+					break;
 				}
 			}
 		}
@@ -138,13 +145,13 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public Quickbar(Quickbar other, PC parent) {
-		slots = new HashMap<Integer, QuickbarSlot>();
+		slots = new HashMap<>();
 		
 		for (Integer index : other.slots.keySet()) {
 			QuickbarSlot slot = other.slots.get(index);
 			
 			if (slot != null) {
-				this.putSlot(index, slot.getCopy(parent));
+				putSlot(index, slot.getCopy(parent));
 			}
 		}
 		
@@ -160,7 +167,7 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public Quickbar(PC parent) {
-		slots = new HashMap<Integer, QuickbarSlot>();
+		slots = new HashMap<>();
 		this.parent = parent;
 	}
 	
@@ -181,9 +188,9 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public QuickbarSlot getSlot(int index) {
-		if (index >= Quickbar.ItemSlots || index < 0) return null;
+		if (index >= ItemSlots || index < 0) return null;
 		
-		return slots.get(Integer.valueOf(index));
+		return slots.get(index);
 	}
 	
 	/**
@@ -207,7 +214,7 @@ public class Quickbar implements Saveable {
 	
 	public void setSlot(QuickbarSlot slot, int index) {
 		// handle the special case of one equip slot holding two items
-		QuickbarSlot current = slots.get(Integer.valueOf(index));
+		QuickbarSlot current = slots.get(index);
 		
 		if (current instanceof ItemEquipSlot && slot instanceof ItemEquipSlot) {
 			if ( ((ItemEquipSlot)current).setSecondaryItem(((ItemEquipSlot)slot).getItem()) ) {
@@ -229,7 +236,7 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public void addToFirstEmptySlot(String itemID, String quality) {
-		addToFirstEmptySlot(Quickbar.getQuickbarSlot(EntityManager.getItem(itemID, quality), parent));
+		addToFirstEmptySlot(getQuickbarSlot(EntityManager.getItem(itemID, quality), parent));
 	}
 	
 	/**
@@ -243,7 +250,7 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public void addToFirstEmptySlot(String itemID) {
-		addToFirstEmptySlot(Quickbar.getQuickbarSlot(EntityManager.getItem(itemID), parent));
+		addToFirstEmptySlot(getQuickbarSlot(EntityManager.getItem(itemID), parent));
 	}
 	
 	/**
@@ -256,13 +263,13 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public void addToFirstEmptySlot(Item item) {
-		addToFirstEmptySlot(Quickbar.getQuickbarSlot(item, parent));
+		addToFirstEmptySlot(getQuickbarSlot(item, parent));
 	}
 	
 	private void addToFirstEmptySlot(QuickbarSlot slot) {
 		if (slot == null) return;
 		
-		for (int i = 0; i < Quickbar.ItemSlots; i++) {
+		for (int i = 0; i < ItemSlots; i++) {
 			if (getSlot(i) == null) {
 				setSlot(slot, i);
 				break;
@@ -278,7 +285,7 @@ public class Quickbar implements Saveable {
 			slot.setIndex(index);
 		}
 		
-		slots.put(Integer.valueOf(index), slot);
+		slots.put(index, slot);
 	}
 	
 	/**
@@ -297,7 +304,7 @@ public class Quickbar implements Saveable {
 		if (item instanceof EquippableItem) {
 			return new ItemEquipSlot((EquippableItem)item, parent);
 		} else if (item.getTemplate().isUsable()) {
-			ItemList.Entry entry = parent.inventory.getUnequippedItems().find(item.getTemplate().getID(),
+			Entry entry = parent.inventory.getUnequippedItems().find(item.getTemplate().getID(),
 					item.getQuality());
 			
 			if (entry != null) {

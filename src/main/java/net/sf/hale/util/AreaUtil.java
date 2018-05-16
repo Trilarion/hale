@@ -29,6 +29,8 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Path;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.Relationship;
+import net.sf.hale.util.PathFinder.Data;
 
 /**
  * A class with utility helper functions for an Area, especially
@@ -44,13 +46,13 @@ public class AreaUtil {
 	
 	private final Area area;
 	
-	private PathFinder.Data pathFindData;
+	private Data pathFindData;
 	
 	public enum Turn {
 		LEFT, RIGHT, STRAIGHT
-	};
-	
-	public AreaUtil(Area area) {
+	}
+
+    public AreaUtil(Area area) {
 		this.area = area;
 		boolean[][] trans = area.getTransparency();
 		
@@ -65,10 +67,10 @@ public class AreaUtil {
 			}
 		}
 		
-		pathFindData = new PathFinder.Data(area);
+		pathFindData = new Data(area);
 	}
 	
-	public static List<Creature> getVisibleCreatures(Creature activeCreature, Faction.Relationship rel) {
+	public static List<Creature> getVisibleCreatures(Creature activeCreature, Relationship rel) {
 		Faction activeFaction = activeCreature.getFaction();
 		
 		List<Creature> creatures = activeCreature.getVisibleCreatures();
@@ -76,7 +78,7 @@ public class AreaUtil {
 		while (iter.hasNext()) {
 			Creature c = iter.next();
 			
-			Faction.Relationship curRel = activeFaction.getRelationship(c.getFaction());
+			Relationship curRel = activeFaction.getRelationship(c.getFaction());
 			if (rel != null && curRel != rel) {
 				iter.remove();
 			} else if (c.stats.isHidden()) {
@@ -162,7 +164,7 @@ public class AreaUtil {
 	private boolean[][] getVisibility(boolean[][] visible, int centerX, int centerY) {
 		if (centerX < 0 || centerY < 0 || centerX >= visible.length || centerY >= visible[0].length) return visible; 
 		
-		byte centerElev = this.area.getElevationGrid().getElevation(centerX, centerY);
+		byte centerElev = area.getElevationGrid().getElevation(centerX, centerY);
 		
 		visible[centerX][centerY] = true;
 		
@@ -172,7 +174,7 @@ public class AreaUtil {
 		cone.next.next.next = new LOSCone(5, new Point(0, Game.TILE_SIZE / 2), 6, new Point(Game.TILE_SIZE / 2, 0));
 		
 		int radius = 1;
-		while (radius <= this.area.getVisibilityRadius()) {
+		while (radius <= area.getVisibilityRadius()) {
 
 			//System.out.println("At radius " + radius);
 			
@@ -189,7 +191,7 @@ public class AreaUtil {
 				
 				int i = 0;
 				for (i = currentCone.getStartI(); i <= currentCone.getEndI(); i++) {
-					Point currentTile = AreaUtil.convertPolarToGrid(centerX, centerY, currentCone.getR(), i);
+					Point currentTile = convertPolarToGrid(centerX, centerY, currentCone.getR(), i);
 
 					byte curElev = 0;
 					
@@ -313,14 +315,14 @@ public class AreaUtil {
 	 */
 	
 	public Path findShortestPath(Creature mover, Point end, int distanceAway) {
-		List<Point> goals = new ArrayList<Point>();
+		List<Point> goals = new ArrayList<>();
 		
 		// add the appropriate set of goal points
 		if (distanceAway == 0) {
 			goals.add(end);
 		} else {
 			for (int i = 0; i < distanceAway * 6; i++) {
-				goals.add( AreaUtil.convertPolarToGrid(end, distanceAway, i) );
+				goals.add( convertPolarToGrid(end, distanceAway, i) );
 			}
 		}
 		
@@ -455,39 +457,39 @@ public class AreaUtil {
 		if (d == 0) {
 			px = 0;
 			py = 0 - r;
-			
-			py = py + (e + Math.abs(px % 2)) / 2;
-			px = px + e;
+
+			py += (e + Math.abs(px % 2)) / 2;
+			px += e;
 		} else if (d == 1) {
 			px = 0 + r;
 			py = 0 - (r + 1) / 2;
-			
-			py = py + e;
-			px = px + 0;
+
+			py += e;
+			px += 0;
 		} else if (d == 2) {
 			px = 0 + r;
 			py = 0 + (r) / 2;
-			
-			py = py + (e + Math.abs(px % 2)) / 2;
-			px = px - e;
+
+			py += (e + Math.abs(px % 2)) / 2;
+			px -= e;
 		} else if (d == 3) {
 			px = 0;
 			py = 0 + r;
-			
-			py = py - (e + 1 - Math.abs(px % 2)) / 2;
-			px = px - e;
+
+			py -= (e + 1 - Math.abs(px % 2)) / 2;
+			px -= e;
 		} else if (d == 4) {
 			px = 0 - r;
 			py = 0 + (r) / 2;
-			
-			py = py - e;
-			px = px + 0;
+
+			py -= e;
+			px += 0;
 		} else if (d == 5) {
 			px = 0 - r;
 			py = 0 - (r + 1) / 2;
-			
-			py = py - (e + 1 - Math.abs(px % 2)) / 2;
-			px = px + e;
+
+			py -= (e + 1 - Math.abs(px % 2)) / 2;
+			px += e;
 		}
 		
 		return new Point(px, py);
@@ -540,50 +542,50 @@ public class AreaUtil {
 		if (d == 0) {
 			px = centerX;
 			py = centerY - r;
-			
-			py = py + (e + Math.abs(px % 2)) / 2;
-			px = px + e;
+
+			py += (e + Math.abs(px % 2)) / 2;
+			px += e;
 		} else if (d == 1) {
 			px = centerX + r;
 			py = centerY - (r + 1 - (centerX % 2)) / 2;
-			
-			py = py + e;
-			px = px + 0;
+
+			py += e;
+			px += 0;
 		} else if (d == 2) {
 			px = centerX + r;
 			py = centerY + (r + (centerX % 2)) / 2;
-			
-			py = py + (e + Math.abs(px % 2)) / 2;
-			px = px - e;
+
+			py += (e + Math.abs(px % 2)) / 2;
+			px -= e;
 		} else if (d == 3) {
 			px = centerX;
 			py = centerY + r;
-			
-			py = py - (e + 1 - Math.abs(px % 2)) / 2;
-			px = px - e;
+
+			py -= (e + 1 - Math.abs(px % 2)) / 2;
+			px -= e;
 		} else if (d == 4) {
 			px = centerX - r;
 			py = centerY + (r + (centerX % 2)) / 2;
-			
-			py = py - e;
-			px = px + 0;
+
+			py -= e;
+			px += 0;
 		} else if (d == 5) {
 			px = centerX - r;
 			py = centerY - (r + 1 - (centerX % 2)) / 2;
-			
-			py = py - (e + 1 - Math.abs(px % 2)) / 2;
-			px = px + e;
+
+			py -= (e + 1 - Math.abs(px % 2)) / 2;
+			px += e;
 		}
 		
 		return new Point(px, py);
 	}
 	
-	public static ArrayList<Point> findIntersectingHexes(int x0, int y0, int x1, int y1) {
-		ArrayList<Point> hexes = new ArrayList<Point>();
+	public static List<Point> findIntersectingHexes(int x0, int y0, int x1, int y1) {
+		ArrayList<Point> hexes = new ArrayList<>();
 		
-		Point previous = AreaUtil.convertScreenToGrid(x0, y0);
-		Point end = AreaUtil.convertScreenToGrid(x1, y1);
-		Point[] adjacentToEnd = AreaUtil.getAdjacentTiles(end);
+		Point previous = convertScreenToGrid(x0, y0);
+		Point end = convertScreenToGrid(x1, y1);
+		Point[] adjacentToEnd = getAdjacentTiles(end);
 		
 		Point current = new Point(-1, -1);
 		int previousSide = -1;
@@ -593,7 +595,7 @@ public class AreaUtil {
 //		System.out.println("Finding...");
 		
 		while (i < 24 && !current.equals(end)) {
-			Point previousScreen = AreaUtil.convertGridToScreen(previous);
+			Point previousScreen = convertGridToScreen(previous);
 			
 			previousSide = getLineIntersectSide(previousSide, previousScreen.x, previousScreen.y, x0, y0, x1, y1);
 			

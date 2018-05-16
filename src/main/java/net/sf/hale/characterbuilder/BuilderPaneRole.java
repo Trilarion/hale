@@ -22,6 +22,7 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.characterbuilder.PointAllocatorModel.Listener;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 
@@ -32,7 +33,7 @@ import net.sf.hale.rules.Role;
  *
  */
 
-public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.Listener {
+public class BuilderPaneRole extends BuilderPane implements Listener {
 	private List<RoleSelector> roleSelectors;
 	private PointAllocatorModel points;
 	
@@ -51,16 +52,16 @@ public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.
 			getBackButton().setVisible(false);
 		}
 		
-		roleSelectors = new ArrayList<RoleSelector>();
+		roleSelectors = new ArrayList<>();
         
         points = new PointAllocatorModel(1);
         points.addListener(this);
         
-        super.setTitleText("Select a Role");
+        setTitleText("Select a Role");
         
         allocatorModelUpdated();
         
-        workingCopy = this.getCharacter().getWorkingCopy();
+        workingCopy = getCharacter().getWorkingCopy();
 	}
 	
 	@Override protected void next() {
@@ -91,7 +92,7 @@ public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.
 		}
     	
 		roleSelectors.add(selector);
-		super.addSelector(selector);
+		addSelector(selector);
 		
 		return selector;
 	}

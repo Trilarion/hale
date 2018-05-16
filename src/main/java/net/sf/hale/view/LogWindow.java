@@ -19,6 +19,7 @@
 
 package net.sf.hale.view;
 
+import de.matthiasmann.twl.TabbedPane.Tab;
 import net.sf.hale.Game;
 import net.sf.hale.rules.QuestEntry;
 
@@ -34,7 +35,7 @@ import de.matthiasmann.twl.TabbedPane;
 public class LogWindow extends GameSubWindow {
 	private final TabbedPane content;
 	
-	private final TabbedPane.Tab questTab;
+	private final Tab questTab;
 	
 	private final RecipeSetViewer recipeViewer;
 	private final QuestSetViewer questViewer;
@@ -45,7 +46,7 @@ public class LogWindow extends GameSubWindow {
 	 */
 	
 	public LogWindow() {
-		this.setTitle("Log");
+        setTitle("Log");
 		
 		content = new TabbedPane();
 		content.setTheme("content");

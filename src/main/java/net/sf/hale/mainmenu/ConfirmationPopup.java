@@ -45,12 +45,12 @@ public class ConfirmationPopup extends PopupWindow {
 	
 	public ConfirmationPopup(Widget parent) {
 		super(parent);
-		this.setCloseOnClickedOutside(false);
+        setCloseOnClickedOutside(false);
 
 		content = new Content();
-		this.add(content);
+        add(content);
 		
-		callbacks = new ArrayList<Runnable>();
+		callbacks = new ArrayList<>();
 	}
 	
 	/**

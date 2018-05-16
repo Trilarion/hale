@@ -27,6 +27,8 @@ import java.util.TreeSet;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Path;
+import net.sf.hale.interfacelock.MovementHandler.Mode;
+import net.sf.hale.interfacelock.MovementHandler.Mover;
 
 /**
  * The global class responsible for locking the interface, preventing player
@@ -53,8 +55,8 @@ public class InterfaceLocker {
 	 */
 	
 	public InterfaceLocker() {
-		locks = new TreeSet<InterfaceLock>();
-		queuedLocks = new LinkedList<InterfaceLock>();
+		locks = new TreeSet<>();
+		queuedLocks = new LinkedList<>();
 		interfaceLocked = false;
 		
 		movementHandler = new MovementHandler();
@@ -65,7 +67,7 @@ public class InterfaceLocker {
 	 * @return the current movement mode
 	 */
 	
-	public MovementHandler.Mode getMovementMode() {
+	public Mode getMovementMode() {
 		return movementHandler.getMovementMode();
 	}
 	
@@ -74,7 +76,7 @@ public class InterfaceLocker {
 	 * @param mode the mode to set
 	 */
 	
-	public void setMovementMode(MovementHandler.Mode mode) {
+	public void setMovementMode(Mode mode) {
 		movementHandler.setMovementMode(mode);
 	}
 	
@@ -88,7 +90,7 @@ public class InterfaceLocker {
 		queuedLocks.clear();
 		interfaceLocked = false;
 		movementHandler.clear();
-		movementHandler.setMovementMode(MovementHandler.Mode.Party);
+		movementHandler.setMovementMode(Mode.Party);
 	}
 	
 	/**
@@ -107,7 +109,7 @@ public class InterfaceLocker {
 	 * @return the move created for this movement
 	 */
 	
-	public MovementHandler.Mover addMove(Creature mover, Path path, boolean provokeAoOs) {
+	public Mover addMove(Creature mover, Path path, boolean provokeAoOs) {
 		interfaceLocked = true;
 		
 		return movementHandler.addMove(mover, path, provokeAoOs);
@@ -148,7 +150,7 @@ public class InterfaceLocker {
 	}
 	
 	private void addQueued() {
-		if (queuedLocks.size() > 0) {
+		if (!queuedLocks.isEmpty()) {
 			synchronized(queuedLocks) {
 				Iterator<InterfaceLock> iter = queuedLocks.iterator();
 				while (iter.hasNext()) {
@@ -184,7 +186,7 @@ public class InterfaceLocker {
 	 */
 	
 	public void checkTime(long curTime) {
-		if (locks.size() > 0 && !movementHandler.isLocked()) {
+		if (!locks.isEmpty() && !movementHandler.isLocked()) {
 			// only pop locks after the movement handler is unlocked
 			
 			int priority = locks.first().getPriority();
@@ -212,11 +214,11 @@ public class InterfaceLocker {
 	}
 	
 	private void checkUnlockInterface() {
-		if (interfaceLocked && locks.size() == 0 && !movementHandler.isLocked()) {
+		if (interfaceLocked && locks.isEmpty() && !movementHandler.isLocked()) {
 			interfaceLocked = false;
 
 			synchronized(this) {
-				this.notifyAll();
+                notifyAll();
 			}
 
 			// recompute mouse state including check pathing

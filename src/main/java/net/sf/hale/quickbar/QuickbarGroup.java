@@ -49,8 +49,8 @@ public class QuickbarGroup {
 	 */
 	
 	public QuickbarGroup(SimpleJSONObject data, Map<String, List<Ability>> abilitiesByGroup) {
-		this.name = data.get("name", null);
-		this.tooltip = data.get("tooltip", null);
+        name = data.get("name", null);
+        tooltip = data.get("tooltip", null);
 		
 		if (data.containsKey("icon")) {
 			icon = IconFactory.createIcon(data.getObject("icon"));
@@ -58,8 +58,8 @@ public class QuickbarGroup {
 			icon = IconFactory.emptyIcon;
 		}
 		
-		List<Ability> abilities = new ArrayList<Ability>();
-		for (Ability ability : abilitiesByGroup.get(this.name)) {
+		List<Ability> abilities = new ArrayList<>();
+		for (Ability ability : abilitiesByGroup.get(name)) {
 			abilities.add(ability);
 		}
 		

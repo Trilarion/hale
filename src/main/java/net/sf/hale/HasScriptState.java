@@ -31,14 +31,14 @@ public interface HasScriptState {
 	 * @param key the key to get the value for
 	 * @return the value for the specified key
 	 */
-	
-	public Object get(String key);
+
+    Object get(String key);
 	
 	/**
 	 * Puts the specified key value pair in the script state
 	 * @param key the key to associated with the value
 	 * @param value the value to put
 	 */
-	
-	public void put(String key, Object value);
+
+    void put(String key, Object value);
 }

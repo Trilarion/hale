@@ -39,7 +39,7 @@ public class FeatureType extends AbstractTerrainType {
 			TerrainTile previewTile, List<TerrainTile> tiles) {
 		super(id, transparent, passable, previewTile, tiles);
 		
-		terrainTypeIDs = new HashSet<String>();
+		terrainTypeIDs = new HashSet<>();
 	}
 	
 	/**

@@ -35,6 +35,7 @@ import net.sf.hale.entity.SavedItemList;
 import net.sf.hale.quickbar.QuickbarGroup;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONArray;
 import net.sf.hale.util.SimpleJSONArrayEntry;
@@ -52,9 +53,9 @@ import net.sf.hale.util.SimpleJSONParser;
 public class Ruleset {
 	public enum Gender {
 		Female,
-		Male;
-	};
-	
+		Male
+	}
+
 	private final Map<String, Ability> abilities;
 	private final Map<String, Race> races;
 	private final Map<String, Role> roles;
@@ -85,30 +86,30 @@ public class Ruleset {
 	 */
 	
 	public Ruleset() {
-		abilities = new HashMap<String, Ability>();
-		abilitySelectionLists = new HashMap<String, AbilitySelectionList>();
+		abilities = new HashMap<>();
+		abilitySelectionLists = new HashMap<>();
 		
-		races = new LinkedHashMap<String, Race>();
-		roles = new LinkedHashMap<String, Role>();
-		skills = new LinkedHashMap<String, Skill>();
-		factions = new HashMap<String, Faction>();
-		damageTypes = new LinkedHashMap<String, DamageType>();
+		races = new LinkedHashMap<>();
+		roles = new LinkedHashMap<>();
+		skills = new LinkedHashMap<>();
+		factions = new HashMap<>();
+		damageTypes = new LinkedHashMap<>();
 		
-		baseWeapons = new HashMap<String, BaseWeapon>();
-		armorTypes = new HashMap<String, ArmorType>();
+		baseWeapons = new HashMap<>();
+		armorTypes = new HashMap<>();
 		
-		itemLists = new LinkedHashMap<String, SavedItemList>();
+		itemLists = new LinkedHashMap<>();
 		
-		racialTypes = new HashMap<String, RacialType>();
+		racialTypes = new HashMap<>();
 		
-		ruleValues = new HashMap<String, Integer>();
-		ruleStrings = new HashMap<String, String>();
+		ruleValues = new HashMap<>();
+		ruleStrings = new HashMap<>();
 		
-		itemQualities = new HashMap<String, Quality>();
+		itemQualities = new HashMap<>();
 		
-		cutscenes = new HashMap<String, Cutscene>();
+		cutscenes = new HashMap<>();
 		
-		quickbarGroups = new LinkedHashMap<String, QuickbarGroup>();
+		quickbarGroups = new LinkedHashMap<>();
 	}
 	
 	/**
@@ -264,14 +265,14 @@ public class Ruleset {
 		quickbarGroups.clear();
 		
 		// create the set of abilities by group
-		Map<String, List<Ability>> abilitiesByGroup = new HashMap<String, List<Ability>>();
+		Map<String, List<Ability>> abilitiesByGroup = new HashMap<>();
 		for (Ability ability : abilities.values()) {
 			if (!ability.isActivateable() || ability.getQuickbarGroup() == null) continue;
 			
 			String group = ability.getQuickbarGroup();
 			
 			if (!abilitiesByGroup.containsKey(group)) {
-				abilitiesByGroup.put(group, new ArrayList<Ability>());
+				abilitiesByGroup.put(group, new ArrayList<>());
 			}
 			
 			abilitiesByGroup.get(group).add(ability);
@@ -372,7 +373,7 @@ public class Ruleset {
 		
 		for (String key : parser.keySet()) {
 			String type = parser.get(key, "Energy");
-			if (type.equals("Energy"))
+			if ("Energy".equals(type))
 				damageTypes.put(key, new DamageType(key, true));
 			else
 				damageTypes.put(key, new DamageType(key, false));
@@ -405,7 +406,7 @@ public class Ruleset {
 	private void readFactions() {
 		factions.clear();
 		
-		Map<Faction, SimpleJSONArray> relationshipArrays = new HashMap<Faction, SimpleJSONArray>();
+		Map<Faction, SimpleJSONArray> relationshipArrays = new HashMap<>();
 		
 		// load factions and get the list of relationships
 		SimpleJSONParser parser = new SimpleJSONParser("factions", ResourceType.JSON);
@@ -414,7 +415,7 @@ public class Ruleset {
 			
 			Faction faction = new Faction(factionData.get("id", null));
 			// a faction is always friendly with itself
-			faction.setRelationship(faction, Faction.Relationship.Friendly);
+			faction.setRelationship(faction, Relationship.Friendly);
 			
 			if (factionData.containsKey("relationships")) {
 				// save relationship array to parse after loading all factions
@@ -431,7 +432,7 @@ public class Ruleset {
 				
 				String relationID = relationshipObject.get("id", null);
 				String relationType = relationshipObject.get("relationship", null);
-				Faction.Relationship relationship = Faction.Relationship.valueOf(relationType);
+				Relationship relationship = Relationship.valueOf(relationType);
 				
 				// set the factions with the appropriate relationship with each other
 				faction.setRelationship(relationID, relationship);

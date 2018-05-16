@@ -77,16 +77,16 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 			throw new NullPointerException("entity template must not be null");
 		
 		this.template = template;
-		
-		this.scriptState = new ScriptState();
-		
-		this.effects = new EntityEffectSet();
-		
-		this.faction = Game.ruleset.getString("DefaultFaction");
-		
-		this.location = Location.Inventory;
-		
-		this.viewers = new ArrayList<EntityListener>();
+
+        scriptState = new ScriptState();
+
+        effects = new EntityEffectSet();
+
+        faction = Game.ruleset.getString("DefaultFaction");
+
+        location = Location.Inventory;
+
+        viewers = new ArrayList<>();
 	}
 	
 	/**
@@ -96,15 +96,15 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 	 */
 	
 	protected Entity(Entity other) {
-		this.template = other.template;
-		
-		this.scriptState = new ScriptState(other.scriptState);
-		
-		this.effects = new EntityEffectSet(other.effects, this);
-		this.faction = other.faction;
-		
-		this.location = Location.Inventory;
-		this.viewers = new ArrayList<EntityListener>();
+        template = other.template;
+
+        scriptState = new ScriptState(other.scriptState);
+
+        effects = new EntityEffectSet(other.effects, this);
+        faction = other.faction;
+
+        location = Location.Inventory;
+        viewers = new ArrayList<>();
 	}
 	
 	/**
@@ -115,20 +115,20 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 	 */
 	
 	public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
-		this.faction = data.get("faction", null);
+        faction = data.get("faction", null);
 		
 		refHandler.add(data.get("ref", null), this);
 		
 		if (data.containsKey("location"))
-			this.location = Location.load(data.getObject("location"), area);
+            location = Location.load(data.getObject("location"), area);
 		else
-			this.location = Location.Inventory;
+            location = Location.Inventory;
 		
 		if (data.containsKey("scriptState"))
-			this.scriptState.load(data.getObject("scriptState"));
+            scriptState.load(data.getObject("scriptState"));
 		
 		if (data.containsKey("effects")) {
-			this.effects.load(data.getObject("effects"), refHandler, this);
+            effects.load(data.getObject("effects"), refHandler, this);
 		}
 	}
 	
@@ -306,17 +306,17 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 	 */
 	
 	public boolean setLocation(Location newLocation) {
-		Location oldLocation = this.location;
+		Location oldLocation = location;
 		
-		Point oldScreen = this.location.getScreenPoint();
+		Point oldScreen = location.getScreenPoint();
 		Point newScreen = newLocation.getScreenPoint();
 		
 		if (oldLocation.getArea() != null && oldLocation.getArea() != newLocation.getArea()) {
 			// moving to a new area
 			oldLocation.getArea().getEntities().removeEntity(this);
 		}
-		
-		this.location = newLocation;
+
+        location = newLocation;
 		
 		effects.offsetAnimationPositions(newScreen.x - oldScreen.x, newScreen.y - oldScreen.y);
 		effects.moveAuras();
@@ -326,7 +326,7 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 			
 		} else if (oldLocation.getArea() == newLocation.getArea()) {
 			// moving within an area
-			this.location.getArea().getEntities().moveEntity(this, oldLocation);
+            location.getArea().getEntities().moveEntity(this, oldLocation);
 		} else {
 			// moving to a new area
 			newLocation.getArea().getEntities().addEntity(this);
@@ -444,8 +444,8 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 		effect.startAnimations();
 		
 		effects.add(effect, getLocation().getArea() != null);
-		
-		this.updateListeners();
+
+        updateListeners();
 	}
 	
 	@Override public void removeEffect(Effect effect) {
@@ -458,8 +458,8 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 		effect.endAnimations();
 		
 		effects.remove(effect);
-		
-		this.updateListeners();
+
+        updateListeners();
 	}
 	
 	/**

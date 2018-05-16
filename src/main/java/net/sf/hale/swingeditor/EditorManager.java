@@ -35,20 +35,21 @@ import javax.imageio.ImageIO;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.EquippableItemTemplate.Type;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.Logger;
 
 /**
- * A class for managing all of the separate editors currently in existance
+ * A class for managing all of the separate editors currently in existence
  * and creating new ones, as well as managing the set of assets available
  * @author Jared
  *
  */
-
 public class EditorManager {
 	private static SwingEditor editor;
 	
@@ -60,7 +61,7 @@ public class EditorManager {
 	private static List<AssetEditor> subEditors;
 	
 	private static Map<String, BufferedImage> itemIcons;
-	private static Map<EquippableItemTemplate.Type, Map<String, BufferedImage>> subIcons;
+	private static Map<Type, Map<String, BufferedImage>> subIcons;
 	private static Map<String, BufferedImage> projectileIcons;
 	private static Map<String, BufferedImage> doorIcons;
 	
@@ -72,8 +73,8 @@ public class EditorManager {
 	public static void initialize(SwingEditor editor) {
 		EditorManager.editor = editor;
 		
-		EditorManager.logEntries = new ArrayList<String>();
-		EditorManager.subEditors = new ArrayList<AssetEditor>();
+		logEntries = new ArrayList<>();
+		subEditors = new ArrayList<>();
 		
 		addLogEntry("Created Campaign Editor");
 	}
@@ -83,7 +84,7 @@ public class EditorManager {
 	 */
 	
 	public static void updateCampaign() {
-		EditorManager.editor.updateCampaign();
+		editor.updateCampaign();
 	}
 	
 	/**
@@ -161,11 +162,11 @@ public class EditorManager {
 	 */
 	
 	public static void loadAllAssets() {
-		creaturesModel = new AssetModel<Creature>(AssetType.Creatures);
+		creaturesModel = new AssetModel<>(AssetType.Creatures);
 		
 		// get sprites and sort them alphabetically
 		Set<String> sprites = SpriteManager.getSpriteIDs();
-		List<String> spritesList = new ArrayList<String>(sprites);
+		List<String> spritesList = new ArrayList<>(sprites);
 		Collections.sort(spritesList);
 		
 		BufferedImage subItemsImage = null;
@@ -180,10 +181,10 @@ public class EditorManager {
 			e.printStackTrace();
 		}
 		
-		doorIcons = new LinkedHashMap<String, BufferedImage>();
-		itemIcons = new LinkedHashMap<String, BufferedImage>();
-		subIcons = new HashMap<EquippableItemTemplate.Type, Map<String, BufferedImage>>();
-		projectileIcons = new HashMap<String, BufferedImage>();
+		doorIcons = new LinkedHashMap<>();
+		itemIcons = new LinkedHashMap<>();
+		subIcons = new HashMap<>();
+		projectileIcons = new HashMap<>();
 		
 		// go through the list of sprites and add them to the icon lists as needed
 		for (String longID : spritesList) {
@@ -196,7 +197,7 @@ public class EditorManager {
 				if (shortID.startsWith("projectile_")) {
 					projectileIcons.put(longID, getImage(subItemsImage, longID));
 				} else {
-					EditorManager.addSubIconImage(longID, shortID, subItemsImage);
+					addSubIconImage(longID, shortID, subItemsImage);
 				}
 			} else if (longID.startsWith("images/doors/")) {
 				doorIcons.put(longID, getImage(doorsImage, longID));
@@ -217,7 +218,7 @@ public class EditorManager {
 		if (shortID.endsWith("Secondary")) return;
 		
 		// don't show gender specific icons
-		for (Ruleset.Gender gender : Ruleset.Gender.values()) {
+		for (Gender gender : Gender.values()) {
 			String genderString = gender.toString();
 			
 			if (shortID.endsWith(genderString))  {
@@ -240,11 +241,11 @@ public class EditorManager {
 			String itemType = shortID.substring(0, index);
 			itemType = itemType.substring(0, 1).toUpperCase() + itemType.substring(1, itemType.length());
 			
-			EquippableItemTemplate.Type type = EquippableItemTemplate.Type.valueOf(itemType);
+			Type type = Type.valueOf(itemType);
 			
 			Map<String, BufferedImage> map = subIcons.get(type);
 			if (map == null) {
-				map = new LinkedHashMap<String, BufferedImage>();
+				map = new LinkedHashMap<>();
 				subIcons.put(type, map);
 			}
 			
@@ -297,7 +298,7 @@ public class EditorManager {
 	 * @return the list of valid icon choices
 	 */
 	
-	public static Map<String, BufferedImage> getSubIconChoices(EquippableItemTemplate.Type type) {
+	public static Map<String, BufferedImage> getSubIconChoices(Type type) {
 		return subIcons.get(type);
 	}
 	

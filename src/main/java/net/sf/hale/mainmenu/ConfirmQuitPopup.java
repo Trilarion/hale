@@ -43,10 +43,10 @@ public class ConfirmQuitPopup extends ConfirmationPopup implements Runnable {
 		QuitToMenu,
 		
 		/** Exit the game entirely */
-		ExitGame;
-	};
-	
-	private final QuitMode mode;
+		ExitGame
+    }
+
+    private final QuitMode mode;
 
 	/**
 	 * Creates a new ConfirmQuitPopup with the specified parent Widget and
@@ -73,7 +73,7 @@ public class ConfirmQuitPopup extends ConfirmationPopup implements Runnable {
 	}
 	
 	@Override public void run() {
-		switch (ConfirmQuitPopup.this.mode) {
+		switch (mode) {
 		case QuitToMenu:
 			Game.mainViewer.exitToMainMenu();
 			break;

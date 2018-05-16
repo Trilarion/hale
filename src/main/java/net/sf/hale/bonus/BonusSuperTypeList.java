@@ -19,27 +19,29 @@
 
 package net.sf.hale.bonus;
 
+import net.sf.hale.bonus.Bonus.Type;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class BonusSuperTypeList {
-	private Map<Bonus.Type, BonusTypeList> bonuses;
+	private Map<Type, BonusTypeList> bonuses;
 	
 	public BonusSuperTypeList() {
-		bonuses = new HashMap<Bonus.Type, BonusTypeList>();
+		bonuses = new HashMap<>();
 	}
 	
 	public BonusSuperTypeList(BonusSuperTypeList other) {
-		this.bonuses = new HashMap<Bonus.Type, BonusTypeList>();
+        bonuses = new HashMap<>();
 		
-		for (Bonus.Type key : other.bonuses.keySet()) {
+		for (Type key : other.bonuses.keySet()) {
 			BonusTypeList list = new BonusTypeList(other.bonuses.get(key));
-			this.bonuses.put(key, list);
+            bonuses.put(key, list);
 		}
 	}
 	
 	public void remove(Bonus bonus) {
-		Bonus.Type type = bonus.getType();
+		Type type = bonus.getType();
 		
 		if (bonuses.containsKey(type)) {
 			bonuses.get(type).remove(bonus);
@@ -51,7 +53,7 @@ public class BonusSuperTypeList {
 	}
 	
 	public void add(Bonus bonus) {
-		Bonus.Type type = bonus.getType();
+		Type type = bonus.getType();
 		
 		if (bonuses.containsKey(type)) {
 			bonuses.get(type).add(bonus);
@@ -62,7 +64,7 @@ public class BonusSuperTypeList {
 		}
 	}
 	
-	public int getCurrentTotal(Bonus.Type type) {
+	public int getCurrentTotal(Type type) {
 		if (bonuses.containsKey(type)) return bonuses.get(type).getCurrentTotal();
 		else return 0;
 	}

@@ -14,7 +14,7 @@ import java.net.URLStreamHandler;
 public class URLResourceStreamHandler extends URLStreamHandler {
 
 	@Override protected URLConnection openConnection(URL url) throws IOException {
-		if (!url.getProtocol().equals("resource"))
+		if (!"resource".equals(url.getProtocol()))
 			throw new IllegalArgumentException("May only use resource URLs");
 		
 		String resourcePath = url.getPath();

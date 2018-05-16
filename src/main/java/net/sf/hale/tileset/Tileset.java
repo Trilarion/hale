@@ -73,27 +73,27 @@ public class Tileset {
 	
 	public Tileset(String id, String resource) {
 		this.id = id;
-		this.layers = new LinkedHashMap<String, Layer>();
+        layers = new LinkedHashMap<>();
 		
 		SimpleJSONParser parser = new SimpleJSONParser(resource);
 		parser.setWarnOnMissingKeys(true);
-		
-		this.name = parser.get("name", id);
-		this.directory = parser.get("directory", null);
-		this.entityLayerID = parser.get("entityLayer", null);
-		this.interfaceLayerID = parser.get("interfaceLayer", null);
+
+        name = parser.get("name", id);
+        directory = parser.get("directory", null);
+        entityLayerID = parser.get("entityLayer", null);
+        interfaceLayerID = parser.get("interfaceLayer", null);
 		
 		parser.setWarnOnMissingKeys(false);
-		
-		this.defaultVisibilityRadius = parser.get("defaultVisibilityRadius", 10);
-		this.defaultTerrainType = parser.get("defaultTerrainType", null);
+
+        defaultVisibilityRadius = parser.get("defaultVisibilityRadius", 10);
+        defaultTerrainType = parser.get("defaultTerrainType", null);
 		
 		// parse elevation rules if they exist
 		SimpleJSONArray elevationObject = parser.getArray("elevation");
 		if (elevationObject != null)
-			this.elevationList = ElevationList.parse(elevationObject);
+            elevationList = ElevationList.parse(elevationObject);
 		else
-			this.elevationList = null;
+            elevationList = null;
 		
 		parser.setWarnOnMissingKeys(true);
 		
@@ -101,18 +101,18 @@ public class Tileset {
 		for (SimpleJSONArrayEntry entry : parser.getArray("layers")) {
 			SimpleJSONObject layerObject = entry.getObject();
 			
-			List<String> layerSpriteSheets = new ArrayList<String>();
+			List<String> layerSpriteSheets = new ArrayList<>();
 			String layerID = layerObject.get("id", null);
 			for (SimpleJSONArrayEntry layerEntry : layerObject.getArray("spriteSheets")) {
 				String sheetID = layerEntry.getString();
 				layerSpriteSheets.add(sheetID);
 			}
-			
-			this.layers.put(layerID, new Layer(layerID, directory, layerSpriteSheets));
+
+            layers.put(layerID, new Layer(layerID, directory, layerSpriteSheets));
 		}
 		
 		//parse set of feature types
-		this.featureTypes = new HashMap<String, FeatureType>();
+        featureTypes = new HashMap<>();
 		SimpleJSONObject featureTypeObject = parser.getObject("features");
 		for (String featureID : featureTypeObject.keySet()) {
 			SimpleJSONObject featureObject = featureTypeObject.getObject(featureID);
@@ -121,7 +121,7 @@ public class Tileset {
 			featureTypes.put(featureID, featureType);
 		}
 		
-		List<String> terrainBorderPriority = new ArrayList<String>();
+		List<String> terrainBorderPriority = new ArrayList<>();
 		if (parser.containsKey("terrainBorderPriority")) {
 			SimpleJSONArray priorityArray = parser.getArray("terrainBorderPriority");
 			
@@ -131,7 +131,7 @@ public class Tileset {
 		}
 		
 		// parse set of terrain types
-		this.terrainTypes = new HashMap<String, TerrainType>();
+        terrainTypes = new HashMap<>();
 		SimpleJSONObject terrainTypeObject = parser.getObject("terrain");
 		for (String terrainID : terrainTypeObject.keySet()) {
 			SimpleJSONObject terrainObject = terrainTypeObject.getObject(terrainID);
@@ -141,7 +141,7 @@ public class Tileset {
 		}
 		
 		// parse set of border types
-		this.borderLists = new HashMap<String, BorderList>();
+        borderLists = new HashMap<>();
 		SimpleJSONObject borderListObject = parser.getObject("borders");
 		for (String borderID : borderListObject.keySet()) {
 			SimpleJSONArray borderArray = borderListObject.getArray(borderID);
@@ -224,7 +224,7 @@ public class Tileset {
 	 */
 	
 	public Set<BorderList> getMatchingBorderLists(TerrainType[][] terrain, Point center) {
-		Set<BorderList> lists = new HashSet<BorderList>();
+		Set<BorderList> lists = new HashSet<>();
 		
 		TerrainType centerType = terrain[center.x][center.y];
 		if (centerType == null) return lists;

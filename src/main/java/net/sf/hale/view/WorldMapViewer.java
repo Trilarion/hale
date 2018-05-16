@@ -21,6 +21,7 @@ package net.sf.hale.view;
 
 import java.util.List;
 
+import de.matthiasmann.twl.Event.Type;
 import net.sf.hale.Game;
 import net.sf.hale.area.Transition;
 import net.sf.hale.entity.Entity;
@@ -65,7 +66,7 @@ public class WorldMapViewer extends Widget {
 	
 	public WorldMapViewer(Transition transition) {
 		if (transition != null) {
-			this.origin = Game.curCampaign.getWorldMapLocation(transition.getWorldMapLocation());
+            origin = Game.curCampaign.getWorldMapLocation(transition.getWorldMapLocation());
 		}
 		
 		updateSprite();
@@ -87,9 +88,9 @@ public class WorldMapViewer extends Widget {
 	
 	public void updateSprite() {
 		if (Game.curCampaign != null)
-			this.backgroundSprite = Game.curCampaign.getWorldMapSprite();
+            backgroundSprite = Game.curCampaign.getWorldMapSprite();
 		else
-			this.backgroundSprite = null;
+            backgroundSprite = null;
 	}
 	
 	@Override public void paintWidget(GUI gui) {
@@ -196,7 +197,7 @@ public class WorldMapViewer extends Widget {
 		
 		private LocationHover(LocationViewer parent) {
 			this.parent = parent;
-			this.location = parent.location;
+            location = parent.location;
 			
 			name = new Label(location.getName());
 			add(name);
@@ -273,7 +274,7 @@ public class WorldMapViewer extends Widget {
 		
 		private void handleHover(Event evt) {
 			if (evt.isMouseEvent()) {
-				boolean hover = evt.getType() != Event.Type.MOUSE_EXITED && isMouseInside(evt);
+				boolean hover = evt.getType() != Type.MOUSE_EXITED && isMouseInside(evt);
 				
 				if (hover && !isHovering) {
 					isHovering = true;
@@ -358,7 +359,7 @@ public class WorldMapViewer extends Widget {
 		
 		private void handleHover(Event evt) {
 			if (evt.isMouseEvent()) {
-				boolean hover = evt.getType() != Event.Type.MOUSE_EXITED && isMouseInside(evt);
+				boolean hover = evt.getType() != Type.MOUSE_EXITED && isMouseInside(evt);
 				
 				if (hover && !isHovering) {
 					isHovering = true;

@@ -21,8 +21,7 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 public class HaleLWJGLRenderer extends LWJGLRenderer {
 
 	public HaleLWJGLRenderer() throws LWJGLException {
-		super();
-	}
+    }
 	
 	@Override protected void setupGLState() {
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT|GL11.GL_TRANSFORM_BIT|GL11.GL_HINT_BIT|

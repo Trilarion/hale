@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.matthiasmann.twl.Event.Type;
 import net.sf.hale.AreaListener;
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
@@ -31,7 +32,9 @@ import net.sf.hale.entity.Entity;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
 import net.sf.hale.mainmenu.ConfirmQuitPopup;
+import net.sf.hale.mainmenu.ConfirmQuitPopup.QuitMode;
 import net.sf.hale.mainmenu.MainMenuAction;
+import net.sf.hale.mainmenu.MainMenuAction.Action;
 import net.sf.hale.quickbar.QuickbarViewer;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Merchant;
@@ -72,9 +75,9 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 public class MainViewer extends DesktopArea {
 	private final GUI gui;
 	
-	private final List<Entity> entityUpdateList = new ArrayList<Entity>();
-	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
-	private final List<PopupWindow> popupsToHide = new ArrayList<PopupWindow>();
+	private final List<Entity> entityUpdateList = new ArrayList<>();
+	private final List<PopupWindow> popupsToShow = new ArrayList<>();
+	private final List<PopupWindow> popupsToHide = new ArrayList<>();
 	private final FPSCounter fpsCounter;
 	
 	public final CharacterWindow characterWindow;
@@ -122,10 +125,10 @@ public class MainViewer extends DesktopArea {
 		Game.mainViewer = this;
 		Game.mouseActions = new MouseActionList();
 		
-		fadeAways = new ArrayList<OverHeadFadeAway>();
-		fadeAwaysToAdd = new ArrayList<OverHeadFadeAway>();
-		
-		this.setTheme("");
+		fadeAways = new ArrayList<>();
+		fadeAwaysToAdd = new ArrayList<>();
+
+        setTheme("");
 		
 		gui = new GUI(this, Game.renderer);
 		gui.setSize();
@@ -183,28 +186,28 @@ public class MainViewer extends DesktopArea {
 	}
 	
 	private void addWidgets() {
-		this.add(Game.areaViewer);
-		
-		this.add(mainPane);
+        add(Game.areaViewer);
+
+        add(mainPane);
 		if (Game.config.showFPS()) {
-			this.add(fpsCounter);
+            add(fpsCounter);
 		}
-		
-		this.add(quickbarViewer);
-		this.add(portraitArea);
-		this.add(ticker);
-        this.add(mouseOver);
-		this.add(targeterDescription);
-		
-		this.add(characterWindow);
-        this.add(inventoryWindow);
-        this.add(messagesWindow);
-        this.add(containerWindow);
-        this.add(craftingWindow);
-        this.add(miniMapWindow);
-        this.add(logWindow);
-        this.add(merchantWindow);
-        this.add(scriptConsole);
+
+        add(quickbarViewer);
+        add(portraitArea);
+        add(ticker);
+        add(mouseOver);
+        add(targeterDescription);
+
+        add(characterWindow);
+        add(inventoryWindow);
+        add(messagesWindow);
+        add(containerWindow);
+        add(craftingWindow);
+        add(miniMapWindow);
+        add(logWindow);
+        add(merchantWindow);
+        add(scriptConsole);
         
         mainPane.setMovementModeIcon();
 	}
@@ -285,7 +288,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void setLoadGame(String loadGame) {
-		this.action = new MainMenuAction(loadGame);
+        action = new MainMenuAction(loadGame);
 	}
 	
 	/**
@@ -311,7 +314,7 @@ public class MainViewer extends DesktopArea {
 		while (running) {
 			if (loader != null && !loader.isAlive()) {
 				running = false;
-				this.hidePopup(popup);
+                hidePopup(popup);
 			}
 			
 			Game.textureLoader.update();
@@ -402,7 +405,7 @@ public class MainViewer extends DesktopArea {
             Display.processMessages();
             
 			if (Display.isCloseRequested()) {
-				new ConfirmQuitPopup(this, ConfirmQuitPopup.QuitMode.ExitGame).openPopupCentered();
+				new ConfirmQuitPopup(this, QuitMode.ExitGame).openPopupCentered();
 			}
 		}
 		
@@ -419,10 +422,10 @@ public class MainViewer extends DesktopArea {
 			return action;
 		}
 		else if (exitGame) {
-			return new MainMenuAction(MainMenuAction.Action.Exit);
+			return new MainMenuAction(Action.Exit);
 		}
 		else {
-			return new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
+			return new MainMenuAction(Action.ShowMainMenu);
 		}
 	}
 	
@@ -493,8 +496,8 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void exitGame() {
-		this.isRunning = false;
-		this.exitGame = true;
+        isRunning = false;
+        exitGame = true;
 	}
 	
 	/**
@@ -503,7 +506,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void exitToMainMenu() {
-		this.isRunning = false;
+        isRunning = false;
 	}
 	
 	/**
@@ -613,7 +616,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void updateInterface() {
-		this.updateInterface = true;
+        updateInterface = true;
 	}
 	
 	private void updateContent(long curTime) {
@@ -623,7 +626,7 @@ public class MainViewer extends DesktopArea {
 			fadeAway.updateTime(curTime);
 			if (fadeAway.isFinished()) {
 				iter.remove();
-				this.removeChild(fadeAway);
+                removeChild(fadeAway);
 			}
 		}
 		
@@ -648,7 +651,7 @@ public class MainViewer extends DesktopArea {
 		synchronized(fadeAwaysToAdd) {
 			for (OverHeadFadeAway fadeAway : fadeAwaysToAdd) {
 				fadeAways.add(fadeAway);
-				this.insertChild(fadeAway, 1);
+                insertChild(fadeAway, 1);
 				fadeAway.initialize(curTime);
 			}
 			
@@ -656,19 +659,17 @@ public class MainViewer extends DesktopArea {
 		}
 		
 		synchronized(entityUpdateList) {
-			for (int i = 0; i < entityUpdateList.size(); i++) {
-				Entity e = entityUpdateList.get(i);
-				
-				Game.areaListener.checkKillEntity(e);
-				e.updateListeners();
-			}
+            for (Entity e : entityUpdateList) {
+                Game.areaListener.checkKillEntity(e);
+                e.updateListeners();
+            }
 			entityUpdateList.clear();
 		}
 		
 		if (updateInterface) {
 			//long startTime = System.nanoTime();
-			
-			this.updateInterface = false;
+
+            updateInterface = false;
 			
 			messagesWindow.updateContent();
 			characterWindow.updateContent(Game.curCampaign.party.getSelected());
@@ -697,7 +698,7 @@ public class MainViewer extends DesktopArea {
 		}
 		
 		synchronized(this) {
-			this.notifyAll();
+            notifyAll();
 		}
 	}
 	
@@ -708,7 +709,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void setNewQuestEntry(QuestEntry entry) {
-		this.newQuestEntry = entry;
+        newQuestEntry = entry;
 	}
 	
 	/**
@@ -758,7 +759,7 @@ public class MainViewer extends DesktopArea {
 		mouseX = evt.getMouseX();
 		mouseY = evt.getMouseY();
 		
-		if (evt.getType() == Event.Type.KEY_PRESSED) {
+		if (evt.getType() == Type.KEY_PRESSED) {
 			if (!scriptConsole.hasKeyboardFocus()) {
 				keyBindings.fireKeyEvent(evt.getKeyCode());
 				return true;

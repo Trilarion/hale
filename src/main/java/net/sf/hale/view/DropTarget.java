@@ -30,20 +30,20 @@ public interface DropTarget {
 	 * Called when this widget is being hovered over by a drag target
 	 * @param target the drag target
 	 */
-	
-	public void dragAndDropStartHover(DragTarget target);
+
+    void dragAndDropStartHover(DragTarget target);
 	
 	/**
 	 * Called when this widget has stopped being hovered over by a drag target
 	 * @param target the drag target
 	 */
-	
-	public void dragAndDropStopHover(DragTarget target);
+
+    void dragAndDropStopHover(DragTarget target);
 	
 	/**
 	 * Called when a drag target has been dropped on this drop target
 	 * @param target the target that has been dropped
 	 */
-	
-	public void dropDragTarget(DragTarget target);
+
+    void dropDragTarget(DragTarget target);
 }

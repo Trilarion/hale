@@ -77,11 +77,11 @@ public class AreaElevationGrid {
 		
 		for (int x = 0; x < copyWidth; x++) {
 			for (int y = 0; y < copyHeight; y++) {
-				newElevation[x][y] = this.elevation[x][y];
+				newElevation[x][y] = elevation[x][y];
 			}
 		}
-		
-		this.elevation = newElevation;
+
+        elevation = newElevation;
 	}
 	
 	/**
@@ -116,8 +116,8 @@ public class AreaElevationGrid {
 	
 	public void modifyElevation(int x, int y, byte delta) {
 		if (delta == 0) return;
-		
-		this.elevation[x][y] = (byte) (this.elevation[x][y] + delta);
+
+        elevation[x][y] += delta;
 		
 		byte minValue = MinElevation;
 		byte maxValue = MaxElevation;
@@ -126,7 +126,7 @@ public class AreaElevationGrid {
 			if (p.x < 0 || p.y < 0 || p.x >= elevation.length || p.y >= elevation[0].length)
 				continue;
 			
-			byte pElevation = this.elevation[p.x][p.y];
+			byte pElevation = elevation[p.x][p.y];
 			
 			minValue = (byte)Math.max(minValue, pElevation - 1);
 			maxValue = (byte)Math.min(maxValue, pElevation + 1);
@@ -146,7 +146,7 @@ public class AreaElevationGrid {
 	 */
 	
 	public void setElevation(int x, int y, byte elev) {
-		this.elevation[x][y] = elev;
+        elevation[x][y] = elev;
 		
 		if (elevation[x][y] > MaxElevation) elevation[x][y] = MaxElevation;
 		else if (elevation[x][y] < MinElevation) elevation[x][y] = MinElevation;
@@ -174,11 +174,11 @@ public class AreaElevationGrid {
 			out.write("elevation ");
 			out.write(Integer.toString(y));
 			out.write(" ");
-			
-			for (int x = 0; x < elevation.length; x++) {
-				out.write(Byte.toString(elevation[x][y]));
-				out.write(" ");
-			}
+
+            for (byte[] anElevation : elevation) {
+                out.write(Byte.toString(anElevation[y]));
+                out.write(" ");
+            }
 			
 			out.newLine();
 		}

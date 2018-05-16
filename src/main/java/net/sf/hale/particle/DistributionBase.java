@@ -43,14 +43,14 @@ public interface DistributionBase extends Saveable {
 	 * @return the value for the property of the specified particle for this
 	 * DistributionBase
 	 */
-	
-	public float getBase(Particle particle);
+
+    float getBase(Particle particle);
 	
 	/**
 	 * Loads the distribution base from the specified JSON data
 	 * @param data the JSON data to load from
 	 * @return the distribution base
 	 */
-	
-	public DistributionBase load(SimpleJSONObject data);
+
+    DistributionBase load(SimpleJSONObject data);
 }

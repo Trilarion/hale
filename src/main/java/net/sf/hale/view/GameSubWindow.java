@@ -40,7 +40,7 @@ public abstract class GameSubWindow extends ResizableFrame implements Runnable {
 	 */
 	
 	public GameSubWindow() {
-		this.addCloseCallback(this);
+        addCloseCallback(this);
 	}
 	
 	/**
@@ -59,8 +59,8 @@ public abstract class GameSubWindow extends ResizableFrame implements Runnable {
 	public void setPositionCentered() {
 		int w = Game.config.getResolutionX();
 		int h = Game.config.getResolutionY();
-		
-		this.setPosition((w - getInnerWidth()) / 2, (h - getInnerHeight()) / 2 - 15);
+
+        setPosition((w - getInnerWidth()) / 2, (h - getInnerHeight()) / 2 - 15);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public abstract class GameSubWindow extends ResizableFrame implements Runnable {
 	 */
 	
 	public void setPositionDefault() {
-		setPosition(super.getInnerX() + defaultPositionX, super.getInnerY() + defaultPositionY);
+		setPosition(getInnerX() + defaultPositionX, getInnerY() + defaultPositionY);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public abstract class GameSubWindow extends ResizableFrame implements Runnable {
 	}
 	
 	@Override public void setVisible(boolean visible) {
-		if (this.isVisible() != visible)
+		if (isVisible() != visible)
 			super.setVisible(visible);
 		
 		if (visible) requestKeyboardFocus();

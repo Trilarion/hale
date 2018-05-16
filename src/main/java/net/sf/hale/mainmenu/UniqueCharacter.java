@@ -29,6 +29,7 @@ import net.sf.hale.entity.PC;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 
 /**
  * A unique character is a construct used in listing out and selecting a
@@ -43,7 +44,7 @@ public class UniqueCharacter implements Iterable<PC> {
 	
 	private final String portraitID;
 	private final String name;
-	private final Ruleset.Gender gender;
+	private final Gender gender;
 	private final Race race;
 	
 	private int minLevel;
@@ -57,14 +58,14 @@ public class UniqueCharacter implements Iterable<PC> {
 	 */
 	
 	public UniqueCharacter(PC pc) {
-		this.pcs = new ArrayList<PC>();
+        pcs = new ArrayList<>();
 		
 		pcs.add(pc);
-		
-		this.portraitID = pc.getTemplate().getPortrait();
-		this.name = pc.getTemplate().getName();
-		this.gender = pc.getTemplate().getGender();
-		this.race = pc.getTemplate().getRace();
+
+        portraitID = pc.getTemplate().getPortrait();
+        name = pc.getTemplate().getName();
+        gender = pc.getTemplate().getGender();
+        race = pc.getTemplate().getRace();
 		
 		setMinMaxLevel();
 	}
@@ -86,12 +87,12 @@ public class UniqueCharacter implements Iterable<PC> {
 	
 	public void setMinMaxLevel() {
 		if (Game.curCampaign.allowLevelUp()) {
-			this.minLevel = 1;
+            minLevel = 1;
 		} else {
-			this.minLevel = Game.curCampaign.getMinStartingLevel();
+            minLevel = Game.curCampaign.getMinStartingLevel();
 		}
-		
-		this.maxLevel = Game.curCampaign.getMaxStartingLevel();
+
+        maxLevel = Game.curCampaign.getMaxStartingLevel();
 	}
 	
 	/**
@@ -104,7 +105,7 @@ public class UniqueCharacter implements Iterable<PC> {
 	public boolean meetsLevelConstraints(PC pc) {
 		int level = pc.roles.getTotalLevel();
 		
-		return level >= this.minLevel && level <= this.maxLevel;
+		return level >= minLevel && level <= maxLevel;
 	}
 	
 	/**
@@ -131,7 +132,7 @@ public class UniqueCharacter implements Iterable<PC> {
 		for (PC pc : pcs) {
 			int level = pc.roles.getTotalLevel();
 			
-			if (level > highestLevel && level >= this.minLevel && level <= this.maxLevel) {
+			if (level > highestLevel && level >= minLevel && level <= maxLevel) {
 				highestLevel = level;
 				maxPC = pc;
 			}
@@ -148,15 +149,15 @@ public class UniqueCharacter implements Iterable<PC> {
 	 */
 	
 	public boolean addIfMatches(PC pc) {
-		if (!this.portraitID.equals(pc.getTemplate().getPortrait())) return false;
+		if (!portraitID.equals(pc.getTemplate().getPortrait())) return false;
 		
-		if (!this.name.equals(pc.getTemplate().getName())) return false;
+		if (!name.equals(pc.getTemplate().getName())) return false;
 		
-		if (this.gender != pc.getTemplate().getGender()) return false;
+		if (gender != pc.getTemplate().getGender()) return false;
 		
-		if (this.race != pc.getTemplate().getRace()) return false;
-		
-		this.pcs.add(pc);
+		if (race != pc.getTemplate().getRace()) return false;
+
+        pcs.add(pc);
 		
 		return true;
 	}
@@ -169,7 +170,7 @@ public class UniqueCharacter implements Iterable<PC> {
 	 */
 	
 	public void deleteCreature(PC pc) {
-		int index = this.pcs.indexOf(pc);
+		int index = pcs.indexOf(pc);
 		
 		if (index == -1) return;
 		
@@ -177,8 +178,8 @@ public class UniqueCharacter implements Iterable<PC> {
 				ResourceType.JSON.getExtension();
 		
 		new File(fileName).delete();
-		
-		this.pcs.remove(index);
+
+        pcs.remove(index);
 	}
 
 	@Override public Iterator<PC> iterator() {

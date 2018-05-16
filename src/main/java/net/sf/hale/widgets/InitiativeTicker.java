@@ -44,14 +44,14 @@ public class InitiativeTicker extends Widget {
 	private int viewerGap;
 	private String enabledTooltip, disabledTooltip;
 	
-	private ArrayList<CreatureViewer> viewers;
+	private List<CreatureViewer> viewers;
 	
 	/**
 	 * Creates a new initiative ticker
 	 */
 	
 	public InitiativeTicker() {
-		viewers = new ArrayList<CreatureViewer>();
+		viewers = new ArrayList<>();
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class InitiativeTicker extends Widget {
 		int index = 0;
 		CreatureViewer viewer = new CreatureViewer(creatures.get(index), index);
 		viewers.add(viewer);
-		this.add(viewer);
+        add(viewer);
 		heightSoFar += viewer.getPreferredHeight() + minViewerGap;
 		
 		// set tooltip and active state
@@ -164,7 +164,7 @@ public class InitiativeTicker extends Widget {
 		private CreatureViewer(Creature creature, int currentIndex) {
 			this.creature = creature;
 			this.currentIndex = currentIndex;
-			this.placesForwardDrag = 0;
+            placesForwardDrag = 0;
 			addCallback(this);
 		}
 		
@@ -178,7 +178,7 @@ public class InitiativeTicker extends Widget {
 		
 		@Override public boolean handleEvent(Event evt) {
 			// don't allow interaction with viewer unless it is the active (selected) one
-			if (!this.isActive()) return false;
+			if (!isActive()) return false;
 			
 			switch (evt.getType()) {
 			case MOUSE_DRAGGED:
@@ -225,13 +225,13 @@ public class InitiativeTicker extends Widget {
 			// check for movement down the list
 			for (int i = currentIndex + 1; i < viewers.size(); i++) {
 				// don't allow moving this creature's place next turn
-				if (viewers.get(i).creature == this.creature) break;
+				if (viewers.get(i).creature == creature) break;
 				
 				// to prevent an issue where the mouse is within the target but on layout the
 				// target changes, adjust by the height difference
 				// this prevents problems where the dragged widget can appear to rapidly go
 				// back and forth between positions
-				int yCheck = evt.getMouseY() + this.getHeight() - viewers.get(i).getHeight();
+				int yCheck = evt.getMouseY() + getHeight() - viewers.get(i).getHeight();
 				
 				if (yCheck >= viewers.get(i).getY() && yCheck <= viewers.get(i).getBottom()) {
 					placesForwardDrag += i - currentIndex;

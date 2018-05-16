@@ -39,8 +39,8 @@ import net.sf.hale.entity.Trap;
 
 public class PathFinder {
 	private enum EndPointStatus {
-		Normal, IgnoreParty, IgnoreCreatures;
-	}
+		Normal, IgnoreParty, IgnoreCreatures
+    }
 	
 	/**
 	 * Finds the shortest path between the specified start and end points.  Creatures are ignored
@@ -126,11 +126,11 @@ public class PathFinder {
 			
 			// find the point within the open set with the lowest f score, which is most likely
 			// to be along the correct path based on the simple grid distance heuristic
-			int currentIndex = PathFinder.findLowestFScore(data.openSet, data.fScore, lowest);
+			int currentIndex = findLowestFScore(data.openSet, data.fScore, lowest);
 			
-			if (PathFinder.isEndPoint(lowest, goals, data, status)) {
+			if (isEndPoint(lowest, goals, data, status)) {
 				// we are done, find the path using the parents list
-				return PathFinder.getFinalPath(data, start, lowest, threateningCreatures);
+				return getFinalPath(data, start, lowest, threateningCreatures);
 			}
 			
 			data.openSet.remove(currentIndex);
@@ -141,37 +141,37 @@ public class PathFinder {
 			
 			// get the set of possible adjacent points and compute the scores for each one
 			Point[] adjacent = AreaUtil.getAdjacentTiles(lowest);
-			for (int i = 0; i < adjacent.length; i++) {
+			for (Point anAdjacent : adjacent) {
 				// if the point is outside the grid boundaries
-				if (!PathFinder.checkCoordinates(adjacent[i], data)) continue;
+				if (!checkCoordinates(anAdjacent, data)) continue;
 
 				// if the point is in the closed set (already traversed or not passable)
-				if (data.closed[adjacent[i].x][adjacent[i].y]) continue;
+				if (data.closed[anAdjacent.x][anAdjacent.y]) continue;
 
 				// if the elevation is different from the previous point elevation
-				if (data.area.getElevationGrid().getElevation(adjacent[i].x, adjacent[i].y) != lowestElev) continue;
-				
-				int tentativeGScore = data.gScore[lowest.x][lowest.y] + getCost(mover, data, adjacent[i], threateningCreatures);
-				
+				if (data.area.getElevationGrid().getElevation(anAdjacent.x, anAdjacent.y) != lowestElev) continue;
+
+				int tentativeGScore = data.gScore[lowest.x][lowest.y] + getCost(mover, data, anAdjacent, threateningCreatures);
+
 				boolean tentativeIsBetter;
-				if (!data.open[adjacent[i].x][adjacent[i].y]) {
-					data.openSet.add(adjacent[i]);
-					data.open[adjacent[i].x][adjacent[i].y] = true;
+				if (!data.open[anAdjacent.x][anAdjacent.y]) {
+					data.openSet.add(anAdjacent);
+					data.open[anAdjacent.x][anAdjacent.y] = true;
 					tentativeIsBetter = true;
-				} else if (tentativeGScore < data.gScore[adjacent[i].x][adjacent[i].y]) {
+				} else if (tentativeGScore < data.gScore[anAdjacent.x][anAdjacent.y]) {
 					tentativeIsBetter = true;
 				} else {
 					tentativeIsBetter = false;
 				}
 
 				if (tentativeIsBetter) {
-					data.parent[adjacent[i].x][adjacent[i].y].x = lowest.x;
-					data.parent[adjacent[i].x][adjacent[i].y].y = lowest.y;
+					data.parent[anAdjacent.x][anAdjacent.y].x = lowest.x;
+					data.parent[anAdjacent.x][anAdjacent.y].y = lowest.y;
 
-					data.gScore[adjacent[i].x][adjacent[i].y] = tentativeGScore;
-					data.hScore[adjacent[i].x][adjacent[i].y] = AreaUtil.distance(adjacent[i], end);
-					data.fScore[adjacent[i].x][adjacent[i].y] = data.gScore[adjacent[i].x][adjacent[i].y] +
-						data.hScore[adjacent[i].x][adjacent[i].y];
+					data.gScore[anAdjacent.x][anAdjacent.y] = tentativeGScore;
+					data.hScore[anAdjacent.x][anAdjacent.y] = AreaUtil.distance(anAdjacent, end);
+					data.fScore[anAdjacent.x][anAdjacent.y] = data.gScore[anAdjacent.x][anAdjacent.y] +
+							data.hScore[anAdjacent.x][anAdjacent.y];
 				}
 			}
 		}
@@ -185,7 +185,7 @@ public class PathFinder {
 	 */
 	
 	private static List<Creature> computeThreateningCreatures(Creature mover, Data data) {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		if (mover.stats.isHidden()) return creatures;
 		if (!Game.isInTurnMode()) return creatures;
@@ -270,9 +270,9 @@ public class PathFinder {
 	 */
 	
 	private static final Path getFinalPath(Data data, Point start, Point end, List<Creature> threateningCreatures) {
-		List<Creature> attacksOfOpportunity = new ArrayList<Creature>();
+		List<Creature> attacksOfOpportunity = new ArrayList<>();
 		
-		List<Point> path = new ArrayList<Point>();
+		List<Point> path = new ArrayList<>();
 		Point cur = end;
 		
 		path.add(cur);
@@ -366,7 +366,7 @@ public class PathFinder {
 			open = new boolean[width][height];
 			parent = new Point[width][height];
 			
-			openSet = new ArrayList<Point>(100);
+			openSet = new ArrayList<>(100);
 			
 			for (int i = 0; i < width; i++) {
 				for (int j = 0; j < height; j++) {

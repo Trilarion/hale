@@ -28,6 +28,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
+import de.matthiasmann.twl.Scrollbar.Orientation;
+import net.sf.hale.mainmenu.KeyBindPopup.Callback;
 import org.lwjgl.opengl.DisplayMode;
 
 import net.sf.hale.Config;
@@ -147,8 +150,8 @@ public class OptionsPopup extends PopupWindow {
 			modesTitle = new Label();
 			modesTitle.setTheme("modeslabel");
 			
-			modesModel = new SimpleChangableListModel<String>();
-			modesBox = new ComboBox<String>(modesModel);
+			modesModel = new SimpleChangableListModel<>();
+			modesBox = new ComboBox<>(modesModel);
 			modesBox.setTheme("modesbox");
 			modesBox.addCallback(new Runnable() {
 				@Override public void run() {
@@ -176,7 +179,7 @@ public class OptionsPopup extends PopupWindow {
 			tooltipTitle = new Label();
 			tooltipTitle.setTheme("tooltiplabel");
 			
-			tooltipDelay = new Scrollbar(Scrollbar.Orientation.HORIZONTAL);
+			tooltipDelay = new Scrollbar(Orientation.HORIZONTAL);
 			tooltipDelay.setModel(new SimpleIntegerModel(1, 20, 4));
 			tooltipDelay.setPageSize(1);
 			tooltipDelay.setTheme("tooltipbar");
@@ -185,7 +188,7 @@ public class OptionsPopup extends PopupWindow {
 			combatSpeedTitle = new Label();
 			combatSpeedTitle.setTheme("combatspeedlabel");
 			
-			combatSpeed = new Scrollbar(Scrollbar.Orientation.HORIZONTAL);
+			combatSpeed = new Scrollbar(Orientation.HORIZONTAL);
 			combatSpeed.setModel(new SimpleIntegerModel(1, 5, 3));
 			combatSpeed.setPageSize(1);
 			combatSpeed.setTheme("combatspeedbar");
@@ -207,7 +210,7 @@ public class OptionsPopup extends PopupWindow {
 			
 			keyBindingsContent = new KeyBindingsContent();
 			keyBindingsPane = new ScrollPane(keyBindingsContent);
-			keyBindingsPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			keyBindingsPane.setFixed(Fixed.HORIZONTAL);
 			keyBindingsPane.setTheme("keybindingspane");
 			addHorizontalWidgets(keyBindingsPane);
 			
@@ -218,7 +221,7 @@ public class OptionsPopup extends PopupWindow {
 			accept.addCallback(new Runnable() {
 				@Override public void run() {
 					applySettings();
-					OptionsPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			
@@ -226,7 +229,7 @@ public class OptionsPopup extends PopupWindow {
 			cancel.setTheme("cancelbutton");
 			cancel.addCallback(new Runnable() {
 				@Override public void run() {
-					OptionsPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			
@@ -290,7 +293,7 @@ public class OptionsPopup extends PopupWindow {
 		
 		private void applySettings() {
 			// get the set of key bindings that is currently being shown in the UI
-			Map<String, String> keyBindings = new LinkedHashMap<String, String>();
+			Map<String, String> keyBindings = new LinkedHashMap<>();
 			
 			for (KeyBindWidget widget : keyBindingsContent.widgets) {
 				if (widget.keyBinding.getText() != null) {
@@ -300,9 +303,9 @@ public class OptionsPopup extends PopupWindow {
 				}
 			}
 			
-			boolean showFPS = this.fpsCounter.isActive();
+			boolean showFPS = fpsCounter.isActive();
 			
-			boolean combatAutoScroll = this.autoscrollToggle.isActive();
+			boolean combatAutoScroll = autoscrollToggle.isActive();
 			
 			boolean fullscreen = this.fullscreen.isActive();
 			
@@ -310,9 +313,9 @@ public class OptionsPopup extends PopupWindow {
 			
 			DisplayMode mode;
 			if (scale2x) {
-				mode = Game.all2xUsableDisplayModes.get(this.modesBox.getSelected());
+				mode = Game.all2xUsableDisplayModes.get(modesBox.getSelected());
 			} else {
-				mode = Game.allDisplayModes.get(this.modesBox.getSelected());
+				mode = Game.allDisplayModes.get(modesBox.getSelected());
 			}
 			
 			// get tooltip delay in milliseconds
@@ -368,7 +371,7 @@ public class OptionsPopup extends PopupWindow {
 		private List<KeyBindWidget> widgets;
 		
 		private KeyBindingsContent() {
-			widgets = new ArrayList<KeyBindWidget>();
+			widgets = new ArrayList<>();
 		}
 		
 		private void initializeWidgetsToConfig(Config config) {
@@ -394,7 +397,7 @@ public class OptionsPopup extends PopupWindow {
 		}
 	}
 	
-	private class KeyBindWidget extends Widget implements KeyBindPopup.Callback {
+	private class KeyBindWidget extends Widget implements Callback {
 		private Label actionLabel;
 		private Button keyBinding;
 		

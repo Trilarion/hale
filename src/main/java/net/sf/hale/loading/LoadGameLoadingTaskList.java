@@ -51,8 +51,7 @@ public class LoadGameLoadingTaskList extends LoadingTaskList {
 	 */
 	
 	public LoadGameLoadingTaskList(File file) {
-		super();
-		this.fileToLoad = file;
+        fileToLoad = file;
 		
 		try {
 			// free tileset if one is already loaded

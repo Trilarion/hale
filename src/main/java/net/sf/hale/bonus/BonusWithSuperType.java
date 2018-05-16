@@ -20,5 +20,5 @@
 package net.sf.hale.bonus;
 
 public interface BonusWithSuperType {
-	public String getSuperType();
+	String getSuperType();
 }

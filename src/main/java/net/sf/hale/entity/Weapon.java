@@ -20,6 +20,8 @@
 package net.sf.hale.entity;
 
 import net.sf.hale.area.Area;
+import net.sf.hale.entity.WeaponTemplate.Handed;
+import net.sf.hale.entity.WeaponTemplate.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
@@ -66,7 +68,7 @@ public class Weapon extends EquippableItem {
 	 */
 	
 	public boolean isTwoHanded() {
-		return template.getHanded() == WeaponTemplate.Handed.TwoHanded;
+		return template.getHanded() == Handed.TwoHanded;
 	}
 	
 	/**
@@ -75,7 +77,7 @@ public class Weapon extends EquippableItem {
 	 */
 	
 	public boolean isMelee() {
-		return template.getWeaponType() == WeaponTemplate.Type.Melee;
+		return template.getWeaponType() == Type.Melee;
 	}
 	
 	/**
@@ -94,7 +96,7 @@ public class Weapon extends EquippableItem {
 	 */
 	
 	public int getQualityAttackBonus() {
-		if (this.getQuality() == null)
+		if (getQuality() == null)
 			return 0;
 		else
 			return getQuality().getAttackBonus();

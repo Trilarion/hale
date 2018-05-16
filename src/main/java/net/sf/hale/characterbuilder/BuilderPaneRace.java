@@ -44,7 +44,7 @@ public class BuilderPaneRace extends BuilderPane {
 	public BuilderPaneRace(CharacterBuilder builder, Buildable character) {
 		super(builder, "Race", character);
 		
-		raceSelectors = new ArrayList<RaceSelector>();
+		raceSelectors = new ArrayList<>();
         
         setTitleText("Select Race");
         
@@ -89,7 +89,7 @@ public class BuilderPaneRace extends BuilderPane {
 			super(race.getName(), IconFactory.createIcon(race.getIcon()), false);
 			
 			this.race = race;
-			this.setSelectable(true);
+            setSelectable(true);
 		}
 		
 		@Override protected void onMouseClick() {

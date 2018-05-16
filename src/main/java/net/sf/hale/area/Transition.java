@@ -69,7 +69,7 @@ public class Transition implements Saveable {
 	}
 	
 	public void load(SimpleJSONObject data) {
-		this.isActivated = data.get("activated", false);
+        isActivated = data.get("activated", false);
 	}
 	
 	/**
@@ -198,7 +198,8 @@ public class Transition implements Saveable {
 	 * to the player and usable.
 	 */
 	
-	public void activate() { this.isActivated = true; }
+	public void activate() {
+        isActivated = true; }
 	
 	/**
 	 * Returns true if this is a two way transition (can go both directions), false
@@ -251,7 +252,7 @@ public class Transition implements Saveable {
 				label = areaID;
 			}
 			
-			List<PointImmutable> partyPositions = new ArrayList<PointImmutable>();
+			List<PointImmutable> partyPositions = new ArrayList<>();
 			
 			SimpleJSONArray partyPositionsIn = data.getArray("partyPositions");
 			for (SimpleJSONArrayEntry entry : partyPositionsIn) {
@@ -292,51 +293,51 @@ public class Transition implements Saveable {
 		 * interface are non-applicable
 		 * @return whether this is a world map end point
 		 */
-		
-		public boolean isWorldMap();
+
+        boolean isWorldMap();
 		
 		/**
 		 * Returns the text that should be shown when the user mouses over
 		 * this transition end point
 		 * @return the label text
 		 */
-		
-		public String getLabel();
+
+        String getLabel();
 		
 		/**
 		 * Returns the id of the area that this end Point is located in,
 		 * or null if this is a world map end point
 		 * @return the area ID
 		 */
-		
-		public String getAreaID();
+
+        String getAreaID();
 		
 		/**
 		 * Returns the x coordinate of this endPoint within the area, or -1 if
 		 * this is a world map end point
 		 * @return the x coordinate
 		 */
-		
-		public int getX();
+
+        int getX();
 		
 		/**
 		 * Returns the y coordinate of this endPoint within the area, or -1 if
 		 * this is a world map end point
 		 * @return the y coordinate
 		 */
-		
-		public int getY();
+
+        int getY();
 		
 		/**
 		 * Gets an iterator over all party positions in this EndPoint.
 		 * @return an iterator over all party positions in this EndPoint
 		 * @throws UnsupportedOperationException if this is a world map EndPoint
 		 */
-		
-		public Iterator<PointImmutable> getPartyPositionsIterator();
+
+        Iterator<PointImmutable> getPartyPositionsIterator();
 	}
 	
-	private class WorldMapEndPoint implements EndPoint {
+	private static class WorldMapEndPoint implements EndPoint {
 		@Override public boolean isWorldMap() { return true; }
 		
 		@Override public String getLabel() { return "World Map"; }
@@ -352,7 +353,7 @@ public class Transition implements Saveable {
 		}
 	}
 	
-	private class AreaEndPoint implements EndPoint {
+	private static class AreaEndPoint implements EndPoint {
 		private final String label;
 		private final String areaID;
 		private final int x, y;

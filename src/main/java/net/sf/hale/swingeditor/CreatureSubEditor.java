@@ -35,7 +35,9 @@ import net.sf.hale.entity.Creature;
  */
 
 public class CreatureSubEditor extends JPanel {
-	/**
+    private static final long serialVersionUID = 5801730693279300398L;
+
+    /**
 	 * Creates a new SubEditor editing the specified creature
 	 * @param creature
 	 */

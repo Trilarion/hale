@@ -64,7 +64,7 @@ public class Party implements Iterable<PC>, Saveable {
 		}
 		data.put("characters", charactersData);
 		
-		if (summons.size() > 0) {
+		if (!summons.isEmpty()) {
 			Object[] summonsData = new Object[summons.size()];
 			for (i = 0; i < summons.size(); i++) {
 				summonsData[i] = SaveGameUtil.getRef(summons.get(i));
@@ -116,8 +116,8 @@ public class Party implements Iterable<PC>, Saveable {
 	 */
 	
 	public Party() {
-		characters = new ArrayList<PC>();
-		summons = new ArrayList<NPC>();
+		characters = new ArrayList<>();
+		summons = new ArrayList<>();
 		
 		selectedCharacterIndex = -1;
 		
@@ -219,7 +219,7 @@ public class Party implements Iterable<PC>, Saveable {
 		int index = characters.indexOf(creature);
 		
 		if (index != -1) {
-			this.selectedCharacterIndex = index;
+            selectedCharacterIndex = index;
 		}
 	}
 	
@@ -228,7 +228,7 @@ public class Party implements Iterable<PC>, Saveable {
 	 */
 	
 	public void setFirstMemberSelected() {
-		this.selectedCharacterIndex = 0;
+        selectedCharacterIndex = 0;
 	}
 	
 	/**
@@ -281,7 +281,7 @@ public class Party implements Iterable<PC>, Saveable {
 	 */
 	
 	public void add(PC creature) {
-		for (PC pc : this.characters) {
+		for (PC pc : characters) {
 			if (pc == creature) return;
 		}
 		
@@ -445,8 +445,8 @@ public class Party implements Iterable<PC>, Saveable {
 		private int charactersSize;
 		
 		private AllCreaturesIterator() {
-			this.iteratorIndex = 0;
-			this.charactersSize = characters.size();
+            iteratorIndex = 0;
+            charactersSize = characters.size();
 		}
 		
 		@Override public boolean hasNext() {
@@ -505,7 +505,7 @@ public class Party implements Iterable<PC>, Saveable {
 		private int iteratorIndex;
 		
 		private PartyIterator() {
-			this.iteratorIndex = 0;
+            iteratorIndex = 0;
 		}
 		
 		@Override public boolean hasNext() {

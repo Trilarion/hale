@@ -50,11 +50,10 @@ public class EntityMovementAnimation extends EntityOffsetAnimation {
 	 */
 	
 	public EntityMovementAnimation(Entity mover, int deltaX, int deltaY, int xOffset, int yOffset) {
-		super();
-		
-		this.mover = mover;
-		this.initialGridX = mover.getLocation().getX();
-		this.initialGridY = mover.getLocation().getY();
+
+        this.mover = mover;
+        initialGridX = mover.getLocation().getX();
+        initialGridY = mover.getLocation().getY();
 		
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;

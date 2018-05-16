@@ -52,16 +52,16 @@ public class ReferenceHandler {
 	 */
 	
 	public ReferenceHandler() {
-		areaRefs = new HashMap<String, Area>();
-		entityRefs = new HashMap<String, Entity>();
-		effectRefs = new HashMap<String, Effect>();
-		slotRefs = new HashMap<String, AbilitySlot>();
+		areaRefs = new HashMap<>();
+		entityRefs = new HashMap<>();
+		effectRefs = new HashMap<>();
+		slotRefs = new HashMap<>();
 		
-		effectsWithChildren = new HashMap<Effect, List<String>>();
+		effectsWithChildren = new HashMap<>();
 		
-		effectSlotReferences = new HashMap<Effect, String>();
+		effectSlotReferences = new HashMap<>();
 		
-		slotChildren = new HashMap<AbilitySlot, List<String>>();
+		slotChildren = new HashMap<>();
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class ReferenceHandler {
 		List<String> effects = effectsWithChildren.get(parent);
 		
 		if (effects == null) {
-			effects = new ArrayList<String>();
+			effects = new ArrayList<>();
 			effectsWithChildren.put(parent, effects);
 		}
 		
@@ -93,7 +93,7 @@ public class ReferenceHandler {
 		List<String> effects = slotChildren.get(parent);
 		
 		if (effects == null) {
-			effects = new ArrayList<String>();
+			effects = new ArrayList<>();
 			slotChildren.put(parent, effects);
 		}
 		
@@ -133,7 +133,7 @@ public class ReferenceHandler {
 		for (Effect parent : effectSlotReferences.keySet()) {
 			String abilitySlotRef = effectSlotReferences.get(parent);
 			
-			AbilitySlot slot = this.slotRefs.get(abilitySlotRef);
+			AbilitySlot slot = slotRefs.get(abilitySlotRef);
 			
 			if (slot == null) {
 				Logger.appendToErrorLog("Error resolving reference for ability slot " + abilitySlotRef);
@@ -144,7 +144,7 @@ public class ReferenceHandler {
 		
 		// resolve slot child effect references
 		for (AbilitySlot parent : slotChildren.keySet()) {
-			List<Effect> effects = new ArrayList<Effect>();
+			List<Effect> effects = new ArrayList<>();
 			
 			for (String childRef : slotChildren.get(parent)) {
 				Effect child = effectRefs.get(childRef);

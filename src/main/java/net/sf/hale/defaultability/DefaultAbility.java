@@ -38,8 +38,8 @@ public interface DefaultAbility {
 	 * accomplishes.
 	 * @return the String name of the action for this DefaultAbility
 	 */
-	
-	public String getActionName();
+
+    String getActionName();
 	
 	/**
 	 * Determines whether this can be activated with the given Creature
@@ -52,8 +52,8 @@ public interface DefaultAbility {
 	 * @return true if this DefaultAbility can be activated with the given
 	 * parameters, false otherwise
 	 */
-	
-	public boolean canActivate(PC parent, Location targetPosition);
+
+    boolean canActivate(PC parent, Location targetPosition);
 	
 	/**
 	 * Activates this DefaultAbility for the given Creature at the
@@ -67,13 +67,13 @@ public interface DefaultAbility {
 	 * @param targetPosition the grid position where this DefaultAbility is
 	 * being activated
 	 */
-	
-	public void activate(PC parent, Location targetPosition);
+
+    void activate(PC parent, Location targetPosition);
 	
 	/**
 	 * Returns a copy of this DefaultAbility with an empty internal state.
 	 * @return a copy of this DefaultAbility with an empty internal state.
 	 */
-	
-	public DefaultAbility getInstance();
+
+    DefaultAbility getInstance();
 }

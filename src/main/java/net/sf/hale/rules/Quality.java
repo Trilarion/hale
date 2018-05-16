@@ -45,14 +45,14 @@ public class Quality implements Comparable<Quality> {
 	 */
 	
 	public Quality(SimpleJSONObject data) {
-		this.name = data.get("id", null);
-		this.armorPenaltyBonus = data.get("armorPenaltyBonus", 0);
-		this.armorClassBonus = data.get("armorClassBonus", 0);
-		this.movementPenaltyBonus = data.get("movementPenaltyBonus", 0);
-		this.attackBonus = data.get("attackBonus", 0);
-		this.damageBonus = data.get("damageBonus", 0);
-		this.modifier = data.get("modifier", 0);
-		this.valueAdjustment = data.get("valueAdjustment", 0);
+        name = data.get("id", null);
+        armorPenaltyBonus = data.get("armorPenaltyBonus", 0);
+        armorClassBonus = data.get("armorClassBonus", 0);
+        movementPenaltyBonus = data.get("movementPenaltyBonus", 0);
+        attackBonus = data.get("attackBonus", 0);
+        damageBonus = data.get("damageBonus", 0);
+        modifier = data.get("modifier", 0);
+        valueAdjustment = data.get("valueAdjustment", 0);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class Quality implements Comparable<Quality> {
 	public int getValueAdjustment() { return valueAdjustment; }
 
 	@Override public int compareTo(Quality other) {
-		return this.modifier - other.modifier;
+		return modifier - other.modifier;
 	}
 	
 	@Override public boolean equals(Object other) {

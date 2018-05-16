@@ -38,7 +38,7 @@ public abstract class EntityOffsetAnimation {
 	 */
 	
 	public EntityOffsetAnimation() {
-		this.canceled = false;
+        canceled = false;
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public abstract class EntityOffsetAnimation {
 	 */
 	
 	public void setAnimatingPoint(Point offset) {
-		this.entityOffset = offset;
+        entityOffset = offset;
 		resetOffset();
 	}
 	
@@ -78,7 +78,7 @@ public abstract class EntityOffsetAnimation {
 	 */
 	
 	public void cancel() {
-		this.canceled = true;
+        canceled = true;
 	}
 	
 	/**

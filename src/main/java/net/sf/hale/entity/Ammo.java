@@ -66,7 +66,7 @@ public class Ammo extends EquippableItem {
 	 */
 	
 	public int getQualityAttackBonus() {
-		if (this.getQuality() == null)
+		if (getQuality() == null)
 			return 0;
 		else
 			return getQuality().getAttackBonus();

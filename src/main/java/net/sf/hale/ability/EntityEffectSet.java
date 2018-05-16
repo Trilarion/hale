@@ -26,6 +26,7 @@ import java.util.Set;
 
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.BonusList;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -54,8 +55,8 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		if (effectsNoActiveScript.size() > 0) {
-			List<Object> effectsNoData = new ArrayList<Object>();
+		if (!effectsNoActiveScript.isEmpty()) {
+			List<Object> effectsNoData = new ArrayList<>();
 			
 			for (Effect effect : effectsNoActiveScript) {
 				if (effect.getRoundsRemaining() == 0 && !effect.removeOnDeactivate())
@@ -65,12 +66,12 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 				effectsNoData.add(effect.save());
 			}
 			
-			if (effectsNoData.size() > 0)
+			if (!effectsNoData.isEmpty())
 				data.put("noActiveScript", effectsNoData.toArray());
 		}
 		
-		if (effectsWithActiveScript.size() > 0) {
-			List<Object> effectsWithData = new ArrayList<Object>();
+		if (!effectsWithActiveScript.isEmpty()) {
+			List<Object> effectsWithData = new ArrayList<>();
 			
 			for (Effect effect : effectsWithActiveScript) {
 				if (effect.getRoundsRemaining() == 0 && !effect.removeOnDeactivate())
@@ -80,11 +81,11 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 				effectsWithData.add(effect.save());
 			}
 			
-			if (effectsWithData.size() > 0)
+			if (!effectsWithData.isEmpty())
 				data.put("withActiveScript", effectsWithData.toArray());
 		}
 		
-		if (auras.size() > 0) {
+		if (!auras.isEmpty()) {
 			Object[] aurasData = new Object[auras.size()];
 			int i = 0;
 			for (Aura aura : auras) {
@@ -138,9 +139,9 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * Creates a new EntityEffectSet with no Effects.
 	 */
 	public EntityEffectSet() {
-		auras = new ArrayList<Aura>();
-		effectsNoActiveScript = new ArrayList<Effect>();
-		effectsWithActiveScript = new ArrayList<Effect>();
+		auras = new ArrayList<>();
+		effectsNoActiveScript = new ArrayList<>();
+		effectsWithActiveScript = new ArrayList<>();
 	}
 	
 	/**
@@ -154,15 +155,15 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 		this();
 		
 		for (Effect effect : other.effectsNoActiveScript) {
-			this.effectsNoActiveScript.add(new Effect(effect, target));
+			effectsNoActiveScript.add(new Effect(effect, target));
 		}
 		
 		for (Effect effect : other.effectsWithActiveScript) {
-			this.effectsWithActiveScript.add(new Effect(effect, target));
+			effectsWithActiveScript.add(new Effect(effect, target));
 		}
 		
 		for (Aura aura : other.auras) {
-			this.auras.add(new Aura(aura, target));
+			auras.add(new Aura(aura, target));
 		}
 	}
 	
@@ -235,7 +236,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 */
 	
 	public synchronized List<Effect> getDispellableEffects() {
-		List<Effect> dispellables = new ArrayList<Effect>();
+		List<Effect> dispellables = new ArrayList<>();
 		
 		for (Effect effect : effectsNoActiveScript) {
 			if (checkDispellable(effect))
@@ -370,7 +371,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 			args[i] = arguments[i];
 		}
 		
-		Set<Effect> effectsAlreadyExecuted = new HashSet<Effect>();
+		Set<Effect> effectsAlreadyExecuted = new HashSet<>();
 		
 		for (int i = 0; i < effectsWithActiveScript.size(); i++) {
 			Effect effect = effectsWithActiveScript.get(i);
@@ -451,7 +452,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 */
 	
 	public BonusList getBonusesOfType(String bonusType) {
-		return getBonusesOfType(Bonus.Type.valueOf(bonusType), true);
+		return getBonusesOfType(Type.valueOf(bonusType), true);
 	}
 	
 	/**
@@ -463,7 +464,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the List of all Bonuses of the specified Type
 	 */
 	
-	public BonusList getBonusesOfType(Bonus.Type type) {
+	public BonusList getBonusesOfType(Type type) {
 		return getBonusesOfType(type, true);
 	}
 	
@@ -477,7 +478,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 */
 	
 	public BonusList getPenaltiesOfType(String bonusType) {
-		return getBonusesOfType(Bonus.Type.valueOf(bonusType), false);
+		return getBonusesOfType(Type.valueOf(bonusType), false);
 	}
 	
 	/**
@@ -489,7 +490,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the List of all Bonuses of the specified Type
 	 */
 	
-	public BonusList getPenaltiesOfType(Bonus.Type type) {
+	public BonusList getPenaltiesOfType(Type type) {
 		return getBonusesOfType(type, false);
 	}
 	
@@ -501,8 +502,8 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the List of Effects with bonuses of the specified Type
 	 */
 	
-	public synchronized List<Effect> getEffectsWithBonusesOfType(Bonus.Type type) {
-		List<Effect> effects = new ArrayList<Effect>();
+	public synchronized List<Effect> getEffectsWithBonusesOfType(Type type) {
+		List<Effect> effects = new ArrayList<>();
 		
 		for (Effect effect : effectsNoActiveScript) {
 			for (Bonus bonus : effect.getBonuses()) {
@@ -534,9 +535,9 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	
 	public synchronized boolean hasPenaltiesOfTypes(String[] types) {
 		// first build up the hashset of bonus types
-		Set<Bonus.Type> bonusTypes = new HashSet<Bonus.Type>();
+		Set<Type> bonusTypes = new HashSet<>();
 		for (String type : types) {
-			bonusTypes.add(Bonus.Type.valueOf(type));
+			bonusTypes.add(Type.valueOf(type));
 		}
 		
 		// now check all bonuses for the specified types
@@ -559,7 +560,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	
 	// if bonusOrPenalty true, find bonuses, else find penalties
 	
-	private synchronized BonusList getBonusesOfType(Bonus.Type type, boolean bonusOrPenalty) {
+	private synchronized BonusList getBonusesOfType(Type type, boolean bonusOrPenalty) {
 		BonusList bonusesToReturn = new BonusList();
 		
 		for (Effect effect : effectsNoActiveScript) {
@@ -573,7 +574,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 		return bonusesToReturn;
 	}
 	
-	private void addBonusesOfTypeToList(Effect effect, BonusList list, Bonus.Type type, boolean bonusOrPenalty) {
+	private void addBonusesOfTypeToList(Effect effect, BonusList list, Type type, boolean bonusOrPenalty) {
 		for (Bonus bonus : effect.getBonuses()) {
 			if (bonus.getType() != type) continue;
 			

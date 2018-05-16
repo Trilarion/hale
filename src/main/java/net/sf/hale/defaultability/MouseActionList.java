@@ -109,7 +109,7 @@ public class MouseActionList {
 		
 		private final DefaultAbility ability;
 		
-		private Condition(DefaultAbility ability) {
+		Condition(DefaultAbility ability) {
 			this.ability = ability;
 		}
 		
@@ -122,8 +122,8 @@ public class MouseActionList {
 			if (ability == null) return null;
 			else return ability.getInstance();
 		}
-	};
-	
+	}
+
 	private final Map<Condition, String> mouseCursors;
 	
 	// the list of all conditions with a non-null ability.
@@ -144,7 +144,7 @@ public class MouseActionList {
 	public MouseActionList() {
 		SimpleJSONParser parser = new SimpleJSONParser("gui/mouseActions" + ResourceType.JSON.getExtension());
 		
-		mouseCursors = new HashMap<Condition, String>();
+		mouseCursors = new HashMap<>();
 		for (String conditionString : parser.keySet()) {
 			Condition condition = Condition.valueOf(conditionString);
 			
@@ -155,13 +155,13 @@ public class MouseActionList {
 		
 		parser.warnOnUnusedKeys();
 		
-		conditionsWithAbility = new ArrayList<Condition>();
+		conditionsWithAbility = new ArrayList<>();
 		for (Condition condition : Condition.values()) {
 			if (condition.ability != null) conditionsWithAbility.add(condition);
 		}
 		((ArrayList<Condition>)conditionsWithAbility).trimToSize();
 		
-		conditionsWithAbilityCombat = new ArrayList<Condition>(conditionsWithAbility);
+		conditionsWithAbilityCombat = new ArrayList<>(conditionsWithAbility);
 
 		// push open container to the end
 		conditionsWithAbilityCombat.remove(Condition.Container);

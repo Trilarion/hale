@@ -34,7 +34,7 @@ public class GaussianDistributionWithBase implements DistributionOneValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("stddevFraction", stddevFraction);
 		data.put("multiplier", multiplier);
 		data.put("offset", offset);

@@ -22,6 +22,7 @@ package net.sf.hale.entity;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
@@ -46,10 +47,10 @@ public class PCTemplate extends CreatureTemplate {
 	 * @param portrait
 	 */
 	
-	public PCTemplate(String id, String name, Icon icon, Ruleset.Gender gender, Race race, String portrait) {
+	public PCTemplate(String id, String name, Icon icon, Gender gender, Race race, String portrait) {
 		super(id, name, icon, gender, race, portrait);
-		
-		this.isPregenerated = false;
+
+        isPregenerated = false;
 	}
 	
 	/**
@@ -62,8 +63,8 @@ public class PCTemplate extends CreatureTemplate {
 		super(id, data);
 		
 		data.setWarnOnMissingKeys(false);
-		
-		this.isPregenerated = data.get("isPregenerated", false);
+
+        isPregenerated = data.get("isPregenerated", false);
 		
 		data.setWarnOnMissingKeys(true);
 	}

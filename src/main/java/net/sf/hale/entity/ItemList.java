@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
 import net.sf.hale.rules.Quality;
@@ -40,7 +41,7 @@ import net.sf.hale.util.SimpleJSONObject;
  *
  */
 
-public class ItemList implements Iterable<ItemList.Entry>, Saveable {
+public class ItemList implements Iterable<Entry>, Saveable {
 	private List<Listener> listeners;
 	private List<Entry> entries;
 	
@@ -98,8 +99,8 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 		 * Called whenever an item is added to this list.  This includes
 		 * adding a new entry or increasing the quantity of an entry
 		 */
-		
-		public void itemListItemAdded(String id, Quality quality, int quantity);
+
+        void itemListItemAdded(String id, Quality quality, int quantity);
 		
 		/**
 		 * Called whenever the specified entry is removed from this list
@@ -107,8 +108,8 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 		 * @param return true if the listener should be removed from the list of listeners,
 		 * false if the listener should remain in the list after this call
 		 */
-		
-		public boolean itemListEntryRemoved(Entry entry);
+
+        boolean itemListEntryRemoved(Entry entry);
 	}
 	
 	/**
@@ -135,9 +136,9 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 		}
 		
 		private Entry(Entry other) {
-			this.id = other.id;
-			this.quality = other.quality;
-			this.quantity = other.quantity;
+            id = other.id;
+            quality = other.quality;
+            quantity = other.quantity;
 		}
 		
 		/**
@@ -207,7 +208,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 		}
 		
 		@Override public int compareTo(Entry other) {
-			ItemTemplate thisTemplate = EntityManager.getItemTemplate(this.id);
+			ItemTemplate thisTemplate = EntityManager.getItemTemplate(id);
 			ItemTemplate otherTemplate = EntityManager.getItemTemplate(other.id);
 			
 			int nameComparison = thisTemplate.getName().compareTo(otherTemplate.getName());
@@ -216,11 +217,11 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 				return nameComparison;
 			}
 			
-			if (this.quality != null && other.quality != null) {
-				return this.quality.compareTo(other.quality);
-			} else if (this.quality == null && other.quality == null) {
+			if (quality != null && other.quality != null) {
+				return quality.compareTo(other.quality);
+			} else if (quality == null && other.quality == null) {
 				return 0;
-			} else if (this.quality == null) {
+			} else if (quality == null) {
 				return -1;
 			} else {
 				return 1;
@@ -233,8 +234,8 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 */
 	
 	public ItemList() {
-		entries = new ArrayList<Entry>();
-		listeners = new ArrayList<Listener>();
+		entries = new ArrayList<>();
+		listeners = new ArrayList<>();
 	}
 	
 	/**
@@ -247,7 +248,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 		this();
 		
 		for (Entry entry : other.entries) {
-			this.entries.add(new Entry(entry));
+            entries.add(new Entry(entry));
 		}
 	}
 	
@@ -268,7 +269,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 */
 	
 	public void addListener(Listener listener) {
-		this.listeners.add(listener);
+        listeners.add(listener);
 	}
 	
 	/**
@@ -277,7 +278,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 */
 	
 	public void removeListener(Listener listener) {
-		this.listeners.remove(listener);
+        listeners.remove(listener);
 	}
 	
 	/**
@@ -326,7 +327,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 */
 	
 	public void addAll(ItemList itemList) {
-		for (ItemList.Entry entry : itemList) {
+		for (Entry entry : itemList) {
 			add(entry.id, entry.quality, entry.quantity);
 		}
 	}
@@ -609,7 +610,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 * @return the matching item list entry
 	 */
 	
-	public ItemList.Entry find(String id, Quality quality) {
+	public Entry find(String id, Quality quality) {
 		int index = findEntry(id, quality);
 		
 		if (index == -1) {
@@ -627,7 +628,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 * @return the matching item list entry
 	 */
 	
-	public ItemList.Entry find(String id, String qualityID) {
+	public Entry find(String id, String qualityID) {
 		if (qualityID == null) {
 			return find(id, (Quality)null);
 		} else {
@@ -653,7 +654,7 @@ public class ItemList implements Iterable<ItemList.Entry>, Saveable {
 	 */
 	
 	public Entry getRandomEntry() {
-		if (entries.size() == 0)
+		if (entries.isEmpty())
 			return null;
 		
 		if (entries.size() == 1)

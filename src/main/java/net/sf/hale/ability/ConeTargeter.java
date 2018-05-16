@@ -80,8 +80,8 @@ public class ConeTargeter extends AreaTargeter {
 	 */
 	
 	public void setOrigin(Point origin) {
-		this.gridOrigin = origin;
-		this.screenOrigin = AreaUtil.convertGridToScreenAndCenter(origin);
+        gridOrigin = origin;
+        screenOrigin = AreaUtil.convertGridToScreenAndCenter(origin);
 		
 		visible = Game.curCampaign.curArea.getMatrixOfSize();
 		Game.curCampaign.curArea.getUtil().setVisibilityWithRespectToPosition(visible, gridOrigin);
@@ -121,7 +121,7 @@ public class ConeTargeter extends AreaTargeter {
 	 */
 	
 	public void setConeAngle(int angle) {
-		this.coneAngle = angle;
+        coneAngle = angle;
 	}
 	
 	/**
@@ -132,7 +132,7 @@ public class ConeTargeter extends AreaTargeter {
 	 */
 	
 	public void setConeRadius(int radius) {
-		this.coneRadius = radius;
+        coneRadius = radius;
 	}
 	
 	@Override protected void computeAffectedPoints(int x, int y, Point gridPoint) {
@@ -140,7 +140,7 @@ public class ConeTargeter extends AreaTargeter {
 		// so override the mouse hove condition so we can always select
 		setMouseHoverValid(true);
 		
-		List<Point> affectedPoints = this.getAffectedPoints();
+		List<Point> affectedPoints = getAffectedPoints();
 		
 		// compute the angle and length of a line starting at the origin and
 		// going in the direction specified by the mouse coordinates for the

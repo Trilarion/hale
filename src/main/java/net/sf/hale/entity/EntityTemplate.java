@@ -57,10 +57,10 @@ public abstract class EntityTemplate {
 	public EntityTemplate(String id, String name, Icon icon) {
 		this.id = id;
 		this.name = name;
-		
-		this.conversation = null;
-		this.script = null;
-		this.description = null;
+
+        conversation = null;
+        script = null;
+        description = null;
 		this.icon = icon;
 	}
 	
@@ -73,23 +73,23 @@ public abstract class EntityTemplate {
 	
 	public EntityTemplate(String id, SimpleJSONObject data) {
 		this.id = id;
-		
-		this.name = data.get("name", null);
+
+        name = data.get("name", null);
 		
 		if (data.containsKey("description"))
-			this.description = data.get("description", null);
+            description = data.get("description", null);
 		else
-			this.description = null;
+            description = null;
 		
 		// read in the script if it exists
 		String scriptID = data.get("script", null);
 
 		if (scriptID == null) {
-			this.script = null;
+            script = null;
 		} else {
 			String scriptContents = ResourceManager.getScriptResourceAsString(scriptID);
 
-			this.script = new Scriptable(scriptContents, scriptID, false);
+            script = new Scriptable(scriptContents, scriptID, false);
 		}
 		
 		// read in the conversation script if it exists
@@ -123,11 +123,11 @@ public abstract class EntityTemplate {
 	
 	protected EntityTemplate(String id, EntityTemplate other, CreatedItem createdItem) {
 		this.id = id;
-		this.conversation = other.conversation;
-		this.icon = createdItem.getModifiedIcon(other.icon);
-		this.name = createdItem.getModifiedName(other.name);
-		this.description = other.description;
-		this.script = other.script;
+        conversation = other.conversation;
+        icon = createdItem.getModifiedIcon(other.icon);
+        name = createdItem.getModifiedName(other.name);
+        description = other.description;
+        script = other.script;
 	}
 	
 	/**

@@ -74,10 +74,10 @@ public class Updater extends Thread {
 	 */
 	
 	public void runUpdater(MainMenu mainMenu) {
-		this.popup = new UpdatePopup(mainMenu, this);
+        popup = new UpdatePopup(mainMenu, this);
 		popup.openPopupCentered();
-		
-		this.start();
+
+        start();
 	}
 	
 	private void finish() {

@@ -23,6 +23,7 @@ import de.matthiasmann.twl.Button;
 import net.sf.hale.Game;
 import net.sf.hale.entity.ItemList;
 import net.sf.hale.entity.ItemList.Entry;
+import net.sf.hale.entity.ItemList.Listener;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Item;
 import net.sf.hale.icon.Icon;
@@ -38,9 +39,9 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class ItemUseSlot extends QuickbarSlot implements ItemList.Listener{
+public class ItemUseSlot extends QuickbarSlot implements Listener{
 	private Item item; // cached copy of the item being used
-	private ItemList.Entry entry;
+	private Entry entry;
 	private PC parent;
 	
 	@Override public Object save() {
@@ -62,10 +63,10 @@ public class ItemUseSlot extends QuickbarSlot implements ItemList.Listener{
 	 * @param parent
 	 */
 	
-	public ItemUseSlot(ItemList.Entry entry, PC parent) {
+	public ItemUseSlot(Entry entry, PC parent) {
 		this.entry = entry;
 		this.parent = parent;
-		this.item = entry.createItem();
+        item = entry.createItem();
 		
 		parent.inventory.getUnequippedItems().addListener(this);
 	}
@@ -134,14 +135,14 @@ public class ItemUseSlot extends QuickbarSlot implements ItemList.Listener{
 	}
 
 	@Override public QuickbarSlot getCopy(PC parent) {
-		return new ItemUseSlot(this.entry, parent);
+		return new ItemUseSlot(entry, parent);
 	}
 
 	@Override public void itemListItemAdded(String id, Quality quality, int quantity) { }
 
 	@Override public boolean itemListEntryRemoved(Entry entry) {
 		if (entry == this.entry) {
-			parent.quickbar.setSlot(null, this.getIndex());
+			parent.quickbar.setSlot(null, getIndex());
 			Game.mainViewer.updateInterface();
 			return true;
 		} else {

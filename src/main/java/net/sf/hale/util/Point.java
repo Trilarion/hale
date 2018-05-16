@@ -56,8 +56,8 @@ public class Point {
 	 */
 	
 	public Point() {
-		this.x = 0;
-		this.y = 0;
+        x = 0;
+        y = 0;
 	}
 	
 	/**
@@ -66,8 +66,8 @@ public class Point {
 	 */
 	
 	public Point(Point other) {
-		this.x = other.x;
-		this.y = other.y;
+        x = other.x;
+        y = other.y;
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public class Point {
 	@Override public boolean equals(Object other) {
 		if (! (other instanceof Point) ) return false;
 		
-		return ((Point)other).x == this.x && ((Point)other).y == this.y;
+		return ((Point)other).x == x && ((Point)other).y == y;
 	}
 	
 	@Override public int hashCode() {

@@ -28,9 +28,12 @@ import net.sf.hale.ability.ListTargeter;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Scriptable;
 import net.sf.hale.ability.Targeter;
+import net.sf.hale.ability.Targeter.CheckValidCallback;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Ammo;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Encounter;
 import net.sf.hale.entity.Entity;
@@ -43,10 +46,12 @@ import net.sf.hale.interfacelock.InterfaceCombatLock;
 import net.sf.hale.interfacelock.InterfaceLock;
 import net.sf.hale.interfacelock.InterfaceTargeterLock;
 import net.sf.hale.interfacelock.MovementHandler;
+import net.sf.hale.interfacelock.MovementHandler.Mover;
 import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.particle.Animation;
 import net.sf.hale.rules.Attack;
 import net.sf.hale.rules.Faction;
+import net.sf.hale.rules.Faction.Relationship;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
@@ -59,7 +64,7 @@ import net.sf.hale.util.Point;
  */
 
 public class CombatRunner {
-	private final List<Creature> creatures = new ArrayList<Creature>();
+	private final List<Creature> creatures = new ArrayList<>();
 	private int activeCreatureIndex = -1;
 	
 	private boolean combatModeInitiating = false;
@@ -96,7 +101,7 @@ public class CombatRunner {
 	 */
 	
 	public List<Creature> getThreateningCreatures(Creature target) {
-		List<Creature> threatens = new ArrayList<Creature>();
+		List<Creature> threatens = new ArrayList<>();
 		
 		if (!Game.isInTurnMode()) return threatens;
 		
@@ -125,7 +130,7 @@ public class CombatRunner {
 	 */
 	
 	private List<Creature> getThreateningCreaturesAtNextPosition(Creature target) {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		if (!Game.isInTurnMode()) return creatures;
 		
@@ -158,7 +163,7 @@ public class CombatRunner {
 	 * Only attacks of opportunity from player characters require a pause
 	 */
 	
-	public boolean provokeAttacksOfOpportunity(Creature target, MovementHandler.Mover mover) {
+	public boolean provokeAttacksOfOpportunity(Creature target, Mover mover) {
 		boolean lockInterface = false;
 		boolean alreadyScrolled = false;
 		
@@ -234,7 +239,7 @@ public class CombatRunner {
 		creatures.clear();
 		Game.timer.resetTime();
 		
-		List<CreatureWithInitiative> creatureInitiatives = new ArrayList<CreatureWithInitiative>();
+		List<CreatureWithInitiative> creatureInitiatives = new ArrayList<>();
 		
 		for (Entity e : Game.curCampaign.curArea.getEntities()) {
 			if (! (e instanceof Creature)) continue;
@@ -295,7 +300,7 @@ public class CombatRunner {
 	
 	private boolean checkAIActivation(Creature creature) {
 		Encounter friendlyEncounter = creature.getEncounter();
-		List<Creature> friendlies = new ArrayList<Creature>();
+		List<Creature> friendlies = new ArrayList<>();
 		friendlies.add(creature);
 		if (friendlyEncounter != null) {
 			friendlyEncounter.setAIActive(true);
@@ -305,7 +310,7 @@ public class CombatRunner {
 			}
 		}
 		
-		List<Creature> visibleHostiles = AreaUtil.getVisibleCreatures(creature, Faction.Relationship.Hostile);
+		List<Creature> visibleHostiles = AreaUtil.getVisibleCreatures(creature, Relationship.Hostile);
 		for (Creature hostile : visibleHostiles) {
 			if (friendlyEncounter != null) {
 				friendlyEncounter.addHostile(hostile);
@@ -325,7 +330,7 @@ public class CombatRunner {
 			}
 		}
 		
-		if (!Game.isInTurnMode() && visibleHostiles.size() > 0) {
+		if (!Game.isInTurnMode() && !visibleHostiles.isEmpty()) {
 			return true;
 		}
 		
@@ -356,7 +361,7 @@ public class CombatRunner {
 		if (animate) {
 			DelayedAttackCallback cb;
 			
-			long delay = 0l;
+			long delay = 0L;
 			
 			if (attack.isRanged()) {
 				if (!(attacker instanceof PC) && Game.config.autoScrollDuringCombat()) {
@@ -421,7 +426,7 @@ public class CombatRunner {
 			cb = new DelayedAttackCallback(delay, attack, offHand);
 			cb.start();
 
-			InterfaceLock lock = new InterfaceLock(attacker, 2l * Game.config.getCombatDelay());
+			InterfaceLock lock = new InterfaceLock(attacker, 2L * Game.config.getCombatDelay());
 			Game.interfaceLocker.add(lock);
 			
 			return cb;
@@ -475,7 +480,7 @@ public class CombatRunner {
 	private DelayedAttackCallback creatureAoOAttack(Creature attacker, Creature defender) {
 		if (defender == null) return null;
 		
-		Attack attack = attacker.performSingleAttack(defender, Inventory.Slot.MainHand);
+		Attack attack = attacker.performSingleAttack(defender, Slot.MainHand);
 		
 		return creatureAttack(attack, null, true);
 	}
@@ -490,7 +495,7 @@ public class CombatRunner {
 	 * @param slot
 	 */
 	
-	public void creatureSingleAttack(Creature attacker, Creature defender, Inventory.Slot slot) {
+	public void creatureSingleAttack(Creature attacker, Creature defender, Slot slot) {
 		creatureAttack(attacker.performSingleAttack(defender, slot), null, false);
 	}
 	
@@ -505,7 +510,7 @@ public class CombatRunner {
 	 * @return the callback which the caller may wait on for the attack to complete
 	 */
 	
-	public DelayedAttackCallback creatureSingleAttackAnimate(Creature attacker, Creature defender, Inventory.Slot slot) {
+	public DelayedAttackCallback creatureSingleAttackAnimate(Creature attacker, Creature defender, Slot slot) {
 		if (defender == null) return null;
 		
 		if (!attacker.threatensLocation(defender.getLocation())) return null;
@@ -539,7 +544,7 @@ public class CombatRunner {
 	 */
 	
 	public boolean checkContinueCombat() {
-		List<Creature> combatants = new ArrayList<Creature>();
+		List<Creature> combatants = new ArrayList<>();
 		
 		for (Creature creature : creatures) {
 			if (creatureIsCombatant(creature))
@@ -547,8 +552,8 @@ public class CombatRunner {
 		}
 		
 		for (int i = 0; i < combatants.size(); i++) {
-			for (int j = 0; j < combatants.size(); j++) {
-				if (combatants.get(i).getFaction().isHostile(combatants.get(j)))
+			for (Creature combatant : combatants) {
+				if (combatants.get(i).getFaction().isHostile(combatant))
 					return true;
 			}
 		}
@@ -775,7 +780,7 @@ public class CombatRunner {
 	 */
 	
 	public List<Creature> getNextCreatures(int n) {
-		List<Creature> next = new ArrayList<Creature>(n);
+		List<Creature> next = new ArrayList<>(n);
 		
 		int curIndex = activeCreatureIndex;
 		
@@ -850,13 +855,13 @@ public class CombatRunner {
 	 *
 	 */
 	
-	private class CreatureWithInitiative implements Comparable<CreatureWithInitiative> {
+	private static class CreatureWithInitiative implements Comparable<CreatureWithInitiative> {
 		private Creature creature;
 		private int initiative;
 		
 		private CreatureWithInitiative(Creature creature) {
 			this.creature = creature;
-			this.initiative = creature.stats.get(Bonus.Type.Initiative) + Game.dice.d100();
+            initiative = creature.stats.get(Type.Initiative) + Game.dice.d100();
 		}
 
 		@Override public int compareTo(CreatureWithInitiative other) {
@@ -867,8 +872,8 @@ public class CombatRunner {
 			else if (c1Init < c2Init) return 1;
 			else {
 				// initiatives are equal, choose based on bonus
-				int c1Mod = creature.stats.get(Bonus.Type.Initiative);
-				int c2Mod = other.creature.stats.get(Bonus.Type.Initiative);
+				int c1Mod = creature.stats.get(Type.Initiative);
+				int c2Mod = other.creature.stats.get(Type.Initiative);
 				
 				if (c1Mod > c2Mod) return -1;
 				else if (c1Mod < c2Mod) return 1;
@@ -885,7 +890,7 @@ public class CombatRunner {
 	 * be alive
 	 */
 	
-	private class CheckAoOCallback implements Targeter.CheckValidCallback {
+	private static class CheckAoOCallback implements CheckValidCallback {
 		private Creature target;
 		
 		private CheckAoOCallback(Creature target) {
@@ -901,8 +906,8 @@ public class CombatRunner {
 	 * A callback to cancel the current AoO and allow combat to continue
 	 */
 	
-	private class CancelAoOCallback implements Runnable {
-		private MovementHandler.Mover moverToUnPause;
+	private static class CancelAoOCallback implements Runnable {
+		private Mover moverToUnPause;
 		
 		@Override public void run() {
 			Game.areaListener.getTargeterManager().cancelCurrentTargeter();
@@ -921,7 +926,7 @@ public class CombatRunner {
 	
 	private class TakeAoOCallback implements Runnable {
 		private Creature parent, target;
-		private MovementHandler.Mover moverToUnPause;
+		private Mover moverToUnPause;
 		
 		private TakeAoOCallback(Creature parent, Creature target) {
 			this.parent = parent;
@@ -940,7 +945,7 @@ public class CombatRunner {
 		
 		private void takeAoO() {
 			parent.takeAttackOfOpportunity();
-			DelayedAttackCallback cb = CombatRunner.this.creatureAoOAttack(parent, target);
+			DelayedAttackCallback cb = creatureAoOAttack(parent, target);
 			
 			cb.addCallback(new CheckDefeatedAfterAoOCallback());
 		}

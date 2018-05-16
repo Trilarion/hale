@@ -82,9 +82,9 @@ public class Location implements Saveable {
 	 */
 	
 	private Location() {
-		this.area = null;
-		this.x = 0;
-		this.y = 0;
+        area = null;
+        x = 0;
+        y = 0;
 	}
 	
 	/**
@@ -108,8 +108,8 @@ public class Location implements Saveable {
 	
 	public Location(Area area, Point point) {
 		this.area = area;
-		this.x = point.x;
-		this.y = point.y;
+        x = point.x;
+        y = point.y;
 	}
 	
 	/**
@@ -120,8 +120,8 @@ public class Location implements Saveable {
 	
 	public Location(Area area, PointImmutable point) {
 		this.area = area;
-		this.x = point.x;
-		this.y = point.y;
+        x = point.x;
+        y = point.y;
 	}
 	
 	/**
@@ -447,7 +447,7 @@ public class Location implements Saveable {
 		
 		Location otherLocation = (Location) other;
 		
-		return otherLocation.area == this.area && otherLocation.x == x && otherLocation.y == y;
+		return otherLocation.area == area && otherLocation.x == x && otherLocation.y == y;
 	}
 	
 	/**

@@ -52,9 +52,9 @@ public class InterfaceLock implements Comparable<InterfaceLock> {
 	 */
 	
 	public InterfaceLock(Creature locker, long duration) {
-		this.unlockTime = duration + System.currentTimeMillis();
+        unlockTime = duration + System.currentTimeMillis();
 		this.locker = locker;
-		this.priority = 0;
+        priority = 0;
 	}
 	
 	/**
@@ -118,9 +118,9 @@ public class InterfaceLock implements Comparable<InterfaceLock> {
 	public int getPriority() { return priority; }
 	
 	@Override public int compareTo(InterfaceLock other) {
-		if (this.getPriority() == other.getPriority())
-			return this.hashCode() - other.hashCode();
+		if (getPriority() == other.getPriority())
+			return hashCode() - other.hashCode();
 		
-		return this.getPriority() - other.getPriority();
+		return getPriority() - other.getPriority();
 	}
 }

@@ -36,15 +36,15 @@ public class SavedItemList extends ItemList {
 		super(data.getArray("items"));
 		
 		if (data.containsKey("enchantmentChance")) {
-			this.enchantmentPercentage = data.get("enchantmentChance", 0);
+            enchantmentPercentage = data.get("enchantmentChance", 0);
 		} else {
-			this.enchantmentPercentage = 0;
+            enchantmentPercentage = 0;
 		}
 		
 		if (data.containsKey("enchantmentSkillModifier")) {
-			this.enchantmentSkillModifier = data.get("enchantmentSkillModifier", 0);
+            enchantmentSkillModifier = data.get("enchantmentSkillModifier", 0);
 		} else {
-			this.enchantmentSkillModifier = 0;
+            enchantmentSkillModifier = 0;
 		}
 	}
 	

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.hale.interfacelock.MovementHandler.Mode;
 import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.quickbar.Quickbar;
 import net.sf.hale.util.Logger;
@@ -52,7 +53,7 @@ public class Keybindings {
 	
 	public Keybindings() {
 		// create the list of all bindings
-		List<Binding> bindings = new ArrayList<Binding>();
+		List<Binding> bindings = new ArrayList<>();
 		
 		bindings.add(new ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
@@ -72,7 +73,7 @@ public class Keybindings {
 		
 		// now find the keyboard key for each binding from the config
 		
-		bindingsByKey = new HashMap<Integer, Binding>();
+		bindingsByKey = new HashMap<>();
 		
 		for (Binding binding : bindings) {
 			int keyCode = Game.config.getKeyForAction(binding.getActionName());
@@ -172,10 +173,10 @@ public class Keybindings {
 	
 	public static class ToggleMovementMode extends Binding {
 		@Override public void run() {
-			if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
-				Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Single);
+			if (Game.interfaceLocker.getMovementMode() == Mode.Party) {
+				Game.interfaceLocker.setMovementMode(Mode.Single);
 			} else {
-				Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Party);
+				Game.interfaceLocker.setMovementMode(Mode.Party);
 			}
 			
 			Game.mainViewer.getMainPane().setMovementModeIcon();

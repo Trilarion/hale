@@ -22,6 +22,7 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.Event.Type;
 import net.sf.hale.Game;
 import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.AnimationState;
@@ -48,12 +49,12 @@ public class IconButton extends Button {
 	public IconButton(Icon icon) {
 		if (icon != null) {
 			this.icon = icon;
-			this.setSize(icon.getWidth(), icon.getHeight());
+            setSize(icon.getWidth(), icon.getHeight());
 		} else {
-			this.setSize(Game.ICON_SIZE, Game.ICON_SIZE);
+            setSize(Game.ICON_SIZE, Game.ICON_SIZE);
 		}
 		
-		callbacks = new ArrayList<Callback>(1);
+		callbacks = new ArrayList<>(1);
 		
 		// the left click callback
 		super.addCallback(new Runnable() {
@@ -112,7 +113,7 @@ public class IconButton extends Button {
 		AnimationState animationState = getAnimationState();
 		
 		if (evt.isMouseEvent()) {
-			boolean hover = (evt.getType() != Event.Type.MOUSE_EXITED) && isMouseInside(evt);
+			boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
 			
 			if (hover && !animationState.getAnimationState(Button.STATE_HOVER)) {
 				for (Callback callback : callbacks) {
@@ -157,21 +158,21 @@ public class IconButton extends Button {
 		/**
 		 * Called whenever this IconButton is left clicked
 		 */
-		public void leftClicked();
+        void leftClicked();
 		
 		/**
 		 * Called whenever this IconButton is right clicked
 		 */
-		public void rightClicked();
+        void rightClicked();
 		
 		/**
 		 * Called whenever the mouse enters the area of this IconButton
 		 */
-		public void startHover();
+        void startHover();
 		
 		/**
 		 * Called whenever the mouse exits the area of this IconButton
 		 */
-		public void endHover();
+        void endHover();
 	}
 }

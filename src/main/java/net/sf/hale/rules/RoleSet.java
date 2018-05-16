@@ -28,6 +28,7 @@ import java.util.Set;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -93,7 +94,7 @@ public class RoleSet implements Saveable {
 		for (String roleID : data.keySet()) {
 			// skip the baseRoleID key
 			// note that the base role levels will still be read in a separate entry
-			if (roleID.equals("baseRoleID")) continue;
+			if ("baseRoleID".equals(roleID)) continue;
 			
 			// assume that if the baseRoleID hasn't been set above, it will be the first role
 			// listed
@@ -133,7 +134,7 @@ public class RoleSet implements Saveable {
 	 */
 	
 	public RoleSet(Creature parent) {
-		roles = new LinkedHashMap<String, Integer>();
+		roles = new LinkedHashMap<>();
 		
 		casterLevel = 0;
 		totalLevel = 0;
@@ -152,13 +153,13 @@ public class RoleSet implements Saveable {
 		this(parent);
 		
 		for (String roleID : other.roles.keySet()) {
-			this.roles.put(roleID, other.roles.get(roleID));
+            roles.put(roleID, other.roles.get(roleID));
 		}
-		
-		this.casterLevel = other.casterLevel;
-		this.totalLevel = other.totalLevel;
-		
-		this.baseRoleID = other.baseRoleID;
+
+        casterLevel = other.casterLevel;
+        totalLevel = other.totalLevel;
+
+        baseRoleID = other.baseRoleID;
 	}
 	
 	/**
@@ -168,14 +169,14 @@ public class RoleSet implements Saveable {
 	
 	public void addLevels(RoleSet other) {
 		// add base role first
-		this.addLevels(other.getBaseRole(), other.roles.get(other.baseRoleID));
+        addLevels(other.getBaseRole(), other.roles.get(other.baseRoleID));
 		
 		for (String roleID : other.roles.keySet()) {
 			if (roleID.equals(other.baseRoleID)) continue; 
 			
 			Role role = Game.ruleset.getRole(roleID);
-			
-			this.addLevels(role, other.roles.get(roleID));
+
+            addLevels(role, other.roles.get(roleID));
 		}
 	}
 	
@@ -216,7 +217,7 @@ public class RoleSet implements Saveable {
 		int oldLevel;
 		
 		Integer integerLevel = roles.get(role.getID());
-		if (integerLevel != null) oldLevel = integerLevel.intValue();
+		if (integerLevel != null) oldLevel = integerLevel;
 		else oldLevel = 0;
 		
 		int newLevel = oldLevel + levelsToAdd;
@@ -330,11 +331,11 @@ public class RoleSet implements Saveable {
 	 */
 	
 	public void clear() {
-		this.roles.clear();
-		this.totalLevel = 0;
-		this.casterLevel = 0;
-		
-		this.baseRoleID = null;
+        roles.clear();
+        totalLevel = 0;
+        casterLevel = 0;
+
+        baseRoleID = null;
 	}
 	
 	/**
@@ -357,7 +358,7 @@ public class RoleSet implements Saveable {
 	
 	public int getVerbalSpellFailure() {
 		// if area is silenced or parent creature is silenced
-		if (parent.stats.has(Bonus.Type.Silence))
+		if (parent.stats.has(Type.Silence))
 			return Integer.MAX_VALUE / 10;
 		
 		if (parent.getLocation().getArea() != null) {
@@ -366,12 +367,12 @@ public class RoleSet implements Saveable {
 		}
 		
 		int deafnessPenalty = 0;
-		if (parent.stats.has(Bonus.Type.Deaf)) {
+		if (parent.stats.has(Type.Deaf)) {
 			deafnessPenalty = 30;
 		}
 		
 		// verbal spell failure penalty will be negative, so subtract
-		return Math.max(0, deafnessPenalty - parent.stats.get(Bonus.Type.VerbalSpellFailure));
+		return Math.max(0, deafnessPenalty - parent.stats.get(Type.VerbalSpellFailure));
 	}
 	
 	/**
@@ -382,7 +383,7 @@ public class RoleSet implements Saveable {
 	 */
 	
 	public int getSomaticSpellFailure() {
-		return Math.max(0, parent.stats.get(Stat.ArmorPenalty) - parent.stats.get(Bonus.Type.ArmorSpellFailure));
+		return Math.max(0, parent.stats.get(Stat.ArmorPenalty) - parent.stats.get(Type.ArmorSpellFailure));
 	}
 	
 	/**
@@ -393,7 +394,7 @@ public class RoleSet implements Saveable {
 	
 	public int getThreatenedSpellFailure() {
 		List<Creature> threatens = Game.areaListener.getCombatRunner().getThreateningCreatures(parent);
-		if (threatens.size() != 0) {
+		if (!threatens.isEmpty()) {
 			int meleeCombatFailure = 0;
 			for (Creature attacker : threatens) {
 				int curFailure = 30;
@@ -404,7 +405,7 @@ public class RoleSet implements Saveable {
 				meleeCombatFailure += Math.max(0, curFailure);
 			}
 			
-			return Math.max(0, meleeCombatFailure - parent.stats.get(Bonus.Type.MeleeSpellFailure));
+			return Math.max(0, meleeCombatFailure - parent.stats.get(Type.MeleeSpellFailure));
 		} else {
 			return 0;
 		}

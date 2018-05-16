@@ -41,8 +41,8 @@ public class TerrainType extends AbstractTerrainType {
 			TerrainTile previewTile, List<TerrainTile> tiles) {
 		
 		super(id, transparent, passable, previewTile, tiles);
-		
-		this.borders = new HashMap<String, String>();
+
+        borders = new HashMap<>();
 	}
 	
 	/**

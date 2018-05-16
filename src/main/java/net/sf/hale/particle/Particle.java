@@ -34,19 +34,19 @@ public class Particle extends AnimationBase {
 	
 	public Particle(Particle other) {
 		super(other);
-		
-		this.sprite = other.sprite;
-		
-		this.stopAtOpaque = other.stopAtOpaque;
-		this.drawInOpaque = other.drawInOpaque;
+
+        sprite = other.sprite;
+
+        stopAtOpaque = other.stopAtOpaque;
+        drawInOpaque = other.drawInOpaque;
 	}
 	
 	public Particle(Sprite sprite) {
 		super(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		this.sprite = sprite;
-		
-		this.stopAtOpaque = false;
-		this.drawInOpaque = false;
+
+        stopAtOpaque = false;
+        drawInOpaque = false;
 	}
 	
 	public final void setDrawInOpaque(boolean drawInOpaque) {

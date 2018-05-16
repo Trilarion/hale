@@ -26,6 +26,7 @@ import net.sf.hale.entity.PC;
 
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ThemeInfo;
+import net.sf.hale.view.ItemListViewer.Mode;
 
 /**
  * A widget for showing the contents of a container and allowing a creature
@@ -86,8 +87,8 @@ public class ContainerWindow extends GameSubWindow {
 		viewer.clearAllItemHovers();
 		
 		if (!visible) {
-			this.opener = null;
-			this.container = null;
+            opener = null;
+            container = null;
 		}
 	}
 	
@@ -95,8 +96,8 @@ public class ContainerWindow extends GameSubWindow {
 		if (opener == null || container == null) return;
 		
 		opener.inventory.getTakeAllCallback(container).run();
-		
-		this.setVisible(false);
+
+        setVisible(false);
 	}
 	
 	/**
@@ -116,18 +117,18 @@ public class ContainerWindow extends GameSubWindow {
 	 */
 	
 	public void updateContent() {
-		if (!this.isVisible()) return;
+		if (!isVisible()) return;
 		
-		if (this.opener == null || this.container == null) return;
-		
-		this.setTitle(opener.getTemplate().getName() + " opens " + container.getTemplate().getName());
+		if (opener == null || container == null) return;
+
+        setTitle(opener.getTemplate().getName() + " opens " + container.getTemplate().getName());
 		
 		takeAllButton.setEnabled(!Game.isInTurnMode());
 		
-		if (this.container != null) {
-			viewer.updateContent(ItemListViewer.Mode.CONTAINER, this.opener, null, this.container.getCurrentItems());
+		if (container != null) {
+			viewer.updateContent(Mode.CONTAINER, opener, null, container.getCurrentItems());
 		} else {
-			viewer.updateContent(ItemListViewer.Mode.CONTAINER, this.opener, null, null);
+			viewer.updateContent(Mode.CONTAINER, opener, null, null);
 		}
 		
 		layout();

@@ -30,7 +30,7 @@ public class FixedAngleDistribution implements DistributionTwoValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("magnitudeMin", magnitudeMin);
 		data.put("magnitudeMax", magnitudeMax);
 		data.put("angle", angle);
@@ -47,8 +47,8 @@ public class FixedAngleDistribution implements DistributionTwoValue {
 	}
 	
 	public FixedAngleDistribution(float magMin, float magMax, float angle) {
-		this.magnitudeMin = magMin;
-		this.magnitudeMax = magMax;
+        magnitudeMin = magMin;
+        magnitudeMax = magMax;
 		this.angle = angle;
 	}
 	

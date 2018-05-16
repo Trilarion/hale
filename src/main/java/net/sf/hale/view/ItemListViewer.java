@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.entity.AmmoTemplate;
 import net.sf.hale.entity.Armor;
@@ -31,8 +32,10 @@ import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.entity.ItemTemplate;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.TrapTemplate;
@@ -42,6 +45,7 @@ import net.sf.hale.rules.Currency;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.widgets.ItemIconHover;
 import net.sf.hale.widgets.ItemIconViewer;
+import net.sf.hale.widgets.ItemIconViewer.Listener;
 import net.sf.hale.widgets.RightClickMenu;
 
 import de.matthiasmann.twl.Button;
@@ -57,7 +61,7 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class ItemListViewer extends Widget implements ItemIconViewer.Listener, DropTarget {
+public class ItemListViewer extends Widget implements Listener, DropTarget {
 	/**
 	 * Controls the types of actions available for each ItemIconViewer
 	 * @author Jared Stephen
@@ -72,13 +76,13 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		
 		/** Viewing the contents of a container */
 		CONTAINER
-	};
-	
-	private enum Filter {
-		All, Weapons, Armor, Usable, Ingredients, Traps, Quest;
-	};
-	
-	private int gridGap;
+	}
+
+    private enum Filter {
+		All, Weapons, Armor, Usable, Ingredients, Traps, Quest
+    }
+
+    private int gridGap;
 	
 	private List<ToggleButton> filterButtons;
 	
@@ -103,18 +107,18 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	 */
 	
 	public ItemListViewer() {
-		itemHovers = new ArrayList<ItemIconHover>();
+		itemHovers = new ArrayList<>();
 		
-		viewers = new ArrayList<ItemIconViewer>();
+		viewers = new ArrayList<>();
 		
 		content = new Content();
 		scrollPane = new ScrollPane(content);
-		scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		scrollPane.setFixed(Fixed.HORIZONTAL);
 		scrollPane.setExpandContentSize(true);
 		scrollPane.setTheme("itemspane");
-		this.add(scrollPane);
+        add(scrollPane);
 		
-		filterButtons = new ArrayList<ToggleButton>();
+		filterButtons = new ArrayList<>();
 		for (Filter filter : Filter.values()) {
 			ToggleButton button = new ToggleButton();
 			button.setTheme(filter.toString().toLowerCase() + "filter");
@@ -184,7 +188,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		int viewerIndex = 0;
 		
 		// update the viewers, adding new ones as needed
-		for (ItemList.Entry entry : items) {
+		for (Entry entry : items) {
 			if (!itemMatchesFilter(entry.getID()) ) continue;
 			
 			ItemIconViewer viewer;
@@ -257,9 +261,9 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		
 		EquippableItem item = (EquippableItem)viewer.getItem();
 		
-		List<ItemIconViewer> viewersToAdd = new ArrayList<ItemIconViewer>();
+		List<ItemIconViewer> viewersToAdd = new ArrayList<>();
 		
-		for ( Inventory.Slot slot : EquippableItemTemplate.validSlotsForType.get(item.getTemplate().getType()) ) {
+		for ( Slot slot : EquippableItemTemplate.validSlotsForType.get(item.getTemplate().getType()) ) {
 			viewersToAdd.add(Game.mainViewer.inventoryWindow.getEquippedViewer(slot));
 		}
 		
@@ -308,7 +312,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		itemHovers.add(hover);
 		
 		// add and set the widget position and size
-		this.getGUI().getRootPane().add(hover);
+        getGUI().getRootPane().add(hover);
 		hover.setSize(hover.getPreferredWidth(), hover.getPreferredHeight());
 		hover.setPosition(x, y - hover.getHeight());
 	}
@@ -331,7 +335,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		clearAllItemHovers();
 				
 		addEquippedHovers(viewer);
-		addHover(this.mode, viewer.getItem(), viewer, viewer.getEmptyHoverText(), viewer.getX(), viewer.getY());
+		addHover(mode, viewer.getItem(), viewer, viewer.getEmptyHoverText(), viewer.getX(), viewer.getY());
 	}
 	
 	@Override public void hoverEnded(ItemIconViewer viewer) {
@@ -487,9 +491,9 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			
 			menu.addButton(button);
 			
-			if (eItem instanceof Weapon && creature.inventory.canEquip(eItem, Inventory.Slot.OffHand)) {
+			if (eItem instanceof Weapon && creature.inventory.canEquip(eItem, Slot.OffHand)) {
 				Button offHandButton = new Button("Equip Off Hand");
-				offHandButton.addCallback(creature.inventory.getEquipCallback(eItem, Inventory.Slot.OffHand));
+				offHandButton.addCallback(creature.inventory.getEquipCallback(eItem, Slot.OffHand));
 				checkEquipButton(offHandButton, eItem);
 				
 				menu.addButton(offHandButton);
@@ -566,12 +570,12 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		}
 		
 		@Override public void run() {
-			if (ItemListViewer.this.activeButton != null) {
-				ItemListViewer.this.activeButton.setActive(false);
+			if (activeButton != null) {
+                activeButton.setActive(false);
 			}
-			
-			ItemListViewer.this.activeButton = button;
-			ItemListViewer.this.activeFilter = filter;
+
+            activeButton = button;
+            activeFilter = filter;
 			
 			button.setActive(true);
 			updateContent(mode, creature, merchant, items);

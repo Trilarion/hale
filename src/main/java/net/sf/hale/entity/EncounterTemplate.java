@@ -42,13 +42,13 @@ import net.sf.hale.util.SimpleJSONParser;
 
 public class EncounterTemplate {
 	
-	private class Entry {
+	private static class Entry {
 		private final String creatureID;
 		private final PointImmutable position;
 		
 		private Entry(String creatureID, int x, int y) {
 			this.creatureID = creatureID;
-			this.position = new PointImmutable(x, y);
+            position = new PointImmutable(x, y);
 		}
 	}
 	
@@ -84,7 +84,7 @@ public class EncounterTemplate {
 		radius = parser.get("radius", 0);
 		
 		String factionID = parser.get("faction", null);
-		this.faction = Game.ruleset.getFaction(factionID);
+        faction = Game.ruleset.getFaction(factionID);
 		
 		if (parser.containsKey("minRandomCreatures")) {
 			minRandomCreatures = parser.get("minRandomCreatures", 0);
@@ -94,7 +94,7 @@ public class EncounterTemplate {
 			maxRandomCreatures = -1;
 		}
 		
-		creatures = new ArrayList<Entry>();
+		creatures = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : parser.getArray("creatures")) {
 			SimpleJSONObject object = entry.getObject();
 			
@@ -221,7 +221,7 @@ public class EncounterTemplate {
 	 */
 	
 	public Map<PointImmutable, NPC> spawnCreatures(Location location) {
-		Map<PointImmutable, NPC> spawnedCreatures = new HashMap<PointImmutable, NPC>();
+		Map<PointImmutable, NPC> spawnedCreatures = new HashMap<>();
 		
 		if (randomizesCreatures() && Game.scriptInterface.SpawnRandomEncounters) {
 			// spawn random unless it has been disabled
@@ -237,7 +237,7 @@ public class EncounterTemplate {
 			
 		} else {
 			// spawn fixed
-			for (Entry entry : this.creatures) {
+			for (Entry entry : creatures) {
 				// convert relative to absolute area coordinates
 				int x = location.getX() + entry.position.x;
 				int y = location.getY() + entry.position.y;
@@ -255,7 +255,7 @@ public class EncounterTemplate {
 	private PointImmutable getFreeRandomLocation(Map<PointImmutable, NPC> spawnedCreatures, Location location) {
 		// give up eventually if we can't find a spot
 		for (int count = 0; count < 100; count++) {
-			int r = Game.dice.rand(0, this.radius);
+			int r = Game.dice.rand(0, radius);
 			int i = Game.dice.rand(0, r * 6);
 			
 			Point spawnPoint = AreaUtil.convertPolarToGrid(location.toPoint(), r, i);

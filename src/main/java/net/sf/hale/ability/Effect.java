@@ -77,7 +77,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 		
 		if (title != null) data.put("title", title);
 		
-		if (icons.size() > 0) {
+		if (!icons.isEmpty()) {
 			Object[] iconsData = new Object[icons.size()];
 			for (int i = 0; i < iconsData.length; i++) {
 				iconsData[i] = icons.get(i).save();
@@ -89,10 +89,10 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 		data.put("removeOnDeactivate", removeOnDeactivate);
 		data.put("hasDescription", hasDescription);
 		
-		if (childEffects.size() > 0) {
+		if (!childEffects.isEmpty()) {
 			// store children
 			
-			List<String> childData = new ArrayList<String>();
+			List<String> childData = new ArrayList<>();
 			for (Effect effect : childEffects) {
 				// don't save children with invalid targets
 				if (!effect.getTarget().isValidEffectTarget()) continue;
@@ -216,15 +216,15 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	
 	public Effect() {
 		super(null, null, false);
-		this.bonuses = new BonusList();
-		this.title = "Effect";
-		this.hasDescription = true;
-		this.icons = new ArrayList<Icon>();
-		
-		this.animations = new ArrayList<Animated>(1);
-		this.childEffects = new ArrayList<Effect>(1);
-		
-		this.scriptState = new ScriptState();
+		bonuses = new BonusList();
+		title = "Effect";
+		hasDescription = true;
+		icons = new ArrayList<>();
+
+		animations = new ArrayList<>(1);
+		childEffects = new ArrayList<>(1);
+
+		scriptState = new ScriptState();
 	}
 	
 	/**
@@ -241,13 +241,13 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	
 	public Effect(String scriptID) {
 		super(ResourceManager.getScriptResourceAsString(scriptID), scriptID, false);
-		this.bonuses = new BonusList();
-		this.hasDescription = true;
-		this.icons = new ArrayList<Icon>();
-		this.animations = new ArrayList<Animated>(1);
-		this.childEffects = new ArrayList<Effect>(1);
-		
-		this.scriptState = new ScriptState();
+		bonuses = new BonusList();
+		hasDescription = true;
+		icons = new ArrayList<>();
+		animations = new ArrayList<>(1);
+		childEffects = new ArrayList<>(1);
+
+		scriptState = new ScriptState();
 	}
 	
 	/**
@@ -260,14 +260,14 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 		super(other);
 		
 		this.target = target;
-		this.bonuses = new BonusList(other.bonuses);
-		this.duration = other.duration;
-		this.title = other.title;
-		this.icons = new ArrayList<Icon>(other.icons);
-		this.scriptState = new ScriptState(other.scriptState);
-		
-		this.animations = new ArrayList<Animated>(1);
-		this.childEffects = new ArrayList<Effect>(1);
+		bonuses = new BonusList(other.bonuses);
+		duration = other.duration;
+		title = other.title;
+		icons = new ArrayList<>(other.icons);
+		scriptState = new ScriptState(other.scriptState);
+
+		animations = new ArrayList<>(1);
+		childEffects = new ArrayList<>(1);
 	}
 	
 	/**
@@ -287,7 +287,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void addNegativeIcon(String imageID) {
-		this.icons.add(IconFactory.createIcon(imageID, Color.RED));
+		icons.add(IconFactory.createIcon(imageID, Color.RED));
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void addPositiveIcon(String imageID) {
-		this.icons.add(IconFactory.createIcon(imageID, Color.AQUA));
+		icons.add(IconFactory.createIcon(imageID, Color.AQUA));
 	}
 	
 	/**
@@ -307,7 +307,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void addIcon(String imageID) {
-		this.icons.add(IconFactory.createIcon(imageID));
+		icons.add(IconFactory.createIcon(imageID));
 	}
 	
 	/**
@@ -362,12 +362,12 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void elapseRounds(int rounds) {
-		if (this.duration != 0) {
-			this.duration -= rounds;
+		if (duration != 0) {
+			duration -= rounds;
 		}
 		
 		// note that this is only being executed once even if we elapse many rounds
-		this.executeFunction(ScriptFunctionType.onRoundElapsed, this);
+		executeFunction(ScriptFunctionType.onRoundElapsed, this);
 	}
 	
 	/**
@@ -434,7 +434,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void removeChildEffect(Effect effect) {
-		this.childEffects.remove(effect);
+		childEffects.remove(effect);
 	}
 	
 	/**
@@ -444,7 +444,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void addChildEffect(Effect effect) {
-		this.childEffects.add(effect);
+		childEffects.add(effect);
 	}
 	
 	/**
@@ -453,7 +453,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public List<Effect> getChildEffects() {
-		List<Effect> effects = new ArrayList<Effect>();
+		List<Effect> effects = new ArrayList<>();
 		
 		for (Effect effect : childEffects) {
 			effects.add(effect);
@@ -485,7 +485,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public List<Effect> getChildEffectsWithTarget(EffectTarget target) {
-		List<Effect> effects = new ArrayList<Effect>();
+		List<Effect> effects = new ArrayList<>();
 		
 		for (Effect effect : childEffects) {
 			if (effect.getTarget() == target) effects.add(effect);
@@ -523,7 +523,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void addAnimation(Animated animation) {
-		this.animations.add(animation);
+		animations.add(animation);
 	}
 	
 	/**
@@ -531,7 +531,7 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	 */
 	
 	public void startAnimations() {
-		for (Animated animation : this.animations) {
+		for (Animated animation : animations) {
 			
 			Game.particleManager.add(animation);
 		}
@@ -569,21 +569,21 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
 	
 	public void appendDescription(StringBuilder sb) {
 		// don't append description for permanent effects
-		if (this.duration == 0 && !this.removeOnDeactivate) return;
+		if (duration == 0 && !removeOnDeactivate) return;
 		
 		// don't append description if the effect has been set as not showing a description
 		if (!hasDescription) return;
 		
 		sb.append("<div style=\"margin-top: 1em;\">");
 		sb.append("<span style=\"font-family: medium;\">");
-		sb.append(this.title).append("</span>");
+		sb.append(title).append("</span>");
 		
-		if (this.duration != 0) {
+		if (duration != 0) {
 			sb.append("<p>(<span style=\"font-family: blue;\">");
-			sb.append(this.duration).append("</span> Rounds Remaining)</p>");
+			sb.append(duration).append("</span> Rounds Remaining)</p>");
 		}
 		
-		sb.append(this.bonuses.getDescription());
+		sb.append(bonuses.getDescription());
 		
 		sb.append("</div>");
 	}

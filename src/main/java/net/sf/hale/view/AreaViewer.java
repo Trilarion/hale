@@ -24,10 +24,12 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Targeter;
 import net.sf.hale.area.Area;
 import net.sf.hale.area.Transition;
+import net.sf.hale.area.Transition.EndPoint;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.interfacelock.InterfaceLock;
+import net.sf.hale.tileset.AreaTileGrid.AreaRenderer;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.widgets.EntityMouseover;
@@ -51,7 +53,7 @@ import de.matthiasmann.twl.renderer.Image;
  *
  */
 
-public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
+public class AreaViewer extends Widget implements AreaRenderer {
 	
 	/**
 	 * The "active" and enabled GUI state for this AreaViewer, used as a time source
@@ -86,10 +88,10 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	public AreaViewer(Area area) {
 		mouseHoverTile = new Point();
 		mouseHoverValid = true;
-		
-		this.scroll = new Point(0, 0);
-		this.maxScroll = new Point(0, 0);
-		this.minScroll = new Point(0, 0);
+
+        scroll = new Point(0, 0);
+        maxScroll = new Point(0, 0);
+        minScroll = new Point(0, 0);
 		this.area = area;
 		
 		fadeInTime = System.currentTimeMillis();
@@ -102,8 +104,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	
 	public void setArea(Area area) {
 		this.area = area;
-		this.scroll.x = 0;
-		this.scroll.y = 0;
+        scroll.x = 0;
+        scroll.y = 0;
 		
 		invalidateLayout();
 		
@@ -176,7 +178,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	}
 	
 	@Override protected void paintWidget(GUI gui) {
-		AnimationState as = this.getAnimationState();
+		AnimationState as = getAnimationState();
 		
 		GL11.glPushMatrix();
 		GL11.glTranslatef((-scroll.x + getX()), (-scroll.y + getY()), 0.0f);
@@ -292,9 +294,9 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		shake.endTime = curTime + 600;
 		shake.lastTime = curTime;
 		shake.lastShakeX = 1;
-		
-		
-		this.screenShake = shake;
+
+
+        screenShake = shake;
 		
 		Game.interfaceLocker.add(new InterfaceLock(Game.curCampaign.party.getSelected(), 600));
 	}
@@ -325,10 +327,10 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	 */
 	
 	public void addDelayedScrollToScreenPoint(Point pScreen) {
-		this.delayedScroll = new DelayedScroll();
+        delayedScroll = new DelayedScroll();
 
-		int destx = pScreen.x - this.getInnerWidth() / 2;
-		int desty = pScreen.y - this.getInnerHeight() / 2;
+		int destx = pScreen.x - getInnerWidth() / 2;
+		int desty = pScreen.y - getInnerHeight() / 2;
 		
 		delayedScroll.startScrollX = scroll.x;
 		delayedScroll.startScrollY = scroll.y;
@@ -366,8 +368,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	public void scrollToCreature(Entity creature) {
 		Point pScreen = creature.getLocation().getCenteredScreenPoint();
 		
-		int destx = pScreen.x - this.getInnerWidth() / 2;
-		int desty = pScreen.y - this.getInnerHeight() / 2;
+		int destx = pScreen.x - getInnerWidth() / 2;
+		int desty = pScreen.y - getInnerHeight() / 2;
 		
 		// clear any delayed scroll
 		delayedScroll = null;
@@ -394,8 +396,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		minScroll.x = Game.TILE_SIZE;
 		minScroll.y = Game.TILE_SIZE;
 		
-		maxScroll.x = (area.getWidth() - 1) * Game.TILE_WIDTH - this.getInnerWidth();
-		maxScroll.y = area.getHeight() * Game.TILE_SIZE - Game.TILE_SIZE / 2 - this.getInnerHeight();
+		maxScroll.x = (area.getWidth() - 1) * Game.TILE_WIDTH - getInnerWidth();
+		maxScroll.y = area.getHeight() * Game.TILE_SIZE - Game.TILE_SIZE / 2 - getInnerHeight();
 		if (maxScroll.x < minScroll.x) maxScroll.x = minScroll.x;
 		if (maxScroll.y < minScroll.y) maxScroll.y = minScroll.y;
 	}
@@ -524,7 +526,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 			
 			if (!transition.isActivated()) continue;
 			
-			Transition.EndPoint endPoint = transition.getEndPointInArea(area);
+			EndPoint endPoint = transition.getEndPointInArea(area);
 			Point screen = AreaUtil.convertGridToScreen(endPoint.getX(), endPoint.getY());
 			transition.getIcon().draw(screen.x, screen.y);
 		}
@@ -584,11 +586,11 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
         hexGreen = themeInfo.getImage("hexgreen");
         hexGrey = themeInfo.getImage("hexgrey");
         hexAnim = themeInfo.getImage("hexanim");
-        
-        this.getAnimationState().setAnimationState(STATE_ACTIVE, true);
+
+        getAnimationState().setAnimationState(STATE_ACTIVE, true);
     }
 	
-	private class DelayedScroll {
+	private static class DelayedScroll {
 		private int startScrollX;
 		private int startScrollY;
 		
@@ -598,7 +600,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		private long startTime, endTime;
 	}
 	
-	private class ScreenShake {
+	private static class ScreenShake {
 		private long endTime;
 		
 		private long lastTime;

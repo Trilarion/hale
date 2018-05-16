@@ -56,11 +56,11 @@ public class RightClickMenuLevel extends Widget {
 	public RightClickMenuLevel(RightClickMenuLevel parentLevel, Widget parentButton) {
         this.parentLevel = parentLevel;
         this.parentButton = parentButton;
-        buttons = new ArrayList<Button>();
+        buttons = new ArrayList<>();
         
         title = new Label();
         title.setTheme("titlelabel");
-        this.add(title);
+        add(title);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class RightClickMenuLevel extends Widget {
 	public void addButton(Button button) {
 		buttons.add(button);	
 		button.setTheme("menubutton");
-		this.add(button);
+        add(button);
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {

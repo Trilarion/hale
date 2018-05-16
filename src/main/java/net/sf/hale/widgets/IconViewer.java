@@ -53,7 +53,7 @@ public class IconViewer extends Button {
 	
 	public IconViewer(Icon icon, String tooltip) {
 		this(icon);
-		this.setTooltipContent(tooltip);
+        setTooltipContent(tooltip);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class IconViewer extends Button {
 	 */
 	
 	public void setEventHandlingEnabled(boolean enabled) {
-		this.enableEventHandling = enabled;
+        enableEventHandling = enabled;
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class IconViewer extends Button {
 	 */
 	
 	public Icon getIcon() {
-		return this.icon;
+		return icon;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class IconViewer extends Button {
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
-		if (!this.enableEventHandling) return false;
+		if (!enableEventHandling) return false;
 		
 		switch (evt.getType()) {
 		case MOUSE_WHEEL:

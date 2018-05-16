@@ -19,6 +19,8 @@
 
 package net.sf.hale.characterbuilder;
 
+import de.matthiasmann.twl.Event.Type;
+import net.sf.hale.characterbuilder.PointAllocatorModel.Listener;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.widgets.IconViewer;
 import de.matthiasmann.twl.AnimationState;
@@ -33,7 +35,7 @@ import de.matthiasmann.twl.Event;
  *
  */
 
-public class BuildablePropertySelector extends DialogLayout implements PointAllocatorModel.Listener {
+public class BuildablePropertySelector extends DialogLayout implements Listener {
 	private PointAllocatorModel pointsModel;
 	private int minValue, maxValue;
 	private int value;
@@ -57,8 +59,8 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 	
 	public BuildablePropertySelector(String name, Icon icon, boolean hasValue) {
 		this.hasValue = hasValue;
-		this.selected = false;
-		this.selectable = false;
+        selected = false;
+        selectable = false;
 		
 		iconViewer = new IconViewer();
 		if (icon != null) iconViewer.setIcon(icon);
@@ -155,7 +157,7 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 	 */
 	
 	public void setPointAllocatorModel(PointAllocatorModel model) {
-		this.pointsModel = model;
+        pointsModel = model;
 		model.addListener(this);
 	}
 	
@@ -305,7 +307,7 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 		AnimationState animationState = getAnimationState();
 		
 		if (evt.isMouseEvent()) {
-			boolean hover = (evt.getType() != Event.Type.MOUSE_EXITED) && isMouseInside(evt);
+			boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
 			
 			if (animationState.getAnimationState(Button.STATE_HOVER) != hover) {
 				if (hover) onMouseHover();

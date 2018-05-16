@@ -69,7 +69,7 @@ public class AreaTileGrid {
 	public AreaTileGrid(Tileset tileset, int width, int height) {
 		this.tileset = tileset;
 		
-		tiles = new LinkedHashMap<String, TileLayerList>();
+		tiles = new LinkedHashMap<>();
 		
 		for (String layerID : tileset.getLayerIDs()) {
 			tiles.put(layerID, new TileLayerList(width, height));
@@ -303,21 +303,21 @@ public class AreaTileGrid {
 		 * Returns the Area that is being rendered by this AreaRenderer
 		 * @return the Area being rendered
 		 */
-		
-		public Area getArea();
+
+        Area getArea();
 		
 		/**
 		 * Draws all transitions in the Area at their coordinates
 		 */
-		
-		public void drawTransitions();
+
+        void drawTransitions();
 		
 		/**
 		 * Draws interface elements such as the mouse hover over and the highlight
 		 * for the currently selected entity
 		 * @param as the current animation state
 		 */
-		
-		public void drawInterface(AnimationState as);
+
+        void drawInterface(AnimationState as);
 	}
 }

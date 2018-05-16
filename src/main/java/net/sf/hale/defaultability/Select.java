@@ -49,7 +49,7 @@ public class Select implements DefaultAbility {
 	@Override public void activate(PC parent, Location targetPosition) {
 		Creature target = targetPosition.getCreature();
 		
-		Select.selectCreature(target);
+		selectCreature(target);
 		Game.areaViewer.addDelayedScrollToCreature(target);
 		
 		Game.areaListener.computeMouseState();

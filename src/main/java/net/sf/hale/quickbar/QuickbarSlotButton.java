@@ -82,13 +82,13 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		}
 		
 		indexLabel.setTheme("indexlabel");
-		this.add(indexLabel);
+        add(indexLabel);
 		
 		primaryLabel = new Label();
 		primaryLabel.setTheme("primarylabel");
-		this.add(primaryLabel);
-		
-		this.icon = IconFactory.emptyIcon;
+        add(primaryLabel);
+
+        icon = IconFactory.emptyIcon;
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	 */
 	
 	public void setDisabledExceptActivate(boolean disable) {
-		this.disabledExceptActivate = disable;
+        disabledExceptActivate = disable;
 	}
 	
 	@Override protected void layout() {
@@ -130,11 +130,11 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	 */
 	
 	public void setOverrideIcon(Icon icon) {
-		this.overrideIcon = icon;
+        overrideIcon = icon;
 	}
 	
 	public void clearOverrideIcon() {
-		this.overrideIcon = null;
+        overrideIcon = null;
 	}
 	
 	/**
@@ -151,29 +151,29 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		this.quickbar = quickbar;
 		
 		if (slot == null) {
-			if (this.getTooltipContent() != emptyTooltip)
-				this.setTooltipContent(emptyTooltip);
-			
-			this.icon = IconFactory.emptyIcon;
-			this.primaryLabel.setText("");
-			this.secondaryIcon = null;
+			if (getTooltipContent() != emptyTooltip)
+                setTooltipContent(emptyTooltip);
+
+            icon = IconFactory.emptyIcon;
+            primaryLabel.setText("");
+            secondaryIcon = null;
 		} else {
 			
 			if (slot.isActivateable()) {
-				this.icon = slot.getIcon();
-				this.secondaryIcon = slot.getSecondaryIcon();
+                icon = slot.getIcon();
+                secondaryIcon = slot.getSecondaryIcon();
 			} else {
-				this.icon = slot.getIcon().multiplyByColor(new Color(0xFF7F7F7F));
+                icon = slot.getIcon().multiplyByColor(new Color(0xFF7F7F7F));
 				
 				if (slot.getSecondaryIcon() != null)
-					this.secondaryIcon = slot.getSecondaryIcon().multiplyByColor(new Color(0xFF7F7F7F));
+                    secondaryIcon = slot.getSecondaryIcon().multiplyByColor(new Color(0xFF7F7F7F));
 			}
 			
 			primaryLabel.setText(slot.getLabelText());
 			
 			String tooltip = slot.getTooltipText();
 			if (!tooltip.equals(getTooltipContent())) {
-				this.setTooltipContent(tooltip);
+                setTooltipContent(tooltip);
 			}
 		}
 	}
@@ -334,27 +334,27 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	}
 
 	@Override public void dragAndDropStartHover(DragTarget target) {
-		if (target.getItem() != null && target.getParentPC() == this.quickbar.getParent()) {
+		if (target.getItem() != null && target.getParentPC() == quickbar.getParent()) {
 			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getItem(), target.getParentPC());
 		} else {
 			dragSlotToAdd = null;
 		}
 		
 		if (dragSlotToAdd != null) {
-			this.setOverrideIcon(target.getDragIcon().multiplyByColor(new Color(0xFF555555)));
+            setOverrideIcon(target.getDragIcon().multiplyByColor(new Color(0xFF555555)));
 		}
 	}
 
 	@Override public void dragAndDropStopHover(DragTarget target) {
-		this.clearOverrideIcon();
+        clearOverrideIcon();
 	}
 
 	@Override public void dropDragTarget(DragTarget target) {
-		this.clearOverrideIcon();
+        clearOverrideIcon();
 		
 		if (dragSlotToAdd != null) {
 			quickbar.setSlot(dragSlotToAdd, index);
-			this.setSlot(quickbar.getSlot(index), quickbar);
+            setSlot(quickbar.getSlot(index), quickbar);
 			Game.mainViewer.updateInterface();
 		}
 	}

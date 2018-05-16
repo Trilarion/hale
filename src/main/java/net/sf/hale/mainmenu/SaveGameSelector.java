@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 
 import net.sf.hale.Game;
+import net.sf.hale.mainmenu.AbstractSaveGamePopup.Selector;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SaveFileHeader;
 import net.sf.hale.util.SaveGameUtil;
@@ -40,7 +41,7 @@ import de.matthiasmann.twl.ThemeInfo;
  *
  */
 
-public class SaveGameSelector extends AbstractSaveGamePopup.Selector {
+public class SaveGameSelector extends Selector {
 	private String saveGame;
 	
 	private Label name, date, partyName, partyLevel, area;

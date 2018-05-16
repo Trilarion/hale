@@ -43,6 +43,7 @@ import net.sf.hale.loading.LoadingWaitPopup;
 import net.sf.hale.mainmenu.ErrorPopup;
 import net.sf.hale.mainmenu.MainMenu;
 import net.sf.hale.mainmenu.MainMenuAction;
+import net.sf.hale.mainmenu.MainMenuAction.Action;
 import net.sf.hale.particle.ParticleManager;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.SpriteManager;
@@ -263,7 +264,7 @@ public class Game {
 	public enum OSType {
 		Unix,
 		Windows,
-		Mac;
+		Mac
 	}
 	
 	/**
@@ -343,18 +344,18 @@ public class Game {
 		// determines the resource IDs of all available core resources, but does not read them in yet
 		ResourceManager.registerCorePackage();
 		
-		Game.numberFormat = NumberFormat.getInstance();
-		Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
-		Game.dice = new Dice();
+		numberFormat = NumberFormat.getInstance();
+		config = new Config(getConfigBaseDirectory() + "config.json");
+		dice = new Dice();
 		
-		Game.scriptEngineManager = new JSEngineManager();
-		Game.scriptInterface = new ScriptInterface();
+		scriptEngineManager = new JSEngineManager();
+		scriptInterface = new ScriptInterface();
 		
-		Game.particleManager = new ParticleManager();
+		particleManager = new ParticleManager();
 		
-		Game.timer = new GameTimer();
-		Game.interfaceLocker = new InterfaceLocker();
-		Game.scriptInterface.ai = new AIScriptInterface();
+		timer = new GameTimer();
+		interfaceLocker = new InterfaceLocker();
+		scriptInterface.ai = new AIScriptInterface();
 		
 		Display.setTitle("Hale");
 		setDisplayIcon();
@@ -372,8 +373,8 @@ public class Game {
 		
 		try {
 			// run the game in a loop until the specified action is Exit
-			MainMenuAction action = new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
-			while (action.getAction() != MainMenuAction.Action.Exit) {
+			MainMenuAction action = new MainMenuAction(Action.ShowMainMenu);
+			while (action.getAction() != Action.Exit) {
 				// perform the specified action and get the new action caused
 				// by performing it
 				action = performAction(action);
@@ -402,7 +403,7 @@ public class Game {
 		
 		int numThreads = group.enumerate(threads);
 		
-		List<Thread> threadsList = new ArrayList<Thread>();
+		List<Thread> threadsList = new ArrayList<>();
 		
 		for (int i = 0; i < numThreads; i++) {
 			Thread thread = threads[i];
@@ -465,11 +466,11 @@ public class Game {
 		case Windows:
 			String baseDir = System.getProperty("user.home") + "\\My Documents\\My Games\\hale\\";
 
-			Game.configBaseDirectory = baseDir + "\\config\\";
-			Game.charactersBaseDirectory = baseDir + "\\characters\\";
-			Game.partiesBaseDirectory = baseDir + "\\parties\\";
-			Game.saveBaseDirectory = baseDir + "\\saves\\";
-			Game.logBaseDirectory = baseDir + "\\log\\";
+			configBaseDirectory = baseDir + "\\config\\";
+			charactersBaseDirectory = baseDir + "\\characters\\";
+			partiesBaseDirectory = baseDir + "\\parties\\";
+			saveBaseDirectory = baseDir + "\\saves\\";
+			logBaseDirectory = baseDir + "\\log\\";
 			
 			createTimerAccuracyThread();
 			break;
@@ -480,33 +481,33 @@ public class Game {
 			String xdgDataHome = System.getenv("XDG_DATA_HOME");
 			String xdgConfigHome = System.getenv("XDG_CONFIG_HOME");
 			
-			if (xdgDataHome == null || xdgDataHome.length() == 0) {
+			if (xdgDataHome == null || xdgDataHome.isEmpty()) {
 				// fallback to XDG default
 				xdgDataHome = System.getProperty("user.home") + "/.local/share";
 			}
 			
-			if (xdgConfigHome == null || xdgConfigHome.length() == 0) {
+			if (xdgConfigHome == null || xdgConfigHome.isEmpty()) {
 				// fallback to XDG default
 				xdgConfigHome = System.getProperty("user.home") + "/.config";
 			}
+
+			xdgDataHome += "/hale/";
+			xdgConfigHome += "/hale/";
 			
-			xdgDataHome = xdgDataHome + "/hale/";
-			xdgConfigHome = xdgConfigHome + "/hale/";
-			
-			Game.configBaseDirectory = xdgConfigHome;
-			Game.charactersBaseDirectory = xdgDataHome + "characters/";
-			Game.partiesBaseDirectory = xdgDataHome + "parties/";
-			Game.saveBaseDirectory = xdgDataHome + "saves/";
-			Game.logBaseDirectory = xdgDataHome + "log/";
+			configBaseDirectory = xdgConfigHome;
+			charactersBaseDirectory = xdgDataHome + "characters/";
+			partiesBaseDirectory = xdgDataHome + "parties/";
+			saveBaseDirectory = xdgDataHome + "saves/";
+			logBaseDirectory = xdgDataHome + "log/";
 			
 			break;
 		}
 		
-		new File(Game.configBaseDirectory).mkdirs();
-		new File(Game.charactersBaseDirectory).mkdirs();
-		new File(Game.partiesBaseDirectory).mkdirs();
-		new File(Game.saveBaseDirectory).mkdirs();
-		new File(Game.logBaseDirectory).mkdirs();
+		new File(configBaseDirectory).mkdirs();
+		new File(charactersBaseDirectory).mkdirs();
+		new File(partiesBaseDirectory).mkdirs();
+		new File(saveBaseDirectory).mkdirs();
+		new File(logBaseDirectory).mkdirs();
 	}
 	
 	private static void createTimerAccuracyThread() {
@@ -527,7 +528,7 @@ public class Game {
 	
 	private static void destroyDisplay() {
 		SpriteManager.clear();
-		Game.themeManager.destroy();
+		themeManager.destroy();
 		Display.destroy();
 	}
 	
@@ -550,7 +551,7 @@ public class Game {
 			MainMenu mainMenu = new MainMenu();
 			
 			// show an error popup if one should be shown
-			if (action.getErrorPopupMessages().size() > 0) {
+			if (!action.getErrorPopupMessages().isEmpty()) {
 				ErrorPopup popup = new ErrorPopup(mainMenu, action.getErrorPopupMessages());
 				popup.openPopupCentered();
 			}
@@ -559,42 +560,42 @@ public class Game {
 			
 			// the players loaded open campaign is stored in campaigns/lastOpenCampaign.txt
 			// this is automatically opened when you start the game
-			if (Game.curCampaign != null)
-				MainMenu.writeLastOpenCampaign(Game.curCampaign.getID());
+			if (curCampaign != null)
+				MainMenu.writeLastOpenCampaign(curCampaign.getID());
 			
 			return action;
 		case NewGame:
 			EntityManager.clear();
-			Game.curCampaign.curArea.addPlayerCharacters();
-			Game.mainViewer = new MainViewer();
-			Game.curCampaign.curArea.setEntityVisibility();
+			curCampaign.curArea.addPlayerCharacters();
+			mainViewer = new MainViewer();
+			curCampaign.curArea.setEntityVisibility();
 			
 			// exit if the mainviewer says to
-			return Game.mainViewer.runCampaign(true);
+			return mainViewer.runCampaign(true);
 		case LoadGame:
 			LoadingTaskList loader = null;
 			
 			try {
-				Game.mainViewer = new MainViewer();
+				mainViewer = new MainViewer();
 				loader = new LoadGameLoadingTaskList(SaveGameUtil.getSaveFile(action.getLoadGameFile()));
 				loader.start();
 				
-				LoadingWaitPopup popup = new LoadingWaitPopup(Game.mainViewer, "Loading Saved Game");
+				LoadingWaitPopup popup = new LoadingWaitPopup(mainViewer, "Loading Saved Game");
 				popup.setLoadingTaskList(loader);
 				popup.setBGSprite(SpriteManager.getSpriteAnyExtension("loadingscreen"));
 				popup.openPopupCentered();
-				Game.mainViewer.runLoadingLoop(loader, popup);
+				mainViewer.runLoadingLoop(loader, popup);
 
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error loading saved game: " + action.getLoadGameFile(), e);
 			}
 
 			if (loader != null && loader.isCompletedSuccessfully()) {
-				Game.mainViewer.addMessage("link", "Save file loaded successfully.");
-				return Game.mainViewer.runCampaign(false);
+				mainViewer.addMessage("link", "Save file loaded successfully.");
+				return mainViewer.runCampaign(false);
 			} else {
 				// there was an error in loading
-				MainMenuAction mma = new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
+				MainMenuAction mma = new MainMenuAction(Action.ShowMainMenu);
 				mma.addErrorPopupMessage("Unable to load the save file \"" + action.getLoadGameFile() + "\".");
 				mma.addErrorPopupMessage("");
 				mma.addErrorPopupMessage("Try exiting and restarting the game, then loading");
@@ -607,7 +608,7 @@ public class Game {
 		}
 		
 		// reshow the main menu if no other action was specified above
-		return new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
+		return new MainMenuAction(Action.ShowMainMenu);
 	}
 	
 	/** 

@@ -35,12 +35,14 @@ import net.sf.hale.ability.AbilitySlot;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.area.Area;
 import net.sf.hale.area.Transition;
+import net.sf.hale.area.Transition.EndPoint;
 import net.sf.hale.entity.CreatedItem;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Encounter;
 import net.sf.hale.entity.EncounterTemplate;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.EquippableItemTemplate.Type;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.PC;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -50,6 +52,7 @@ import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Faction.CustomRelationship;
 import net.sf.hale.tileset.Tileset;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
@@ -78,7 +81,7 @@ public class Campaign {
 	private final Map<String, Tileset> tilesets;
 	private final Map<String, EncounterTemplate> encounterTemplates;
 	private final Map<String, CreatedItem> createdItems;
-	private final List<Faction.CustomRelationship> customRelationships;
+	private final List<CustomRelationship> customRelationships;
 	private final Map<String, Merchant> merchants;
 	private final Map<String, Transition> transitions;
 	private final Map<String, Area> areas;
@@ -119,7 +122,7 @@ public class Campaign {
 		}
 		data.put("loadedAreas", areasData);
 		
-		if (createdItems.size() > 0) {
+		if (!createdItems.isEmpty()) {
 			Object[] createdItemsData = new Object[createdItems.size()];
 			i = 0;
 			for (CreatedItem createdItem : createdItems.values()) {
@@ -130,7 +133,7 @@ public class Campaign {
 			data.put("createdItems", createdItemsData);
 		}
 		
-		List<Object> transitionData = new ArrayList<Object>();
+		List<Object> transitionData = new ArrayList<>();
 		for (String transitionID : transitions.keySet()) {
 			Object transition = transitions.get(transitionID).save();
 			
@@ -149,22 +152,22 @@ public class Campaign {
 		
 		data.put("questEntries", questEntries.save());
 		
-		List<Object> locationData = new ArrayList<Object>();
+		List<Object> locationData = new ArrayList<>();
 		for (WorldMapLocation location : worldMapLocations) {
 			if (location.isRevealed())
 				locationData.add(location.save());
 		}
 		
-		if (locationData.size() > 0)
+		if (!locationData.isEmpty())
 			data.put("worldMapLocations", locationData.toArray());
 		
 		if (!scriptState.isEmpty())
 			data.put("scriptState", scriptState.save());
 		
-		if (customRelationships.size() > 0) {
+		if (!customRelationships.isEmpty()) {
 			i = 0;
 			Object[] crData = new Object[customRelationships.size()];
-			for (Faction.CustomRelationship cr : customRelationships) {
+			for (CustomRelationship cr : customRelationships) {
 				crData[i] = cr.save();
 				i++;
 			}
@@ -177,7 +180,7 @@ public class Campaign {
 	public void load(SimpleJSONParser data) throws LoadGameException {
 		ReferenceHandler refHandler = new ReferenceHandler();
 		
-		if (!this.id.equals(data.get("id", null))) {
+		if (!id.equals(data.get("id", null))) {
 			throw new LoadGameException("Campaign Save file ID does not match");
 		}
 		
@@ -187,13 +190,13 @@ public class Campaign {
 		date.incrementRounds(data.get("date", 0));
 		
 		partyCurrency.setValue(data.get("partyCurrency", 0));
-		
-		this.createdItems.clear();
+
+        createdItems.clear();
 		if (data.containsKey("createdItems")) {
 			for (SimpleJSONArrayEntry entry : data.getArray("createdItems")) {
 				CreatedItem createdItem = CreatedItem.load(entry.getObject());
-				
-				this.createdItems.put(createdItem.getCreatedItemID(), createdItem);
+
+                createdItems.put(createdItem.getCreatedItemID(), createdItem);
 			}
 		}
 		
@@ -205,33 +208,33 @@ public class Campaign {
 			Area area = Area.load(areaData, refHandler);
 			areas.put(area.getID(), area);
 		}
-		
-		this.party = Party.load(data.getObject("party"), refHandler);
-		
-		this.curArea = refHandler.getArea(data.get("currentArea", null));
+
+        party = Party.load(data.getObject("party"), refHandler);
+
+        curArea = refHandler.getArea(data.get("currentArea", null));
 		// start animations on the current area effects
 		curArea.startEffectAnimations();
 		
 		// clear existing transitions by reloading them
-		this.loadAreaTransitions();
+        loadAreaTransitions();
 		for (SimpleJSONArrayEntry entry : data.getArray("transitions")) {
 			SimpleJSONObject entryData = entry.getObject();
 			
 			String name = entryData.get("name", null);
-			
-			this.getAreaTransition(name).load(entryData);
+
+            getAreaTransition(name).load(entryData);
 		}
-		
-		this.merchants.clear();
+
+        merchants.clear();
 		for (SimpleJSONArrayEntry entry : data.getArray("merchants")) {
 			SimpleJSONObject entryData = entry.getObject();
 			
 			String id = entryData.get("id", null);
-			
-			this.getMerchant(id).load(entryData);
+
+            getMerchant(id).load(entryData);
 		}
-		
-		this.questEntries = QuestEntryList.load(data.getObject("questEntries"));
+
+        questEntries = QuestEntryList.load(data.getObject("questEntries"));
 		
 		if (data.containsKey("worldMapLocations")) {
 			for (SimpleJSONArrayEntry entry : data.getArray("worldMapLocations")) {
@@ -248,14 +251,14 @@ public class Campaign {
 				}
 			}
 		}
-		
-		this.scriptState = new ScriptState();
+
+        scriptState = new ScriptState();
 		if (data.containsKey("scriptState"))
-			this.scriptState.load(data.getObject("scriptState"));
+            scriptState.load(data.getObject("scriptState"));
 		
 		if (data.containsKey("factionRelationships")) {
 			for (SimpleJSONArrayEntry entry : data.getArray("factionRelationships")) {
-				Faction.CustomRelationship cr = Faction.CustomRelationship.load(entry.getObject());
+				CustomRelationship cr = CustomRelationship.load(entry.getObject());
 				cr.setFactionRelationships();
 				addCustomRelationship(cr);
 			}
@@ -331,26 +334,26 @@ public class Campaign {
 	public Campaign(String id) {
 		this.id = id;
 		name = "";
-		areas = new HashMap<String, Area>();
-		transitions = new HashMap<String, Transition>();
+		areas = new HashMap<>();
+		transitions = new HashMap<>();
 		party = new Party();
-		encounterTemplates = new HashMap<String, EncounterTemplate>();
-		merchants = new HashMap<String, Merchant>();
+		encounterTemplates = new HashMap<>();
+		merchants = new HashMap<>();
 		recipeManager = new RecipeManager();
 		partyCurrency = new Currency();
 		
 		questEntries = new QuestEntryList();
-		worldMapLocations = new ArrayList<WorldMapLocation>();
+		worldMapLocations = new ArrayList<>();
 		
-		createdItems = new HashMap<String, CreatedItem>();
-		tilesets = new HashMap<String, Tileset>();
+		createdItems = new HashMap<>();
+		tilesets = new HashMap<>();
 		
 		scriptState = new ScriptState();
 		
-		customRelationships = new ArrayList<Faction.CustomRelationship>();
+		customRelationships = new ArrayList<>();
 	}
 	
-	public void addCustomRelationship(Faction.CustomRelationship cr) {
+	public void addCustomRelationship(CustomRelationship cr) {
 		customRelationships.add(cr);
 	}
 	
@@ -363,7 +366,7 @@ public class Campaign {
 	}
 	
 	public void addCreatedItem(CreatedItem createdItem) {
-		this.createdItems.put(createdItem.getCreatedItemID(), createdItem);
+        createdItems.put(createdItem.getCreatedItemID(), createdItem);
 	}
 	
 	public int getBestPartySkillCheck(String skillID) {
@@ -416,7 +419,7 @@ public class Campaign {
 			PC pc = EntityManager.getPC(startingCharacter);
 			
 			// auto level up the PC to min level if allowed by this campaign
-			if (this.allowLevelUp) {
+			if (allowLevelUp) {
 				if (pc.getExperiencePoints() < minLevelXP) {
 					pc.addExperiencePoints(minLevelXP - pc.getExperiencePoints());
 				}
@@ -456,7 +459,7 @@ public class Campaign {
 	}
 	
 	public void transition(String transitionID) {
-		Transition transition = this.getAreaTransition(transitionID);
+		Transition transition = getAreaTransition(transitionID);
 		
 		transition(transition, false);
 	}
@@ -472,7 +475,7 @@ public class Campaign {
 		curArea.runOnAreaExit(transition);
 		
 		// get the appropriate end point
-		Transition.EndPoint endPoint;
+		EndPoint endPoint;
 		if (isFromWorldMap) {
 			endPoint = transition.getEndPointForWorldMap();
 		} else {
@@ -491,7 +494,7 @@ public class Campaign {
 		
 		Creature mainMover = Game.curCampaign.party.getSelected();
 		
-		List<AbilitySlot> canceledAuraSlots = new ArrayList<AbilitySlot>();
+		List<AbilitySlot> canceledAuraSlots = new ArrayList<>();
 		
 		Iterator<Creature> partyIter = Game.curCampaign.party.allCreaturesIterator();
 		while (partyIter.hasNext()) {
@@ -665,7 +668,7 @@ public class Campaign {
 	}
 	
 	public void setCurrentDifficulty(String difficulty) {
-		this.currentDifficulty = difficulty;
+        currentDifficulty = difficulty;
 	}
 	
 	public Sprite getWorldMapSprite() {
@@ -682,7 +685,7 @@ public class Campaign {
 		return recipeManager.getRecipeIDsForSkill(skill);
 	}
 	
-	public List<String> getEnchantmentsForItemType(EquippableItemTemplate.Type type) {
+	public List<String> getEnchantmentsForItemType(Type type) {
 		return recipeManager.getEnchantmentsForItemType(type);
 	}
 	

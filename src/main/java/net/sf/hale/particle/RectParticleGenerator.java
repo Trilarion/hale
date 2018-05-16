@@ -62,11 +62,11 @@ public class RectParticleGenerator extends ParticleGenerator {
 	
 	public RectParticleGenerator(RectParticleGenerator other) {
 		super(other);
-		
-		this.upperX = other.upperX;
-		this.upperY = other.upperY;
-		this.lowerX = other.lowerX;
-		this.lowerY = other.lowerY;
+
+        upperX = other.upperX;
+        upperY = other.upperY;
+        lowerX = other.lowerX;
+        lowerY = other.lowerY;
 	}
 	
 	public void setRectBounds(float lowerX, float upperX, float lowerY, float upperY) {
@@ -88,11 +88,11 @@ public class RectParticleGenerator extends ParticleGenerator {
 	
 	@Override public boolean initialize() {
 		if (!super.initialize()) return false;
-		
-		this.upperX += getX();
-		this.upperY += getY();
-		this.lowerX += getX();
-		this.lowerY += getY();
+
+        upperX += getX();
+        upperY += getY();
+        lowerX += getX();
+        lowerY += getY();
 		
 		return true;
 	}

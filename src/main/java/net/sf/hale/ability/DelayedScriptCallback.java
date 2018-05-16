@@ -51,9 +51,9 @@ public class DelayedScriptCallback extends Thread {
 	
 	public DelayedScriptCallback(Scriptable scriptable, String function) {
 		this.scriptable = scriptable;
-		this.delayInMillis = 0l;
-		this.callbackFunction = function;
-		this.arguments = new ArrayList<Object>(5);
+        delayInMillis = 0L;
+        callbackFunction = function;
+        arguments = new ArrayList<>(5);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class DelayedScriptCallback extends Thread {
 	 */
 	
 	public void setDelay(float delayInSeconds) {
-		this.delayInMillis = (long)(1000.0f * delayInSeconds);
+        delayInMillis = (long)(1000.0f * delayInSeconds);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class DelayedScriptCallback extends Thread {
 	 */
 	
 	@Override public void run() {
-		if (delayInMillis != 0l) {
+		if (delayInMillis != 0L) {
 			try {
 				Thread.sleep(delayInMillis);
 			} catch (InterruptedException e) {

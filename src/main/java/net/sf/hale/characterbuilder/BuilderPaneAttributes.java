@@ -23,6 +23,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ScrollPane;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Stat;
+import net.sf.hale.characterbuilder.PointAllocatorModel.Listener;
 import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
@@ -34,7 +35,7 @@ import net.sf.hale.rules.Race;
  *
  */
 
-public class BuilderPaneAttributes extends BuilderPane implements PointAllocatorModel.Listener {
+public class BuilderPaneAttributes extends BuilderPane implements Listener {
 	private PointAllocatorModel points;
 	private AttributeSelector[] selectors;
 	
@@ -82,7 +83,7 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
         		setDefaultValues();
         	}
         });
-        this.add(defaultButton);
+        add(defaultButton);
         
         raceRoleButton = new Button("Suggested Values");
         raceRoleButton.setTheme("racerolebutton");
@@ -91,7 +92,7 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
         		setRoleValues();
         	}
         });
-        this.add(raceRoleButton);
+        add(raceRoleButton);
 	}
 	
 	private void setDefaultValues() {
@@ -203,7 +204,7 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 		public AttributeSelector(Stat stat, String icon) {
 			super(stat.name, IconFactory.createIcon(icon), true);
 			this.stat = stat;
-			this.baseValue = 0;
+            baseValue = 0;
 		}
 		
 		private final double getCost(int curValue, int baseValue) {

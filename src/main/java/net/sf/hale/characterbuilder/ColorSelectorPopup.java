@@ -51,13 +51,13 @@ public class ColorSelectorPopup extends PopupWindow {
 	
 	public ColorSelectorPopup(Widget parent) {
 		super(parent);
-		
-		this.setCloseOnClickedOutside(false);
+
+        setCloseOnClickedOutside(false);
 		
 		content = new Content();
-		this.add(content);
+        add(content);
 		
-		callbacks = new ArrayList<Callback>();
+		callbacks = new ArrayList<>();
 	}
 	
 	/**
@@ -67,7 +67,6 @@ public class ColorSelectorPopup extends PopupWindow {
 	
 	public void setColor(Color color) {
 		if (color == null) {
-			return;
 		} else {
 			content.colorSelector.setColor(color);
 		}
@@ -84,7 +83,7 @@ public class ColorSelectorPopup extends PopupWindow {
 	}
 	
 	private void accept() {
-		ColorSelectorPopup.this.closePopup();
+        closePopup();
 		
 		for (Callback callback : callbacks) {
 			callback.colorSelected(content.colorSelector.getColor());
@@ -99,7 +98,7 @@ public class ColorSelectorPopup extends PopupWindow {
 	 */
 	
 	public interface Callback {
-		public void colorSelected(Color color);
+		void colorSelected(Color color);
 	}
 	
 	private class Content extends Widget {
@@ -118,16 +117,16 @@ public class ColorSelectorPopup extends PopupWindow {
 			colorSelector.setUseLabels(false);
 			colorSelector.setShowPreview(true);
 			colorSelector.setShowAlphaAdjuster(false);
-			this.add(colorSelector);
+            add(colorSelector);
 			
 			cancel = new Button("Cancel");
 			cancel.setTheme("cancelbutton");
 			cancel.addCallback(new Runnable() {
 				@Override public void run() {
-					ColorSelectorPopup.this.closePopup();
+                    closePopup();
 				}
 			});
-			this.add(cancel);
+            add(cancel);
 			
 			accept = new Button("Accept");
 			accept.setTheme("acceptbutton");
@@ -136,7 +135,7 @@ public class ColorSelectorPopup extends PopupWindow {
 					accept();
 				}
 			});
-			this.add(accept);
+            add(accept);
 		}
 		
 		@Override public int getPreferredInnerWidth() {

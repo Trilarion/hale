@@ -42,7 +42,7 @@ public abstract class QuickbarSlot implements Saveable {
 	 */
 	
 	protected QuickbarSlot() {
-		this.index = -1;
+        index = -1;
 	}
 	
 	/**

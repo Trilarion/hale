@@ -54,7 +54,7 @@ public class AmmoTemplate extends EquippableItemTemplate {
 		// the projectile icon must be a simple icon for animation purposes
 		projectileIcon = new SimpleIcon(data.getObject("projectileIcon"));
 		
-		baseWeapons = new ArrayList<BaseWeapon>(2);
+		baseWeapons = new ArrayList<>(2);
 		
 		for (SimpleJSONArrayEntry entry : data.getArray("weapons")) {
 			String baseWeaponID = entry.getString();
@@ -65,9 +65,9 @@ public class AmmoTemplate extends EquippableItemTemplate {
 	
 	private AmmoTemplate(String id, AmmoTemplate other, CreatedItem createdItem) {
 		super(id, other, createdItem);
-		
-		this.projectileIcon = other.projectileIcon;
-		this.baseWeapons = new ArrayList<BaseWeapon>(other.baseWeapons);
+
+        projectileIcon = other.projectileIcon;
+        baseWeapons = new ArrayList<>(other.baseWeapons);
 	}
 	
 	@Override public AmmoTemplate createModifiedCopy(String id, CreatedItem createdItem) {

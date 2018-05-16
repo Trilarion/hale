@@ -27,13 +27,13 @@ public class BonusStackTypeList {
 	private List<Bonus> bonuses;
 	
 	public BonusStackTypeList() {
-		bonuses = new LinkedList<Bonus>();
+		bonuses = new LinkedList<>();
 		currentTotal = 0;
 	}
 	
 	public BonusStackTypeList(BonusStackTypeList other) {
-		this.bonuses = new LinkedList<Bonus>(other.bonuses);
-		this.currentTotal = other.currentTotal;
+        bonuses = new LinkedList<>(other.bonuses);
+        currentTotal = other.currentTotal;
 	}
 	
 	public void add(Bonus bonus) {
@@ -75,5 +75,5 @@ public class BonusStackTypeList {
 	
 	public int getCurrentTotal() { return currentTotal; }
 	
-	public boolean isEmpty() { return bonuses.size() == 0; }
+	public boolean isEmpty() { return bonuses.isEmpty(); }
 }

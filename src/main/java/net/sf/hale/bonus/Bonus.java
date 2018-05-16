@@ -90,31 +90,31 @@ public class Bonus implements Saveable {
 		WeightLimit("Weight Limit"), TemporaryHP("Temporary Hit Points"), ActionPoint("Action Points"),
 		ActionPointEquipHands("Action Points to Wield"), FlankingAngle("Flanking Angle");
 		
-		private Type() {
-			this.name = this.toString(); 
+		Type() {
+            name = toString();
 		}
 		
-		private Type(String name) {
+		Type(String name) {
 			this.name = name;
 		}
 		
 		public final String name;
-	};
-	
+	}
+
 	public enum StackType {
 		StackableBonus, StackablePenalty,
 		GenericBonus, MoraleBonus, DeflectionBonus, NaturalArmorBonus, ArmorBonus, ShieldBonus,
 		GenericPenalty, MoralePenalty, DeflectionPenalty, NaturalArmorPenalty, ArmorPenalty, ShieldPenalty,
 		EnhancementBonus, EnhancementPenalty, LuckBonus, LuckPenalty,
-	};
-	
+	}
+
 	private final Type type;
 	private final StackType stackType;
 	
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("type", type.toString());
 		data.put("stackType", stackType.toString());
 		
@@ -122,8 +122,8 @@ public class Bonus implements Saveable {
 	}
 	
 	public static Bonus load(SimpleJSONObject data) {
-		Bonus.Type type = Type.valueOf(data.get("type", null));
-		Bonus.StackType stackType = StackType.valueOf(data.get("stackType", null));
+		Type type = Type.valueOf(data.get("type", null));
+		StackType stackType = StackType.valueOf(data.get("stackType", null));
 		
 		return new Bonus(type, stackType);
 	}
@@ -139,7 +139,7 @@ public class Bonus implements Saveable {
 	public StackType getStackType() { return stackType; }
 	
 	public static Type parseType(String typeString) {
-		Type type = Bonus.Type.valueOf(typeString);
+		Type type = Type.valueOf(typeString);
 		if (type == null) {
 			Logger.appendToErrorLog("Bonus type " + typeString + " not found.");
 		}
@@ -148,7 +148,7 @@ public class Bonus implements Saveable {
 	}
 	
 	public static StackType parseStackType(String stackTypeString) {
-		StackType stackType = Bonus.StackType.valueOf(stackTypeString);
+		StackType stackType = StackType.valueOf(stackTypeString);
 		if (stackType == null) {
 			Logger.appendToErrorLog("Bonus stack type " + stackTypeString + " not found.");
 			return StackType.GenericBonus;
@@ -158,7 +158,7 @@ public class Bonus implements Saveable {
 	}
 	
 	public Bonus cloneWithReduction(int reduction) {
-		return new Bonus(this.type, this.stackType);
+		return new Bonus(type, stackType);
 	}
 	
 	public void appendDescription(StringBuilder sb) {

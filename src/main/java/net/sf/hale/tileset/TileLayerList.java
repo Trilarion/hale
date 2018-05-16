@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.hale.tileset.AreaTileGrid.AreaRenderer;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.area.Area;
@@ -60,7 +61,7 @@ public class TileLayerList {
 	public JSONOrderedObject writeToJSON() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		Map<String, List<int[]>> out = new LinkedHashMap<String, List<int[]>>();
+		Map<String, List<int[]>> out = new LinkedHashMap<>();
 		
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {
@@ -75,7 +76,7 @@ public class TileLayerList {
 					String id = tile.getTileID();
 					
 					if (!out.containsKey(id)) {
-						out.put(id, new ArrayList<int[]>());
+						out.put(id, new ArrayList<>());
 					}
 					
 					out.get(id).add(coords);
@@ -135,8 +136,8 @@ public class TileLayerList {
 					newTiles[x][y] = new TileList();
 			}
 		}
-		
-		this.tiles = newTiles;
+
+        tiles = newTiles;
 	}
 	
 	/**
@@ -317,7 +318,7 @@ public class TileLayerList {
 	 * bounds of the tile grid
 	 */
 	
-	protected void draw(Point[][] screenCoordinates, AreaTileGrid.AreaRenderer renderer, Point topLeft, Point bottomRight) {
+	protected void draw(Point[][] screenCoordinates, AreaRenderer renderer, Point topLeft, Point bottomRight) {
 		area = renderer.getArea();
 		visibility = area.getVisibility();
 		explored = area.getExplored();
@@ -339,7 +340,7 @@ public class TileLayerList {
 		}
 	}
 	
-	private class TileList extends ArrayList<Tile> {
+	private static class TileList extends ArrayList<Tile> {
 		private static final long serialVersionUID = 1L;
 
 		private TileList() {

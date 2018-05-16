@@ -59,8 +59,8 @@ public class MainMenuAction {
 		NewGame,
 		
 		/** Loads a game within the currently selected campaign */
-		LoadGame;
-	}
+		LoadGame
+    }
 	
 	/**
 	 * Creates a MainMenuAction of the specified type.  This type can be one of
@@ -70,7 +70,7 @@ public class MainMenuAction {
 	 */
 	
 	public MainMenuAction(Action action) {
-		this.errorPopupMessages = new ArrayList<String>();
+        errorPopupMessages = new ArrayList<>();
 		this.action = action;
 		
 		if (action == Action.LoadGame)
@@ -84,8 +84,8 @@ public class MainMenuAction {
 	 */
 	
 	public MainMenuAction(String loadGameFile) {
-		this.errorPopupMessages = new ArrayList<String>();
-		this.action = Action.LoadGame;
+        errorPopupMessages = new ArrayList<>();
+        action = Action.LoadGame;
 		this.loadGameFile = loadGameFile;
 	}
 	
@@ -103,7 +103,7 @@ public class MainMenuAction {
 	 */
 	
 	public void setPreActionCallback(Runnable callback) {
-		this.preActionCallback = callback;
+        preActionCallback = callback;
 	}
 	
 	/**
@@ -113,7 +113,7 @@ public class MainMenuAction {
 	 */
 	
 	public void addErrorPopupMessage(String message) {
-		this.errorPopupMessages.add(message);
+        errorPopupMessages.add(message);
 	}
 	
 	/**

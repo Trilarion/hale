@@ -51,7 +51,7 @@ public class InterfaceAILock extends InterfaceLock {
 		super.setCurrentTime(curTime);
 		
 		if (!finishing) {
-			super.setUnlockTime(curTime + 800);
+			setUnlockTime(curTime + 800);
 			
 			if (!runner.isAlive()) finishing = true;
 		}

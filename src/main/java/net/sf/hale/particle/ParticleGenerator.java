@@ -243,99 +243,99 @@ public class ParticleGenerator implements Animated {
 	}
 	
 	public ParticleGenerator(ParticleGenerator other) {
-		this.particles = new LinkedList<Particle>();
-		this.subGenerators = new LinkedList<SubGenerator>();
-		
-		this.initialized = other.initialized;
+        particles = new LinkedList<>();
+        subGenerators = new LinkedList<>();
+
+        initialized = other.initialized;
 		
 		if (other.velocityDistribution != null)
-			this.velocityDistribution = other.velocityDistribution.getCopyIfHasState();
+            velocityDistribution = other.velocityDistribution.getCopyIfHasState();
 		if (other.durationDistribution != null)
-			this.durationDistribution = other.durationDistribution.getCopyIfHasState();
+            durationDistribution = other.durationDistribution.getCopyIfHasState();
 		
 		if (other.rotationDistribution != null)
-			this.rotationDistribution = other.rotationDistribution.getCopyIfHasState();
+            rotationDistribution = other.rotationDistribution.getCopyIfHasState();
 		if (other.rotationSpeedDistribution != null)
-			this.rotationSpeedDistribution = other.rotationSpeedDistribution.getCopyIfHasState();
+            rotationSpeedDistribution = other.rotationSpeedDistribution.getCopyIfHasState();
 		
 		if (other.alphaVelocityDistribution != null)
-			this.alphaVelocityDistribution = other.alphaVelocityDistribution.getCopyIfHasState();
+            alphaVelocityDistribution = other.alphaVelocityDistribution.getCopyIfHasState();
 		if (other.redVelocityDistribution != null)
-			this.redVelocityDistribution = other.redVelocityDistribution.getCopyIfHasState();
+            redVelocityDistribution = other.redVelocityDistribution.getCopyIfHasState();
 		if (other.greenVelocityDistribution != null)
-			this.greenVelocityDistribution = other.greenVelocityDistribution.getCopyIfHasState();
+            greenVelocityDistribution = other.greenVelocityDistribution.getCopyIfHasState();
 		if (other.blueVelocityDistribution != null)
-			this.blueVelocityDistribution = other.blueVelocityDistribution.getCopyIfHasState();
+            blueVelocityDistribution = other.blueVelocityDistribution.getCopyIfHasState();
 		
 		if (other.alphaDistribution != null)
-			this.alphaDistribution = other.alphaDistribution.getCopyIfHasState();
+            alphaDistribution = other.alphaDistribution.getCopyIfHasState();
 		if (other.redDistribution != null)
-			this.redDistribution = other.redDistribution.getCopyIfHasState();
+            redDistribution = other.redDistribution.getCopyIfHasState();
 		if (other.greenDistribution != null)
-			this.greenDistribution = other.greenDistribution.getCopyIfHasState();
+            greenDistribution = other.greenDistribution.getCopyIfHasState();
 		if (other.blueDistribution != null)
-			this.blueDistribution = other.blueDistribution.getCopyIfHasState();
+            blueDistribution = other.blueDistribution.getCopyIfHasState();
 		
 		if (other.red2VelocityDistribution != null)
-			this.red2VelocityDistribution = other.red2VelocityDistribution.getCopyIfHasState();
+            red2VelocityDistribution = other.red2VelocityDistribution.getCopyIfHasState();
 		if (other.green2VelocityDistribution != null)
-			this.green2VelocityDistribution = other.green2VelocityDistribution.getCopyIfHasState();
+            green2VelocityDistribution = other.green2VelocityDistribution.getCopyIfHasState();
 		if (other.blue2VelocityDistribution != null)
-			this.blue2VelocityDistribution = other.blue2VelocityDistribution.getCopyIfHasState();
+            blue2VelocityDistribution = other.blue2VelocityDistribution.getCopyIfHasState();
 		
 		if (other.red2Distribution != null)
-			this.red2Distribution = other.red2Distribution.getCopyIfHasState();
+            red2Distribution = other.red2Distribution.getCopyIfHasState();
 		if (other.green2Distribution != null)
-			this.green2Distribution = other.green2Distribution.getCopyIfHasState();
+            green2Distribution = other.green2Distribution.getCopyIfHasState();
 		if (other.blue2Distribution != null)
-			this.blue2Distribution = other.blue2Distribution.getCopyIfHasState();
+            blue2Distribution = other.blue2Distribution.getCopyIfHasState();
 		
 		for (SubGenerator subGenerator : other.subGenerators) {
-			this.subGenerators.add(new SubGenerator(subGenerator));
+            subGenerators.add(new SubGenerator(subGenerator));
 		}
-		
-		this.drawingMode = other.drawingMode;
-		
-		this.burstGenerated = other.burstGenerated;
-		this.mode = other.mode;
-		this.timeLeft = other.timeLeft;
-		this.stopAtOpaque = other.stopAtOpaque;
-		this.drawInOpaque = other.drawInOpaque;
-		
-		this.positionX = other.positionX;
-		this.positionY = other.positionY;
-		
-		this.velocityX = other.velocityX;
-		this.velocityY = other.velocityY;
-		this.speed = other.speed;
-		
-		this.currentNewParticles = other.currentNewParticles;
-		this.numParticles = other.numParticles;
-		
-		this.particleSprite = other.particleSprite;
-		this.spriteRef = other.spriteRef;
+
+        drawingMode = other.drawingMode;
+
+        burstGenerated = other.burstGenerated;
+        mode = other.mode;
+        timeLeft = other.timeLeft;
+        stopAtOpaque = other.stopAtOpaque;
+        drawInOpaque = other.drawInOpaque;
+
+        positionX = other.positionX;
+        positionY = other.positionY;
+
+        velocityX = other.velocityX;
+        velocityY = other.velocityY;
+        speed = other.speed;
+
+        currentNewParticles = other.currentNewParticles;
+        numParticles = other.numParticles;
+
+        particleSprite = other.particleSprite;
+        spriteRef = other.spriteRef;
 		
 		for (Particle particle : other.particles) {
-			this.particles.add(new Particle(particle));
+            particles.add(new Particle(particle));
 		}
 	}
 	
 	public ParticleGenerator(Mode mode, String particleSprite, float numParticles) {
 		this.mode = mode;
-		this.drawingMode = DrawingMode.AboveEntities;
+        drawingMode = DrawingMode.AboveEntities;
 		
 		this.particleSprite = SpriteManager.getSprite(particleSprite);
-		
-		this.spriteRef = particleSprite;
+
+        spriteRef = particleSprite;
 		
 		this.numParticles = numParticles;
-		
-		this.particles = new LinkedList<Particle>();
-		
-		this.subGenerators = new LinkedList<SubGenerator>();
-		
-		this.burstGenerated = false;
-		this.initialized = false;
+
+        particles = new LinkedList<>();
+
+        subGenerators = new LinkedList<>();
+
+        burstGenerated = false;
+        initialized = false;
 	}
 	
 	public void setNumParticles(float numParticles) {
@@ -357,7 +357,7 @@ public class ParticleGenerator implements Animated {
 	public void cacheSprite() { }
 	
 	public void setSprite(Sprite sprite) {
-		this.particleSprite = sprite;
+        particleSprite = sprite;
 	}
 	
 	public final float getNumParticles() { return numParticles; }
@@ -367,7 +367,7 @@ public class ParticleGenerator implements Animated {
 	public final float getSpeed() { return speed; }
 	
 	public void addSubGeneratorAtEnd(Animated generator) {
-		subGenerators.add(new SubGenerator(generator, this.timeLeft));
+		subGenerators.add(new SubGenerator(generator, timeLeft));
 	}
 	
 	public void addSubGenerator(Animated generator, float time) {
@@ -393,28 +393,28 @@ public class ParticleGenerator implements Animated {
 	}
 	
 	public void offsetPosition(float x, float y) {
-		this.positionX += x;
-		this.positionY += y;
+        positionX += x;
+        positionY += y;
 	}
 	
 	public void setPosition(float x, float y) {
-		this.positionX = x;
-		this.positionY = y;
+        positionX = x;
+        positionY = y;
 	}
 	
 	public void setVelocity(float x, float y) {
-		this.velocityX = x;
-		this.velocityY = y;
-		
-		this.speed = (float)Math.sqrt(x * x + y * y);
+        velocityX = x;
+        velocityY = y;
+
+        speed = (float)Math.sqrt(x * x + y * y);
 	}
 	
 	public void setDurationInfinite() {
-		this.timeLeft = 1.0e12f;
+        timeLeft = 1.0e12f;
 	}
 	
 	public void setDuration(float durationInSeconds) {
-		this.timeLeft = durationInSeconds;
+        timeLeft = durationInSeconds;
 	}
 	
 	public float getTimeLeft() { return timeLeft; }
@@ -422,15 +422,15 @@ public class ParticleGenerator implements Animated {
 	private void setParametersBasedOnSpeed(Point startGrid, Point endGrid, float speed, boolean setRotation) {
 		Point endScreen = AreaUtil.convertGridToScreenAndCenter(endGrid);
 		Point startScreen = AreaUtil.convertGridToScreenAndCenter(startGrid);
-		
-		this.positionX = startScreen.x;
-		this.positionY = startScreen.y;
+
+        positionX = startScreen.x;
+        positionY = startScreen.y;
 		
 		int distanceSquared = AreaUtil.euclideanDistance2(startScreen.x, startScreen.y, endScreen.x, endScreen.y);
 		
 		float distance = (float)Math.sqrt(distanceSquared);
-		
-		this.timeLeft = distance / speed;
+
+        timeLeft = distance / speed;
 		
 		float distX = endScreen.x - startScreen.x;
 		float distY = endScreen.y - startScreen.y;
@@ -438,12 +438,12 @@ public class ParticleGenerator implements Animated {
 		float angle = (float)Math.acos(distX / distance);
 		
 		if (distY < 0.0f) angle = -angle;
-		
-		this.velocityX = speed * (float)Math.cos(angle);
-		this.velocityY = speed * (float)Math.sin(angle);
+
+        velocityX = speed * (float)Math.cos(angle);
+        velocityY = speed * (float)Math.sin(angle);
 		this.speed = speed;
 		
-		if (setRotation) this.rotationDistribution = new FixedDistribution((float) (angle * 180.0 / Math.PI));
+		if (setRotation) rotationDistribution = new FixedDistribution((float) (angle * 180.0 / Math.PI));
 	}
 	
 	public void setVelocityDurationRotationBasedOnSpeed(Point startGrid, Point endGrid, float speed) {
@@ -455,75 +455,75 @@ public class ParticleGenerator implements Animated {
 	}
 	
 	public void setRotationDistribution(DistributionOneValue dist) {
-		this.rotationDistribution = dist;
+        rotationDistribution = dist;
 	}
 	
 	public void setRotationSpeedDistribution(DistributionOneValue dist) {
-		this.rotationSpeedDistribution = dist;
+        rotationSpeedDistribution = dist;
 	}
 	
 	public void setRedDistribution(DistributionOneValue dist) {
-		this.redDistribution = dist;
+        redDistribution = dist;
 	}
 	
 	public void setGreenDistribution(DistributionOneValue dist) {
-		this.greenDistribution = dist;
+        greenDistribution = dist;
 	}
 	
 	public void setBlueDistribution(DistributionOneValue dist) {
-		this.blueDistribution = dist;
+        blueDistribution = dist;
 	}
 	
 	public void setAlphaDistribution(DistributionOneValue dist) {
-		this.alphaDistribution = dist;
+        alphaDistribution = dist;
 	}
 	
 	public void setRedSpeedDistribution(DistributionOneValue dist) {
-		this.redVelocityDistribution = dist;
+        redVelocityDistribution = dist;
 	}
 	
 	public void setGreenSpeedDistribution(DistributionOneValue dist) {
-		this.greenVelocityDistribution = dist;
+        greenVelocityDistribution = dist;
 	}
 	
 	public void setBlueSpeedDistribution(DistributionOneValue dist) {
-		this.blueVelocityDistribution = dist;
+        blueVelocityDistribution = dist;
 	}
 	
 	public void setAlphaSpeedDistribution(DistributionOneValue dist) {
-		this.alphaVelocityDistribution = dist;
+        alphaVelocityDistribution = dist;
 	}
 	
 	public void setSecondaryRedDistribution(DistributionOneValue dist) {
-		this.red2Distribution = dist;
+        red2Distribution = dist;
 	}
 	
 	public void setSecondaryGreenDistribution(DistributionOneValue dist) {
-		this.green2Distribution = dist;
+        green2Distribution = dist;
 	}
 	
 	public void setSecondaryBlueDistribution(DistributionOneValue dist) {
-		this.blue2Distribution = dist;
+        blue2Distribution = dist;
 	}
 	
 	public void setSecondaryRedSpeedDistribution(DistributionOneValue dist) {
-		this.red2VelocityDistribution = dist;
+        red2VelocityDistribution = dist;
 	}
 	
 	public void setSecondaryGreenSpeedDistribution(DistributionOneValue dist) {
-		this.green2VelocityDistribution = dist;
+        green2VelocityDistribution = dist;
 	}
 	
 	public void setSecondaryBlueSpeedDistribution(DistributionOneValue dist) {
-		this.blue2VelocityDistribution = dist;
+        blue2VelocityDistribution = dist;
 	}
 	
 	public void setDurationDistribution(DistributionOneValue distribution) {
-		this.durationDistribution = distribution;
+        durationDistribution = distribution;
 	}
 	
 	public void setVelocityDistribution(DistributionTwoValue distribution) {
-		this.velocityDistribution = distribution;
+        velocityDistribution = distribution;
 	}
 	
 	public boolean elapseTime(float seconds) {
@@ -570,7 +570,7 @@ public class ParticleGenerator implements Animated {
 			}
 		}
 		
-		return (timeLeft < 0.0f && particles.size() == 0);
+		return (timeLeft < 0.0f && particles.isEmpty());
 	}
 	
 	// sub classes can override to do any needed startup
@@ -640,10 +640,10 @@ public class ParticleGenerator implements Animated {
 		return new ParticleGenerator(this);
 	}
 	
-	private class SubGenerator {
+	private static class SubGenerator {
 		private SubGenerator(SubGenerator other) {
-			this.generator = other.generator.getCopy();
-			this.time = other.time;
+            generator = other.generator.getCopy();
+            time = other.time;
 		}
 		
 		private SubGenerator(Animated generator, float time) {

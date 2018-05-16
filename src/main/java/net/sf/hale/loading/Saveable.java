@@ -31,6 +31,6 @@ public interface Saveable {
 	 * data in a JSONObject and return it
 	 * @return the JSONObject storing all of this Saveable's data
 	 */
-	
-	public Object save();
+
+    Object save();
 }

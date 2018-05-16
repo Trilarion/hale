@@ -32,7 +32,7 @@ public class FixedDistributionWithBase implements DistributionOneValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("multiplier", multiplier);
 		data.put("offset", offset);
 		data.put("base", base.save());

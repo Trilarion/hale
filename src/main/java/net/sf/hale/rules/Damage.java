@@ -49,9 +49,9 @@ public class Damage {
 	
 	public Damage(Creature parent) {
 		this.parent = parent;
-		this.totalDamage = -1;
-		
-		this.entries = new ArrayList<Entry>();
+        totalDamage = -1;
+
+        entries = new ArrayList<>();
 	}
 	
 	/**
@@ -116,8 +116,8 @@ public class Damage {
 	
 	public int computeAppliedDamage() {
 		DifficultyManager diffManager = Game.ruleset.getDifficultyManager();
-		
-		this.totalDamage = 0;
+
+        totalDamage = 0;
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -194,7 +194,7 @@ public class Damage {
 	 *
 	 */
 	
-	private class Entry {
+	private static class Entry {
 		private final DamageType type;
 		private int damage;
 		

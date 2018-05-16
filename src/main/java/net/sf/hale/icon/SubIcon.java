@@ -23,6 +23,7 @@ import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.Point;
 
 import org.lwjgl.opengl.GL11;
@@ -45,9 +46,9 @@ public class SubIcon implements Comparable<SubIcon> {
 		Shield,
 		MainHandWeapon,
 		OffHandWeapon
-	};
-	
-	private Color color;
+	}
+
+    private Color color;
 	private Color secondaryColor;
 	
 	private boolean coversHair;
@@ -63,18 +64,18 @@ public class SubIcon implements Comparable<SubIcon> {
 		SubIcon subIcon = new SubIcon();
 		
 		subIcon.color = this.color.multiply(color);
-		subIcon.secondaryColor = this.secondaryColor.multiply(color);
-		subIcon.coversHair = this.coversHair;
-		subIcon.coversBeard = this.coversBeard;
-		subIcon.icon = this.icon;
-		subIcon.secondaryIcon = this.secondaryIcon;
-		subIcon.type = this.type;
-		subIcon.offset = new Point(this.offset);
+		subIcon.secondaryColor = secondaryColor.multiply(color);
+		subIcon.coversHair = coversHair;
+		subIcon.coversBeard = coversBeard;
+		subIcon.icon = icon;
+		subIcon.secondaryIcon = secondaryIcon;
+		subIcon.type = type;
+		subIcon.offset = new Point(offset);
 		
 		return subIcon;
 	}
 	
-	private void initialize(Race race, Ruleset.Gender gender) {
+	private void initialize(Race race, Gender gender) {
 		// look for a secondary icon if one has not been set
 		if (secondaryIcon == null) {
 			String secondaryBase = icon + "Secondary";
@@ -91,9 +92,9 @@ public class SubIcon implements Comparable<SubIcon> {
 		
 		if (type == Type.OffHandWeapon) {
 			// look for an off hand specified icon
-			String iconOffhand = icon + Type.OffHandWeapon.toString();
+			String iconOffhand = icon + Type.OffHandWeapon;
 			if (SpriteManager.hasSprite(iconOffhand)) {
-				this.icon = iconOffhand;
+                icon = iconOffhand;
 			}
 			
 		} else {
@@ -102,18 +103,18 @@ public class SubIcon implements Comparable<SubIcon> {
 			String iconRace = icon + race.getSubIconRaceString();
 			
 			if (SpriteManager.hasSprite(iconRaceGender))
-				this.icon = iconRaceGender;
+                icon = iconRaceGender;
 			else if (SpriteManager.hasSprite(iconRace))
-				this.icon = iconRace;
+                icon = iconRace;
 		}
 		
 		if (color == null)
-			this.color = Color.WHITE;
+            color = Color.WHITE;
 		
 		if (secondaryColor == null)
 			secondaryColor = Color.WHITE;
-		
-		this.offset = race.getIconOffset(type);
+
+        offset = race.getIconOffset(type);
 	}
 	
 	public boolean coversHair() {
@@ -125,19 +126,19 @@ public class SubIcon implements Comparable<SubIcon> {
 	}
 	
 	public int getWidth() {
-		return SpriteManager.getSprite(this.icon).getWidth();
+		return SpriteManager.getSprite(icon).getWidth();
 	}
 	
 	public int getHeight() {
-		return SpriteManager.getSprite(this.icon).getHeight();
+		return SpriteManager.getSprite(icon).getHeight();
 	}
 	
 	public final void draw(int x, int y) {
 		GL11.glColor4ub(color.getR(), color.getG(), color.getB(), color.getA());
 		
-		SpriteManager.getSprite(this.icon).draw(x + offset.x, y + offset.y);
+		SpriteManager.getSprite(icon).draw(x + offset.x, y + offset.y);
 		
-		Sprite secondarySprite = SpriteManager.getSprite(this.secondaryIcon);
+		Sprite secondarySprite = SpriteManager.getSprite(secondaryIcon);
 		if (secondarySprite != null) {
 			GL11.glColor4ub(secondaryColor.getR(), secondaryColor.getG(),
 					secondaryColor.getB(), secondaryColor.getA());
@@ -154,7 +155,7 @@ public class SubIcon implements Comparable<SubIcon> {
 	public Type getType() { return type; }
 
 	@Override public int compareTo(SubIcon other) {
-		return this.type.compareTo(other.type);
+		return type.compareTo(other.type);
 	}
 	
 	/**
@@ -168,14 +169,14 @@ public class SubIcon implements Comparable<SubIcon> {
 		private Color color;
 		private Type type;
 		private Race race;
-		private Ruleset.Gender gender;
+		private Gender gender;
 		private boolean coversBeard;
 		private boolean coversHair;
 		
 		private String secondaryIcon;
 		private Color secondaryColor;
 		
-		public Factory(Type type, Race race, Ruleset.Gender gender) {
+		public Factory(Type type, Race race, Gender gender) {
 			this.type = type;
 			this.race = race;
 			this.gender = gender;
@@ -195,8 +196,8 @@ public class SubIcon implements Comparable<SubIcon> {
 		}
 		
 		public void setSecondaryIcon(String icon, Color color) {
-			this.secondaryIcon = icon;
-			this.secondaryColor = color;
+            secondaryIcon = icon;
+            secondaryColor = color;
 		}
 		
 		/**

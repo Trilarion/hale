@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.rules.QuestEntry;
 import net.sf.hale.rules.QuestSubEntry;
@@ -45,8 +47,8 @@ public class QuestSetViewer extends Widget {
 	
 	private Map<String, QuestViewer> viewers;
 	
-	private DialogLayout.Group mainH;
-	private DialogLayout.Group mainV;
+	private Group mainH;
+	private Group mainV;
 	
 	private ToggleButton showCompleted;
 	private ScrollPane pane;
@@ -60,7 +62,7 @@ public class QuestSetViewer extends Widget {
 		paneContent = new DialogLayout();
 		paneContent.setTheme("content");
 		pane = new ScrollPane(paneContent);
-		pane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		pane.setFixed(Fixed.HORIZONTAL);
 		add(pane);
 		
 		showCompleted = new ToggleButton();
@@ -72,7 +74,7 @@ public class QuestSetViewer extends Widget {
 		showCompleted.setTheme("showcompletedbutton");
 		add(showCompleted);
 		
-		viewers = new HashMap<String, QuestViewer>();
+		viewers = new HashMap<>();
 		
 		mainH = paneContent.createParallelGroup();
 		mainV = paneContent.createSequentialGroup();
@@ -158,7 +160,7 @@ public class QuestSetViewer extends Widget {
 		}
 	}
 	
-	private class QuestViewer extends ExpandableWidget {
+	private static class QuestViewer extends ExpandableWidget {
 		private QuestEntry entry;
 		
 		private QuestViewer(QuestEntry entry) {
@@ -171,9 +173,9 @@ public class QuestSetViewer extends Widget {
 			super.update();
 			
 			if (entry.getNumSubEntries() < 2)
-				this.setExpandContractVisible(false);
+				setExpandContractVisible(false);
 			else
-				this.setExpandContractVisible(true);
+				setExpandContractVisible(true);
 		}
 
 		@Override public int getPreferredHeight() {

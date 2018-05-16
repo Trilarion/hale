@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.mainmenu.CampaignGroupSelector.CampaignDescriptor;
 import net.sf.hale.resource.ResourceManager;
@@ -87,7 +89,7 @@ public class CampaignPopup extends PopupWindow {
 		private int acceptCancelGap;
 		
 		private Content() {
-			CampaignPopup.this.content = this;
+            content = this;
 			
 			title = new Label();
 			title.setTheme("titlelabel");
@@ -96,7 +98,7 @@ public class CampaignPopup extends PopupWindow {
 			textAreaModel = new HTMLTextAreaModel();
 			TextArea textArea = new TextArea(textAreaModel);
 	        textPane = new ScrollPane(textArea);
-	        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+	        textPane.setFixed(Fixed.HORIZONTAL);
 	        textPane.setCanAcceptKeyboardFocus(false);
 	        textPane.setTheme("descriptionpane");
 	        add(textPane);
@@ -104,7 +106,7 @@ public class CampaignPopup extends PopupWindow {
 			paneContent = new DialogLayout();
 			paneContent.setTheme("content");
 			selectorPane = new ScrollPane(paneContent);
-			selectorPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			selectorPane.setFixed(Fixed.HORIZONTAL);
 			selectorPane.setTheme("selectorpane");
 			add(selectorPane);
 			
@@ -114,7 +116,7 @@ public class CampaignPopup extends PopupWindow {
 				@Override public void run() {
 					mainMenu.loadCampaign(selectedGroup.getSelectedID());
 					mainMenu.update();
-					CampaignPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			accept.setEnabled(false);
@@ -124,18 +126,18 @@ public class CampaignPopup extends PopupWindow {
 			cancel.setTheme("cancelbutton");
 			cancel.addCallback(new Runnable() {
 				@Override public void run() {
-					CampaignPopup.this.closePopup();
+                    closePopup();
 				}
 			});
 			add(cancel);
 			
-			DialogLayout.Group mainH = paneContent.createParallelGroup();
-			DialogLayout.Group mainV = paneContent.createSequentialGroup();
+			Group mainH = paneContent.createParallelGroup();
+			Group mainV = paneContent.createSequentialGroup();
 			
-			Map<String, CampaignDescriptor> campaigns = CampaignPopup.getAvailableCampaigns();
+			Map<String, CampaignDescriptor> campaigns = getAvailableCampaigns();
 			
 			// add available groups to pane content
-			for (CampaignGroupSelector selector : CampaignPopup.getAvailableGroups(campaigns)) {
+			for (CampaignGroupSelector selector : getAvailableGroups(campaigns)) {
 				selector.setCallback(CampaignPopup.this);
 				
 				if (Game.curCampaign != null)
@@ -191,13 +193,13 @@ public class CampaignPopup extends PopupWindow {
 		if (selectedGroup != null && selectedGroup != selector) {
 			selectedGroup.deselect();
 		}
-		
-		this.selectedGroup = selector;
-		
-		CampaignPopup.this.content.textAreaModel.setHtml(selector.getSelectedDescription());
-		CampaignPopup.this.content.textPane.invalidateLayout();
-		
-		CampaignPopup.this.content.accept.setEnabled(true);
+
+        selectedGroup = selector;
+
+        content.textAreaModel.setHtml(selector.getSelectedDescription());
+        content.textPane.invalidateLayout();
+
+        content.accept.setEnabled(true);
 	}
 	
 	/**
@@ -206,7 +208,7 @@ public class CampaignPopup extends PopupWindow {
 	 */
 	
 	private static List<CampaignGroupSelector> getAvailableGroups(Map<String, CampaignDescriptor> campaigns) {
-		List<CampaignGroupSelector> groups = new ArrayList<CampaignGroupSelector>();
+		List<CampaignGroupSelector> groups = new ArrayList<>();
 		
 		// find all of the file defined groups in the campaigns/ directory
 		try {
@@ -226,7 +228,7 @@ public class CampaignPopup extends PopupWindow {
 		}
 		
 		// now find the set of all grouped campaigns
-		Set<String> groupedCampaigns = new HashSet<String>();
+		Set<String> groupedCampaigns = new HashSet<>();
 		
 		for (CampaignGroupSelector selector : groups) {
 			groupedCampaigns.addAll(selector.getAllCampaignIDs());
@@ -257,7 +259,7 @@ public class CampaignPopup extends PopupWindow {
 	 */
 	
 	private static Map<String, CampaignDescriptor> getAvailableCampaigns() {
-		List<CampaignDescriptor> campaigns = new ArrayList<CampaignDescriptor>();
+		List<CampaignDescriptor> campaigns = new ArrayList<>();
 		
 		File campaignDir = new File("campaigns");
 		String[] fileList = campaignDir.list();
@@ -320,7 +322,7 @@ public class CampaignPopup extends PopupWindow {
 		});
 		
 		// convert the sorted list to a map
-		Map<String, CampaignDescriptor> campaignsMap = new LinkedHashMap<String, CampaignDescriptor>();
+		Map<String, CampaignDescriptor> campaignsMap = new LinkedHashMap<>();
 		for (CampaignDescriptor d : campaigns) {
 			campaignsMap.put(d.id, d);
 		}

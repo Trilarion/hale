@@ -226,7 +226,7 @@ public class Config {
 		if (key == null)
 			return -1;
 		else
-			return key.intValue();
+			return key;
 	}
 	
 	/**
@@ -236,7 +236,7 @@ public class Config {
 	 */
 	
 	public List<String> getKeyActionNames() {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		
 		for (String key : keyBindingActions.keySet()) {
 			names.add(key);
@@ -289,16 +289,16 @@ public class Config {
 			randSeed = parser.get("RandomSeed", 0);
 		} else {
 			randSeedSet = false;
-			randSeed = 0l;
+			randSeed = 0L;
 		}
 		
-		keyBindingActions = new HashMap<String, Integer>();
+		keyBindingActions = new HashMap<>();
 		
 		SimpleJSONObject bindingsObject = parser.getObject("Keybindings");
 		for (String bindingName : bindingsObject.keySet()) {
 			String keyboardKey = bindingsObject.get(bindingName, null);
 			
-			if (keyboardKey.length() > 0) {
+			if (!keyboardKey.isEmpty()) {
 				keyBindingActions.put(bindingName, Event.getKeyCodeForName(keyboardKey));
 			} else {
 				keyBindingActions.put(bindingName, -1);
@@ -327,8 +327,8 @@ public class Config {
 		
 		int fileVersion = parser.get("ConfigVersion", 0);
 		
-		if (fileVersion != Config.Version) {
-			Logger.appendToWarningLog("Removing existing config file as version " + fileVersion + " does not match " + Config.Version);
+		if (fileVersion != Version) {
+			Logger.appendToWarningLog("Removing existing config file as version " + fileVersion + " does not match " + Version);
 			configFile.delete();
 			return false;
 		}
@@ -383,7 +383,7 @@ public class Config {
 			
 		}
 		
-		return 0l;
+		return 0L;
 	}
 	
 	/**
@@ -406,7 +406,7 @@ public class Config {
 		
 		DisplayMode[] allModes = Display.getAvailableDisplayModes();
 		
-		List<DisplayMode> goodModes = new ArrayList<DisplayMode>();
+		List<DisplayMode> goodModes = new ArrayList<>();
 		
 		// check each mode in the list of all modes to see if we can use it
 		for (DisplayMode mode : allModes) {

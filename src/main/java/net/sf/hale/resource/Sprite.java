@@ -81,7 +81,7 @@ public class Sprite {
 	 */
 	
 	public void setTexture(int texture) {
-		this.textureReference = texture;
+        textureReference = texture;
 	}
 	
 	/**

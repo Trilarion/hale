@@ -20,6 +20,8 @@
 package net.sf.hale.bonus;
 
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.rules.BaseWeapon;
 import net.sf.hale.util.Logger;
@@ -31,7 +33,7 @@ public class WeaponProficiency extends Bonus {
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("weaponProficiency", baseWeapon);
 		
 		return data;
@@ -42,7 +44,7 @@ public class WeaponProficiency extends Bonus {
 	}
 	
 	public WeaponProficiency(String baseWeapon) {
-		super(Bonus.Type.WeaponProficiency, Bonus.StackType.GenericBonus);
+		super(Type.WeaponProficiency, StackType.GenericBonus);
 		
 		this.baseWeapon = baseWeapon;
 	}
@@ -59,7 +61,7 @@ public class WeaponProficiency extends Bonus {
 	}
 	
 	@Override public WeaponProficiency cloneWithReduction(int reduction) {
-		return new WeaponProficiency(this.baseWeapon);
+		return new WeaponProficiency(baseWeapon);
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {

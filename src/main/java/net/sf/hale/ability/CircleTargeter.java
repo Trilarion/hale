@@ -70,16 +70,16 @@ public class CircleTargeter extends AreaTargeter {
 	
 	public void setRadius(int radius) {
 		this.radius = radius;
-		this.drawRadius = radius - 0.75;
+        drawRadius = radius - 0.75;
 	}
 
 	@Override protected void computeAffectedPoints(int x, int y, Point gridPoint) {
 		if (!mouseHoverValid()) return;
 		
-		List<Point> affectedPoints = this.getAffectedPoints();
+		List<Point> affectedPoints = getAffectedPoints();
 		// compute set of affected points and creatures
 		affectedPoints.add(new Point(gridPoint));
-		for (int r = 1; r <= this.radius; r++) {
+		for (int r = 1; r <= radius; r++) {
 			for (int i = 0; i < r * 6; i++) {
 				Point p = AreaUtil.convertPolarToGrid(gridPoint, r, i);
 				
@@ -99,7 +99,7 @@ public class CircleTargeter extends AreaTargeter {
 			return false;
 		}
 		
-		if (mouseHoverValid() && this.radius > 0) {
+		if (mouseHoverValid() && radius > 0) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
 			GL11.glBegin(GL11.GL_LINE_LOOP);

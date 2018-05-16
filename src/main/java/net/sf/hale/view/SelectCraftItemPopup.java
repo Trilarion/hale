@@ -19,16 +19,21 @@
 
 package net.sf.hale.view;
 
+import de.matthiasmann.twl.DialogLayout.Group;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.entity.ItemTemplate;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.rules.Currency;
@@ -74,9 +79,9 @@ public class SelectCraftItemPopup extends PopupWindow {
 		super(parent);
 		
 		this.recipe = recipe;
-		
-		this.setCloseOnEscape(false);
-		this.setCloseOnClickedOutside(false);
+
+		setCloseOnEscape(false);
+		setCloseOnClickedOutside(false);
 		
 		content = new Content();
 		add(content);
@@ -116,11 +121,11 @@ public class SelectCraftItemPopup extends PopupWindow {
 		scrollPaneContent = new DialogLayout();
 		scrollPaneContent.setTheme("content");
 		scrollPane = new ScrollPane(scrollPaneContent);
-		scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		scrollPane.setFixed(Fixed.HORIZONTAL);
 		content.add(scrollPane);
 		
-		DialogLayout.Group mainH = scrollPaneContent.createParallelGroup();
-		DialogLayout.Group mainV = scrollPaneContent.createSequentialGroup();
+		Group mainH = scrollPaneContent.createParallelGroup();
+		Group mainV = scrollPaneContent.createSequentialGroup();
 		
 		populateItemsList(mainH, mainV);
 		
@@ -134,15 +139,15 @@ public class SelectCraftItemPopup extends PopupWindow {
 		accept.setEnabled(selectedItemViewer != null);
 	}
 	
-	private void populateItemsList(DialogLayout.Group mainH, DialogLayout.Group mainV) {
+	private void populateItemsList(Group mainH, Group mainV) {
 		for (Creature creature : Game.curCampaign.party) {
 			// check equipped items
-			for (Inventory.Slot slot : Inventory.Slot.values()) {
+			for (Slot slot : Slot.values()) {
 				EquippableItem item = creature.inventory.getEquippedItem(slot);
 				
 				if (item == null) continue;
 				
-				if (item.getTemplate().getEnchantments().size() > 0) continue;
+				if (!item.getTemplate().getEnchantments().isEmpty()) continue;
 				
 				if (recipe.getIngredientItemTypes().contains(item.getTemplate().getType())) {
 					ItemViewer viewer = new ItemViewer(item, creature, slot);
@@ -153,13 +158,13 @@ public class SelectCraftItemPopup extends PopupWindow {
 			}
 			
 			// check unequipped items
-			for (ItemList.Entry entry : creature.inventory.getUnequippedItems()) {
+			for (Entry entry : creature.inventory.getUnequippedItems()) {
 				ItemTemplate template = EntityManager.getItemTemplate(entry.getID());
 				
 				if (template instanceof EquippableItemTemplate) {
 					EquippableItemTemplate itemTemplate = (EquippableItemTemplate)template;
 					
-					if (itemTemplate.getEnchantments().size() > 0) continue;
+					if (!itemTemplate.getEnchantments().isEmpty()) continue;
 					
 					if (recipe.getIngredientItemTypes().contains(itemTemplate.getType())) {
 						ItemViewer viewer = new ItemViewer(entry.createItem(), creature, null);
@@ -178,9 +183,9 @@ public class SelectCraftItemPopup extends PopupWindow {
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
-			
-			this.gap = themeInfo.getParameter("gap", 0);
-			this.maxHeight = themeInfo.getParameter("maxHeight", 0);
+
+			gap = themeInfo.getParameter("gap", 0);
+			maxHeight = themeInfo.getParameter("maxHeight", 0);
 		}
 		
 		@Override protected void layout() {
@@ -221,11 +226,11 @@ public class SelectCraftItemPopup extends PopupWindow {
 		private IconViewer viewer;
 		private TextArea textArea;
 		
-		private Inventory.Slot slot;
+		private Slot slot;
 		private Creature parent;
 		private Item item;
 		
-		private ItemViewer(Item item, Creature parent, Inventory.Slot slot) {
+		private ItemViewer(Item item, Creature parent, Slot slot) {
 			this.item = item;
 			this.parent = parent;
 			this.slot = slot;
@@ -250,8 +255,8 @@ public class SelectCraftItemPopup extends PopupWindow {
 		@Override public void run() {
 			if (selectedItemViewer != null)
 				selectedItemViewer.setActive(false);
-			
-			this.setActive(true);
+
+			setActive(true);
 			selectedItemViewer = this;
 			
 			setCraftEnabled();
@@ -272,7 +277,7 @@ public class SelectCraftItemPopup extends PopupWindow {
 				
 				sb.append("<div>Base Damage: ");
 				
-				float damageMult = 1.0f + ( weapon.getQualityDamageBonus() + weapon.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+				float damageMult = 1.0f + ( weapon.getQualityDamageBonus() + weapon.bonuses.get(Type.WeaponDamage)) / 100.0f;
 				float damageMin = ((float)weapon.getTemplate().getMinDamage() * damageMult);
 				float damageMax = ((float)weapon.getTemplate().getMaxDamage() * damageMult);
 				

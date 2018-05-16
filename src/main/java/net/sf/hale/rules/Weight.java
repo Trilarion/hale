@@ -39,7 +39,7 @@ public class Weight {
 	 */
 	
 	public Weight() {
-		this.grams = 0;
+        grams = 0;
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class Weight {
 	 */
 	
 	public Weight(Weight other) {
-		this.grams = other.grams;
+        grams = other.grams;
 	}
 	
 	/**

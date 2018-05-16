@@ -30,7 +30,7 @@ public class UniformArcDistribution implements DistributionTwoValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("magnitudeMin", magnitudeMin);
 		data.put("magnitudeMax", magnitudeMax);
 		data.put("angleMin", angleMin);

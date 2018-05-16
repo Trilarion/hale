@@ -25,8 +25,10 @@ import java.util.List;
 import net.sf.hale.Game;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.ability.CreatureAbilitySet;
+import net.sf.hale.ability.CreatureAbilitySet.Listener;
 import net.sf.hale.characterbuilder.AbilitySelectionListPane;
 import net.sf.hale.characterbuilder.AbilitySelectorButton;
+import net.sf.hale.characterbuilder.AbilitySelectorButton.HoverHolder;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 import de.matthiasmann.twl.ScrollPane;
@@ -46,8 +48,8 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Listener,
-	AbilitySelectorButton.HoverHolder {
+public class AbilitiesSheet extends ScrollPane implements Listener,
+	HoverHolder {
 	
 	private boolean abilitySetModified;
 	private PC parent;
@@ -68,7 +70,7 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 		content = new Content();
 		setContent(content);
 		
-		listPanes = new ArrayList<AbilitySelectionListPane>();
+		listPanes = new ArrayList<>();
 	}
 	
 	@Override public void abilitySetModified() {
@@ -107,7 +109,7 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 		}
 		listPanes.clear();
 		
-		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>();
+		List<AbilitySelectionList> lists = new ArrayList<>();
 		
 		// get all the list referenced by all roles for the parent Creature
 		for (String id : parent.roles.getRoleIDs()) {
@@ -119,7 +121,7 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 		// get all the lists references by the race for the parent creature
 		lists.addAll(parent.getTemplate().getRace().getAllReferencedAbilitySelectionLists());
 		
-		List<String> listsAlreadyAdded = new ArrayList<String>();
+		List<String> listsAlreadyAdded = new ArrayList<>();
 		
 		// add the list buttons
 		for (AbilitySelectionList list : lists) {

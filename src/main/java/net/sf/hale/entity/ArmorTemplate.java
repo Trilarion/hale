@@ -50,23 +50,23 @@ public class ArmorTemplate extends EquippableItemTemplate {
 	
 	public ArmorTemplate(String id, SimpleJSONObject data) {
 		super(id, data);
-		
-		this.armorType = Game.ruleset.getArmorType(data.get("armorType", null));
-		
-		this.armorClass = data.get("armorClass", 0);
-		this.armorPenalty = data.get("armorPenalty", 0);
-		this.movementPenalty = data.get("movementPenalty", 0);
-		this.shieldAttackPenalty = data.get("shieldAttackPenalty", 0);
+
+        armorType = Game.ruleset.getArmorType(data.get("armorType", null));
+
+        armorClass = data.get("armorClass", 0);
+        armorPenalty = data.get("armorPenalty", 0);
+        movementPenalty = data.get("movementPenalty", 0);
+        shieldAttackPenalty = data.get("shieldAttackPenalty", 0);
 	}
 	
 	private ArmorTemplate(String id, ArmorTemplate other, CreatedItem createdItem) {
 		super(id, other, createdItem);
-		
-		this.armorType = other.armorType;
-		this.armorClass = other.armorClass;
-		this.armorPenalty = other.armorPenalty;
-		this.movementPenalty = other.movementPenalty;
-		this.shieldAttackPenalty = other.shieldAttackPenalty;
+
+        armorType = other.armorType;
+        armorClass = other.armorClass;
+        armorPenalty = other.armorPenalty;
+        movementPenalty = other.movementPenalty;
+        shieldAttackPenalty = other.shieldAttackPenalty;
 	}
 	
 	@Override public ArmorTemplate createModifiedCopy(String id, CreatedItem createdItem) {

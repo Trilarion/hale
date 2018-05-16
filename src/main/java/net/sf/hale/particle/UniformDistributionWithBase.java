@@ -34,7 +34,7 @@ public class UniformDistributionWithBase implements DistributionOneValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("plusOrMinusFraction", plusOrMinusFraction);
 		data.put("multiplier", multiplier);
 		data.put("offset", offset);

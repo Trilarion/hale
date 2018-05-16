@@ -25,6 +25,7 @@ import de.matthiasmann.twl.Color;
 
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -52,10 +53,10 @@ public class Spell extends Ability {
 	
 	protected Spell(String id, String script, String scriptLocation, SimpleJSONObject data) {
 		super(id, script, scriptLocation, data, false);
-		
-		this.verbalComponent = data.get("hasVerbalComponent", true);
-		this.somaticComponent = data.get("hasSomaticComponent", true);
-		this.spellResistanceApplies = data.get("spellResistanceApplies", true);
+
+        verbalComponent = data.get("hasVerbalComponent", true);
+        somaticComponent = data.get("hasSomaticComponent", true);
+        spellResistanceApplies = data.get("spellResistanceApplies", true);
 	}
 	
 	/**
@@ -108,7 +109,7 @@ public class Spell extends Ability {
 	@Override public int getCooldown(Creature parent) {
 		int baseCooldown = super.getCooldown(parent);
 		
-		return baseCooldown - parent.stats.get(Bonus.Type.SpellCooldown);
+		return baseCooldown - parent.stats.get(Type.SpellCooldown);
 	}
 	
 	/**
@@ -301,13 +302,13 @@ public class Spell extends Ability {
 	
 	public void applyDamage(Creature parent, Creature target, int damage, String damageType) {
 		// determine multiplier from the parent caster
-		int spellDamageMult = parent.stats.get(Bonus.Type.SpellDamage) +
-			parent.stats.get(damageType, Bonus.Type.DamageForSpellType);
+		int spellDamageMult = parent.stats.get(Type.SpellDamage) +
+			parent.stats.get(damageType, Type.DamageForSpellType);
 		
 		damage = (damage * (100 + spellDamageMult)) / 100;
 		
 		// determine spell resistance factor
-		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Bonus.Type.SpellResistance) : 0 );
+		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Type.SpellResistance) : 0 );
 		
 		if (spellResistance != 0) {
 			Game.mainViewer.addMessage("blue", target.getTemplate().getName() + "'s Spell Resistance absorbs " +
@@ -337,11 +338,11 @@ public class Spell extends Ability {
 	 */
 	
 	public void applyHealing(Creature parent, Creature target, int damage) {
-		int bonusHealingFactor = parent.stats.get(Bonus.Type.SpellHealing);
+		int bonusHealingFactor = parent.stats.get(Type.SpellHealing);
 
 		damage = (damage * (100 + bonusHealingFactor)) / 100;
 
-		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Bonus.Type.SpellResistance) : 0 );
+		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Type.SpellResistance) : 0 );
 		
 		if (spellResistance == 0) {
 			target.healDamage(damage);
@@ -359,7 +360,7 @@ public class Spell extends Ability {
 	@Override public void setSpellDuration(Effect effect, Creature parent) {
 		int duration = effect.getRoundsRemaining();
 		// compute SpellDuration bonus
-		int durationBonus = parent.stats.get(Bonus.Type.SpellDuration);
+		int durationBonus = parent.stats.get(Type.SpellDuration);
 		duration = duration * (100 + durationBonus) / 100;
 		
 		// compute spell resistance modification

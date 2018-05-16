@@ -42,7 +42,7 @@ public class TargeterManager {
 	 */
 	
 	public TargeterManager() {
-		queuedTargeters = new LinkedList<Targeter>();
+		queuedTargeters = new LinkedList<>();
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class TargeterManager {
 	
 	private void nextTargeter() {
 		while (true) {
-			if (queuedTargeters.size() > 0) {
+			if (!queuedTargeters.isEmpty()) {
 				boolean setSuccess = setTargeter(queuedTargeters.getFirst());
 				
 				queuedTargeters.removeFirst();
@@ -135,7 +135,7 @@ public class TargeterManager {
 				setTargeter(null);
 				
 				synchronized(this) {
-					this.notifyAll();
+					notifyAll();
 				}
 				
 				Game.areaListener.computeMouseState();

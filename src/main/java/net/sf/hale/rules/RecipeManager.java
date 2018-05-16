@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.EquippableItemTemplate.Type;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.Logger;
@@ -44,16 +45,16 @@ public class RecipeManager {
 	
 	private Map<String, List<String>> recipesBySkill;
 	
-	private Map<EquippableItemTemplate.Type, List<String>> enchantmentsByItemType;
+	private Map<Type, List<String>> enchantmentsByItemType;
 	
 	/**
 	 * Creates a new RecipeManager containing no recipes
 	 */
 	
 	public RecipeManager() {
-		recipes = new HashMap<String, Recipe>();
-		recipesBySkill = new HashMap<String, List<String>>();
-		enchantmentsByItemType = new HashMap<EquippableItemTemplate.Type, List<String>>();
+		recipes = new HashMap<>();
+		recipesBySkill = new HashMap<>();
+		enchantmentsByItemType = new HashMap<>();
 	}
 	
 	/**
@@ -88,7 +89,7 @@ public class RecipeManager {
 				List<String> recipesOfSkill = recipesBySkill.get(recipe.getSkill().getID());
 				// if the skill list does not exist, create it
 				if (recipesOfSkill == null) {
-					recipesOfSkill = new ArrayList<String>();
+					recipesOfSkill = new ArrayList<>();
 					recipesBySkill.put(recipe.getSkill().getID(), recipesOfSkill);
 				}
 				
@@ -96,10 +97,10 @@ public class RecipeManager {
 				
 				if (recipe.isResultIngredient()) {
 					// add it to the list of enchantments by item type
-					for (EquippableItemTemplate.Type type : recipe.getIngredientItemTypes()) {
+					for (Type type : recipe.getIngredientItemTypes()) {
 						List<String> recipesOfItemType = enchantmentsByItemType.get(type);
 						if (recipesOfItemType == null) {
-							recipesOfItemType = new ArrayList<String>();
+							recipesOfItemType = new ArrayList<>();
 							enchantmentsByItemType.put(type, recipesOfItemType);
 						}
 						
@@ -125,7 +126,7 @@ public class RecipeManager {
 			});
 		}
 		
-		for (EquippableItemTemplate.Type type : enchantmentsByItemType.keySet()) {
+		for (Type type : enchantmentsByItemType.keySet()) {
 			((ArrayList<String>)enchantmentsByItemType.get(type)).trimToSize();
 		}
 	}
@@ -162,7 +163,7 @@ public class RecipeManager {
 	 * @return the list of enchantment recipe IDs
 	 */
 	
-	public List<String> getEnchantmentsForItemType(EquippableItemTemplate.Type type) {
+	public List<String> getEnchantmentsForItemType(Type type) {
 		List<String> enchantmentsOfType = enchantmentsByItemType.get(type);
 		
 		if (enchantmentsOfType == null) {

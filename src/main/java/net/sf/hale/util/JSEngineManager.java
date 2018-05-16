@@ -40,8 +40,8 @@ public class JSEngineManager {
 	 */
 	
 	public JSEngineManager() {
-		this.manager = new ScriptEngineManager();
-		this.engines = new ArrayList<JSEngine>();
+        manager = new ScriptEngineManager();
+        engines = new ArrayList<>();
 	}
 	
 	/**

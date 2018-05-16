@@ -98,10 +98,10 @@ public class FileUtil {
 		
 		ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
 		
-		List<File> files = FileUtil.getFilesAndDirectories(topLevel);
+		List<File> files = getFilesAndDirectories(topLevel);
 		
 		for (File file : files) {
-			String filePath = FileUtil.getRelativePath(topLevel, file);
+			String filePath = getRelativePath(topLevel, file);
 			
 			if (file.isDirectory()) {
 				out.putNextEntry(new ZipEntry(filePath + "/"));
@@ -191,7 +191,7 @@ public class FileUtil {
 	}
 	
 	private static List<String> getPathList(File f) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		if (f == null) return list;
 		
 		try {
@@ -336,21 +336,21 @@ public class FileUtil {
 	 */
 	
 	public static List<File> getFiles(File startingDir) {
-		List<File> result = new ArrayList<File>();
+		List<File> result = new ArrayList<>();
 		
 		File[] subFiles = startingDir.listFiles();
 		
 		if (subFiles == null) return result;
-		
-		for (int i = 0; i < subFiles.length; i++) {
-			if (subFiles[i].getName().equals(".svn")) continue;
-			
-			if (subFiles[i].isFile()) {
-				result.add(subFiles[i]);
-			} else {
-				result.addAll( getFiles(subFiles[i]) );
-			}
-		}
+
+        for (File subFile : subFiles) {
+            if (".svn".equals(subFile.getName())) continue;
+
+            if (subFile.isFile()) {
+                result.add(subFile);
+            } else {
+                result.addAll(getFiles(subFile));
+            }
+        }
 		
 		return result;
 	}
@@ -364,20 +364,20 @@ public class FileUtil {
 	 */
 
 	public static List<File> getFilesAndDirectories(File startingDir) {
-		List<File> result = new ArrayList<File>();
+		List<File> result = new ArrayList<>();
 		
 		File[] subFiles = startingDir.listFiles();
 		
 		if (subFiles == null) return result;
-		
-		for (int i = 0; i < subFiles.length; i++) {
-			if (subFiles[i].getName().equals(".svn")) continue;
-			
-			result.add(subFiles[i]);
-			if (subFiles[i].isDirectory()) {
-				result.addAll( getFilesAndDirectories(subFiles[i]) );
-			}
-		}
+
+        for (File subFile : subFiles) {
+            if (".svn".equals(subFile.getName())) continue;
+
+            result.add(subFile);
+            if (subFile.isDirectory()) {
+                result.addAll(getFilesAndDirectories(subFile));
+            }
+        }
 		
 		return result;
 	}

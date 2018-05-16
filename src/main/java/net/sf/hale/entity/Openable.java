@@ -73,9 +73,9 @@ public abstract class Openable extends Entity {
 		super(template);
 
 		this.template = template;
-		
-		this.isOpen = false;
-		this.isLocked = template.isDefaultLocked();
+
+        isOpen = false;
+        isLocked = template.isDefaultLocked();
 	}
 	
 	@Override public OpenableTemplate getTemplate() {
@@ -106,7 +106,7 @@ public abstract class Openable extends Entity {
 	 */
 	
 	public void setLocked(boolean locked) {
-		this.isLocked = locked;
+        isLocked = locked;
 	}
 	
 	/**

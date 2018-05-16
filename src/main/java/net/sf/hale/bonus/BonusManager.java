@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Bonus.StackType;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Damage;
 import net.sf.hale.rules.DamageType;
@@ -32,37 +34,37 @@ public class BonusManager  {
 	private final ProficiencyList armorProficiencies;
 	private final StandaloneDamageBonusList standaloneDamageBonuses;
 	
-	private final Map<Bonus.Type, BonusTypeList> bonuses;
+	private final Map<Type, BonusTypeList> bonuses;
 	private final Map<String, BonusSuperTypeList> bonusesWithSuperType;
 	
 	public BonusManager() {
-		this.bonuses = new HashMap<Bonus.Type, BonusTypeList>();
-		
-		this.weaponProficiencies = new ProficiencyList();
-		this.armorProficiencies = new ProficiencyList();
-		
-		this.bonusesWithSuperType = new HashMap<String, BonusSuperTypeList>();
-		
-		this.standaloneDamageBonuses = new StandaloneDamageBonusList();
+        bonuses = new HashMap<>();
+
+        weaponProficiencies = new ProficiencyList();
+        armorProficiencies = new ProficiencyList();
+
+        bonusesWithSuperType = new HashMap<>();
+
+        standaloneDamageBonuses = new StandaloneDamageBonusList();
 	}
 	
 	public BonusManager(BonusManager other) {
-		this.bonuses = new HashMap<Bonus.Type, BonusTypeList>();
-		for (Bonus.Type key : other.bonuses.keySet()) {
+        bonuses = new HashMap<>();
+		for (Type key : other.bonuses.keySet()) {
 			BonusTypeList list = new BonusTypeList(other.bonuses.get(key));
-			this.bonuses.put(key, list);
+            bonuses.put(key, list);
 		}
-		
-		this.weaponProficiencies = new ProficiencyList(other.weaponProficiencies);
-		this.armorProficiencies = new ProficiencyList(other.armorProficiencies);
-		
-		this.bonusesWithSuperType = new HashMap<String, BonusSuperTypeList>();
+
+        weaponProficiencies = new ProficiencyList(other.weaponProficiencies);
+        armorProficiencies = new ProficiencyList(other.armorProficiencies);
+
+        bonusesWithSuperType = new HashMap<>();
 		for (String key : other.bonusesWithSuperType.keySet()) {
 			BonusSuperTypeList list = new BonusSuperTypeList(other.bonusesWithSuperType.get(key));
-			this.bonusesWithSuperType.put(key, list);
+            bonusesWithSuperType.put(key, list);
 		}
-		
-		this.standaloneDamageBonuses = new StandaloneDamageBonusList(other.standaloneDamageBonuses);
+
+        standaloneDamageBonuses = new StandaloneDamageBonusList(other.standaloneDamageBonuses);
 	}
 	
 	public void removeAll(BonusList bonuses) {
@@ -154,21 +156,21 @@ public class BonusManager  {
 		}
 	}
 	
-	public boolean has(Bonus.Type type) {
+	public boolean has(Type type) {
 		return bonuses.containsKey(type);
 	}
 	
-	public int get(String superType, Bonus.Type type) {
+	public int get(String superType, Type type) {
 		if (bonusesWithSuperType.containsKey(superType)) return bonusesWithSuperType.get(superType).getCurrentTotal(type);
 		else return 0;
 	}
 	
-	public int get(Bonus.Type type) {
+	public int get(Type type) {
 		if (bonuses.containsKey(type)) return bonuses.get(type).getCurrentTotal();
 		else return 0;
 	}
 	
-	public int get(Bonus.Type type, Bonus.StackType stackType) {
+	public int get(Type type, StackType stackType) {
 		if (bonuses.containsKey(type)) return bonuses.get(type).get(stackType);
 		else return 0;
 	}
@@ -182,7 +184,7 @@ public class BonusManager  {
 	}
 	
 	public int getSkillBonus(String skillID) {
-		if (bonusesWithSuperType.containsKey(skillID)) return bonusesWithSuperType.get(skillID).getCurrentTotal(Bonus.Type.Skill);
+		if (bonusesWithSuperType.containsKey(skillID)) return bonusesWithSuperType.get(skillID).getCurrentTotal(Type.Skill);
 		else return 0;
 	}
 	
@@ -199,20 +201,20 @@ public class BonusManager  {
 	}
 	
 	public int getDamageReduction(DamageType damageType) {
-		int dr = get(damageType.getName(), Bonus.Type.DamageReduction);
+		int dr = get(damageType.getName(), Type.DamageReduction);
 		
 		if (damageType.isPhysical()) {
-			return dr + get(Game.ruleset.getString("PhysicalDamageType"), Bonus.Type.DamageReduction);
+			return dr + get(Game.ruleset.getString("PhysicalDamageType"), Type.DamageReduction);
 		} else {
 			return dr;
 		}
 	}
 	
 	public int getDamageImmunity(DamageType damageType) {
-		int di = get(damageType.getName(), Bonus.Type.DamageImmunity);
+		int di = get(damageType.getName(), Type.DamageImmunity);
 		
 		if (damageType.isPhysical()) {
-			return di + get(Game.ruleset.getString("PhysicalDamageType"), Bonus.Type.DamageImmunity);
+			return di + get(Game.ruleset.getString("PhysicalDamageType"), Type.DamageImmunity);
 		} else {
 			return di;
 		}
@@ -224,17 +226,17 @@ public class BonusManager  {
 		int reduction = 0;
 		int immunity = 0;
 		
-		BonusSuperTypeList list = this.bonusesWithSuperType.get(damageType.getName());
+		BonusSuperTypeList list = bonusesWithSuperType.get(damageType.getName());
 		if (list != null) {
-			reduction += list.getCurrentTotal(Bonus.Type.DamageReduction);
-			immunity += list.getCurrentTotal(Bonus.Type.DamageImmunity);
+			reduction += list.getCurrentTotal(Type.DamageReduction);
+			immunity += list.getCurrentTotal(Type.DamageImmunity);
 		}
 		
 		if (damageType.isPhysical()) {
-			BonusSuperTypeList physicalList = this.bonusesWithSuperType.get(Game.ruleset.getString("PhysicalDamageType"));
+			BonusSuperTypeList physicalList = bonusesWithSuperType.get(Game.ruleset.getString("PhysicalDamageType"));
 			if (physicalList != null) {
-				reduction += physicalList.getCurrentTotal(Bonus.Type.DamageReduction);
-				immunity += physicalList.getCurrentTotal(Bonus.Type.DamageImmunity);
+				reduction += physicalList.getCurrentTotal(Type.DamageReduction);
+				immunity += physicalList.getCurrentTotal(Type.DamageImmunity);
 			}
 		}
 		

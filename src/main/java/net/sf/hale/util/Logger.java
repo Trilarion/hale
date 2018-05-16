@@ -35,7 +35,7 @@ import net.sf.hale.Game;
  */
 
 public class Logger {
-	private static long lastWarningTimeMillis = 0l;
+	private static long lastWarningTimeMillis = 0L;
 	
 	/**
 	 * Appends the specified warning message to the
@@ -117,7 +117,7 @@ public class Logger {
 	
 	private static PrintWriter getErrorPrintWriter() {
 		PrintWriter writer = getPrintWriter("error");
-		writer.print("Log entry created " + Calendar.getInstance().getTime().toString());
+		writer.print("Log entry created " + Calendar.getInstance().getTime());
 		writer.println();
 		
 		return writer;
@@ -127,9 +127,9 @@ public class Logger {
 		PrintWriter writer = getPrintWriter("warning");
 		
 		long curTime = System.currentTimeMillis();
-		if (curTime > lastWarningTimeMillis + 1000l) {
+		if (curTime > lastWarningTimeMillis + 1000L) {
 			lastWarningTimeMillis = curTime;
-			writer.print("Log entry created " + Calendar.getInstance().getTime().toString());
+			writer.print("Log entry created " + Calendar.getInstance().getTime());
 			writer.println();
 		}
 		

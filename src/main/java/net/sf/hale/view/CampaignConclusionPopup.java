@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.SavedParty;
 import net.sf.hale.characterbuilder.CharacterBuilder;
@@ -32,6 +33,7 @@ import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.PC;
 import net.sf.hale.mainmenu.CharacterSelector;
 import net.sf.hale.mainmenu.ConfirmQuitPopup;
+import net.sf.hale.mainmenu.ConfirmQuitPopup.QuitMode;
 import net.sf.hale.mainmenu.MainMenu;
 import net.sf.hale.mainmenu.MainMenuAction;
 import de.matthiasmann.twl.Button;
@@ -41,6 +43,7 @@ import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
+import net.sf.hale.mainmenu.MainMenuAction.Action;
 
 /**
  * A popup for showing the completion of a campaign
@@ -64,9 +67,9 @@ public class CampaignConclusionPopup extends PopupWindow {
 		
 		setCloseOnEscape(false);
 		setCloseOnClickedOutside(false);
-		
-		this.text = new StringBuilder();
-		this.content = new Content();
+
+        text = new StringBuilder();
+        content = new Content();
 		
 		add(content);
 		
@@ -87,7 +90,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 	 */
 	
 	public void show() {
-		this.content.window.textAreaModel.setHtml(this.text.toString());
+        content.window.textAreaModel.setHtml(text.toString());
 		
 		Game.mainViewer.showPopup(this);
 	}
@@ -100,10 +103,10 @@ public class CampaignConclusionPopup extends PopupWindow {
 	 */
 	
 	public void setNextCampaign(String id, String buttonLabel) {
-		this.content.window.next.setText(buttonLabel);
-		this.content.window.next.setVisible(true);
-		
-		this.nextCampaignID = id;
+        content.window.next.setText(buttonLabel);
+        content.window.next.setVisible(true);
+
+        nextCampaignID = id;
 	}
 	
 	/**
@@ -112,7 +115,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 	 */
 	
 	public void setTextAreaHeight(int height) {
-		this.content.window.textAreaHeight = height;
+        content.window.textAreaHeight = height;
 	}
 	
 	private void nextCampaign() {
@@ -123,7 +126,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 			current.abilities.cancelAllAuras();
 		}
 		
-		MainMenuAction action = new MainMenuAction(MainMenuAction.Action.NewGame);
+		MainMenuAction action = new MainMenuAction(Action.NewGame);
 		action.setPreActionCallback(new CampaignLoader());
 		
 		Game.mainViewer.exitToMainMenu();
@@ -139,9 +142,9 @@ public class CampaignConclusionPopup extends PopupWindow {
 		private List<CreatedItem> createdItems;
 		
 		private CampaignLoader() {
-			this.campaignID = nextCampaignID;
-			this.difficulty = Game.ruleset.getDifficultyManager().getCurrentDifficulty();
-			this.characters = new ArrayList<PC>();
+            campaignID = nextCampaignID;
+            difficulty = Game.ruleset.getDifficultyManager().getCurrentDifficulty();
+            characters = new ArrayList<>();
 			
 			for (CharacterSelector selector : content.window.selectors) {
 				characters.add(selector.getCreature());
@@ -149,10 +152,10 @@ public class CampaignConclusionPopup extends PopupWindow {
 			
 			currencyCP = Game.curCampaign.partyCurrency.getValue();
 			partyName = Game.curCampaign.party.getName();
-			
-			this.createdItems = new ArrayList<CreatedItem>();
+
+            createdItems = new ArrayList<>();
 			for (CreatedItem createdItem : Game.curCampaign.getCreatedItems()) {
-				this.createdItems.add(createdItem);
+                createdItems.add(createdItem);
 			}
 		}
 		
@@ -163,7 +166,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 			
 			MainMenu mainMenu = new MainMenu();
 			
-			for (CreatedItem createdItem : this.createdItems) {
+			for (CreatedItem createdItem : createdItems) {
 				Game.curCampaign.addCreatedItem(createdItem);
 			}
 			
@@ -178,7 +181,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 		}
 	}
 	
-	private class MainMenuExitCallback implements Runnable {
+	private static class MainMenuExitCallback implements Runnable {
 		private String difficulty;
 		
 		private MainMenuExitCallback(String difficulty) {
@@ -233,14 +236,14 @@ public class CampaignConclusionPopup extends PopupWindow {
 		private Button quitToMenu, exit;
 		
 		private Window() {
-			selectors = new ArrayList<CharacterSelector>();
+			selectors = new ArrayList<>();
 		}
 		
 		private void exportAll() {
 			export.setText(exportPressedText);
 			export.setEnabled(false);
 			
-			List<String> ids = new ArrayList<String>();
+			List<String> ids = new ArrayList<>();
 			int minLevel = Integer.MAX_VALUE;
 			int maxLevel = 0;
 			
@@ -283,7 +286,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 			quitToMenu.addCallback(new Runnable() {
 				@Override public void run() {
 					new ConfirmQuitPopup(content,
-							ConfirmQuitPopup.QuitMode.QuitToMenu).openPopupCentered();
+							QuitMode.QuitToMenu).openPopupCentered();
 				}
 			});
 			add(quitToMenu);
@@ -293,7 +296,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 			exit.addCallback(new Runnable() {
 				@Override public void run() {
 					new ConfirmQuitPopup(content,
-							ConfirmQuitPopup.QuitMode.ExitGame).openPopupCentered();
+							QuitMode.ExitGame).openPopupCentered();
 				}
 			});
 			add(exit);
@@ -301,12 +304,12 @@ public class CampaignConclusionPopup extends PopupWindow {
 			selectorPaneContent = new ScrollPaneContent();
 			selectorPaneContent.setTheme("content");
 			selectorPane = new ScrollPane(selectorPaneContent);
-			selectorPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			selectorPane.setFixed(Fixed.HORIZONTAL);
 			
 			for (PC creature : Game.curCampaign.party) {
 				if (creature.isSummoned()) continue;
 				
-				CharacterSelector selector = new CharacterSelector(creature, CampaignConclusionPopup.this.content);
+				CharacterSelector selector = new CharacterSelector(creature, content);
 				selectors.add(selector);
 				selectorPaneContent.add(selector);
 			}
@@ -353,16 +356,16 @@ public class CampaignConclusionPopup extends PopupWindow {
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
-			
-			this.defaultWidth = themeInfo.getParameter("defaultwidth", 0);
-			this.defaultHeight = themeInfo.getParameter("defaultheight", 0);
-			this.exportPressedText = themeInfo.getParameter("exportpressedtext", (String)null);
-			
-			this.gap = themeInfo.getParameter("gap", 0);
+
+            defaultWidth = themeInfo.getParameter("defaultwidth", 0);
+            defaultHeight = themeInfo.getParameter("defaultheight", 0);
+            exportPressedText = themeInfo.getParameter("exportpressedtext", (String)null);
+
+            gap = themeInfo.getParameter("gap", 0);
 			
 			// don't override a user set value for the text area height
 			if (textAreaHeight == 0)
-				this.textAreaHeight = themeInfo.getParameter("textareaheight", 0);
+                textAreaHeight = themeInfo.getParameter("textareaheight", 0);
 		}
 		
 		@Override public int getPreferredWidth() {
@@ -374,7 +377,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 		}
 	}
 	
-	private class ScrollPaneContent extends Widget {
+	private static class ScrollPaneContent extends Widget {
 		@Override protected void layout() {
 			int curY = getInnerY();
 			

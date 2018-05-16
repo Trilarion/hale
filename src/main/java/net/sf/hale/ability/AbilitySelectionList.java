@@ -67,25 +67,25 @@ public class AbilitySelectionList {
 		this.id = id;
 		
 		SimpleJSONParser parser = new SimpleJSONParser(resourcePath);
-		
-		this.name = parser.get("name", null);
+
+        name = parser.get("name", null);
 		
 		if (parser.containsKey("subLists")) {
-			this.subLists = new HashMap<String, Pointf>();
+            subLists = new HashMap<>();
 			SimpleJSONObject subListsIn = parser.getObject("subLists");
 			
 			for (String listID : subListsIn.keySet()) {
 				SimpleJSONObject subListIn = subListsIn.getObject(listID);
-				
-				this.subLists.put(listID, new Pointf(subListIn.get("x", 0.0f), subListIn.get("y", 0.0f)));
+
+                subLists.put(listID, new Pointf(subListIn.get("x", 0.0f), subListIn.get("y", 0.0f)));
 			}
 			
 		} else {
-			this.subLists = Collections.emptyMap();
+            subLists = Collections.emptyMap();
 		}
 		
 		if (parser.containsKey("abilities")) {
-			this.abilities = new HashMap<Ability, Pointf>();
+            abilities = new HashMap<>();
 			
 			SimpleJSONObject abilitiesIn = parser.getObject("abilities");
 			
@@ -100,21 +100,21 @@ public class AbilitySelectionList {
 			}
 			
 		} else {
-			this.abilities = Collections.emptyMap();
+            abilities = Collections.emptyMap();
 		}
 		
 		if (parser.containsKey("connectors")) {
-			this.connectors = new ArrayList<Connector>();
+            connectors = new ArrayList<>();
 			
 			SimpleJSONArray connectorsIn = parser.getArray("connectors");
 			for (SimpleJSONArrayEntry entryIn : connectorsIn) {
 				SimpleJSONObject connectorIn = entryIn.getObject();
 				
 				ConnectorType type = ConnectorType.valueOf(connectorIn.get("type", null));
-				this.connectors.add( new Connector(connectorIn.get("x", 0.0f), connectorIn.get("y", 0.0f), type));
+                connectors.add(new Connector(connectorIn.get("x", 0.0f), connectorIn.get("y", 0.0f), type));
 			}
 		} else {
-			this.connectors = Collections.emptyList();
+            connectors = Collections.emptyList();
 		}
 		
 		parser.warnOnUnusedKeys();
@@ -249,12 +249,12 @@ public class AbilitySelectionList {
 	 *
 	 */
 	
-	public class Connector {
+	public static class Connector {
 		private final Pointf point;
 		private final ConnectorType type;
 		
 		private Connector(float p1x, float p1y, ConnectorType type) {
-			this.point = new Pointf(p1x, p1y);
+            point = new Pointf(p1x, p1y);
 			this.type = type;
 		}
 		

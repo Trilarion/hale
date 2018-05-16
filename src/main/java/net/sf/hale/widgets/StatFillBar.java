@@ -28,9 +28,9 @@ public class StatFillBar extends TextWidget {
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
-		
-		this.fullImage = themeInfo.getImage("fullImage");
-		this.emptyImage = themeInfo.getImage("emptyImage");
+
+        fullImage = themeInfo.getImage("fullImage");
+        emptyImage = themeInfo.getImage("emptyImage");
 	}
 	
 	/**

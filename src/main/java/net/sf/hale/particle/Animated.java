@@ -22,28 +22,28 @@ package net.sf.hale.particle;
 import net.sf.hale.loading.Saveable;
 
 public interface Animated extends Saveable {
-	public void setDuration(float seconds);
-	public void setDurationInfinite();
+	void setDuration(float seconds);
+	void setDurationInfinite();
 	
-	public boolean isDrawable();
+	boolean isDrawable();
 	
-	public void offsetPosition(float x, float y);
-	public void setPosition(float x, float y);
+	void offsetPosition(float x, float y);
+	void setPosition(float x, float y);
 	
-	public boolean initialize();
+	boolean initialize();
 	
-	public void draw();
+	void draw();
 	
-	public boolean elapseTime(float seconds);
+	boolean elapseTime(float seconds);
 	
-	public DrawingMode getDrawingMode();
+	DrawingMode getDrawingMode();
 	
-	public Animated getCopy();
+	Animated getCopy();
 	
-	public void cacheSprite();
+	void cacheSprite();
 	
-	public enum DrawingMode {
+	enum DrawingMode {
 		BelowEntities,
-		AboveEntities;
+		AboveEntities
 	}
 }

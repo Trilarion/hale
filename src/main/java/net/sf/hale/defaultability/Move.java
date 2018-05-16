@@ -30,6 +30,8 @@ import net.sf.hale.entity.Location;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Path;
 import net.sf.hale.interfacelock.MovementHandler;
+import net.sf.hale.interfacelock.MovementHandler.Mode;
+import net.sf.hale.interfacelock.MovementHandler.Mover;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
@@ -49,9 +51,9 @@ public class Move implements DefaultAbility {
 	private Path computedPath;
 	
 	// stores the list of callbacks that will be added to the InterfaceMovementLock
-	private List<Runnable> callbacks = new ArrayList<Runnable>();
+	private List<Runnable> callbacks = new ArrayList<>();
 	
-	private MovementHandler.Mover mover;
+	private Mover mover;
 	
 	private boolean truncatePath = true;
 	
@@ -230,13 +232,13 @@ public class Move implements DefaultAbility {
 	 */
 	
 	private void createMover(Creature parent, boolean provoke) {
-		this.mover = Game.interfaceLocker.addMove(parent, computedPath, provoke);
+        mover = Game.interfaceLocker.addMove(parent, computedPath, provoke);
 		mover.addCallbacks(callbacks);
 		
 		if (parent.isPlayerFaction()) {
 			mover.setBackground(true);
 			
-			if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party &&
+			if (Game.interfaceLocker.getMovementMode() == Mode.Party &&
 					allowPartyMove && !Game.isInTurnMode()) {
 				movePartyInFormation(parent);
 			}
@@ -289,7 +291,7 @@ public class Move implements DefaultAbility {
 					
 					// move the curCreature, make it background so it doesn't update the interface like the
 					// main mover
-					MovementHandler.Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
+					Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
 					mover.setBackground(true);
 					
 					// the destination for the current creature will be occupied
@@ -362,7 +364,7 @@ public class Move implements DefaultAbility {
 			
 			// move the curCreature, make it background so it doesn't update the interface like the
 			// main mover
-			MovementHandler.Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
+			Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
 			mover.setBackground(true);
 			
 			// the destination for the current creature will be occupied
@@ -460,7 +462,7 @@ public class Move implements DefaultAbility {
 	 * @return the InterfaceMovementLock associated with this Move
 	 */
 	
-	public MovementHandler.Mover getMover() {
+	public Mover getMover() {
 		return mover;
 	}
 }

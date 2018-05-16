@@ -89,8 +89,8 @@ public class AbilitySlot implements Saveable {
 				data.put("cooldownRoundsLeft", cooldownRoundsLeft);
 		}
 		
-		if (activeEffects.size() > 0) {
-			List<Object> effectsData = new ArrayList<Object>();
+		if (!activeEffects.isEmpty()) {
+			List<Object> effectsData = new ArrayList<>();
 			
 			for (Effect effect : activeEffects) {
 				// don't save effect references for effects on dead NPCs, as these
@@ -165,15 +165,15 @@ public class AbilitySlot implements Saveable {
 	
 	public AbilitySlot(String type, Creature parent) {
 		this.type = type;
-		this.fixed = false;
-		
-		this.abilityID = null;
-		this.cooldownRoundsLeft = 0;
-		this.activeRoundsLeft = 0;
-		this.active = false;
+		fixed = false;
+
+		abilityID = null;
+		cooldownRoundsLeft = 0;
+		activeRoundsLeft = 0;
+		active = false;
 		
 		this.parent = parent;
-		activeEffects = new ArrayList<Effect>();
+		activeEffects = new ArrayList<>();
 	}
 	
 	/**
@@ -185,16 +185,16 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public AbilitySlot(Ability ability, Creature parent) {
-		this.type = ability.getType();
-		this.fixed = true;
-		
-		this.abilityID = ability.getID();
-		this.cooldownRoundsLeft = 0;
-		this.activeRoundsLeft = 0;
-		this.active = false;
+		type = ability.getType();
+		fixed = true;
+
+		abilityID = ability.getID();
+		cooldownRoundsLeft = 0;
+		activeRoundsLeft = 0;
+		active = false;
 		
 		this.parent = parent;
-		activeEffects = new ArrayList<Effect>();
+		activeEffects = new ArrayList<>();
 	}
 	
 	/**
@@ -208,17 +208,17 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public AbilitySlot(AbilitySlot other, Creature parent) {
-		this.type = other.type;
-		this.fixed = other.fixed;
-		
-		this.abilityID = other.abilityID;
-		this.cooldownRoundsLeft = other.cooldownRoundsLeft;
-		this.activeRoundsLeft = other.activeRoundsLeft;
-		this.active = other.active;
+		type = other.type;
+		fixed = other.fixed;
+
+		abilityID = other.abilityID;
+		cooldownRoundsLeft = other.cooldownRoundsLeft;
+		activeRoundsLeft = other.activeRoundsLeft;
+		active = other.active;
 		
 		this.parent = parent;
 		
-		activeEffects = new ArrayList<Effect>();
+		activeEffects = new ArrayList<>();
 		// don't copy active effects from other ability slot
 	}
 	
@@ -300,7 +300,7 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public void setActiveRoundsLeft(int rounds) {
-		this.activeRoundsLeft = rounds;
+		activeRoundsLeft = rounds;
 	}
 	
 	/**
@@ -333,14 +333,14 @@ public class AbilitySlot implements Saveable {
 		if (!isSettable()) return false;
 		
 		if (this.abilityID != null) {
-			if (this.active) {
-				if (this.getAbility().isCancelable()) deactivate();
+			if (active) {
+				if (getAbility().isCancelable()) deactivate();
 				else return false;
 			}
 		}
-		
-		this.active = false;
-		this.activeRoundsLeft = 0;
+
+		active = false;
+		activeRoundsLeft = 0;
 		
 		this.abilityID = abilityID;
 		
@@ -360,8 +360,8 @@ public class AbilitySlot implements Saveable {
 	public boolean isSettable() {
 		if (fixed) return false;
 		
-		if (this.abilityID != null) {
-			if (this.active && !this.getAbility().isCancelable()) return false;
+		if (abilityID != null) {
+			if (active && !getAbility().isCancelable()) return false;
 		}
 		
 		return true;
@@ -382,7 +382,7 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public void resetCooldown() {
-		this.cooldownRoundsLeft = 0;
+		cooldownRoundsLeft = 0;
 	}
 	
 	/**
@@ -403,7 +403,7 @@ public class AbilitySlot implements Saveable {
 		if (abilityID == null) return false;
 		if (active) return false;
 		if (cooldownRoundsLeft > 0) return false;
-		if (!parent.timer.canPerformAction(this.getAbility().getAPCost())) return false;
+		if (!parent.timer.canPerformAction(getAbility().getAPCost())) return false;
 		if (!Game.isInTurnMode() && !getAbility().canActivateOutsideCombat()) return false;
 		
 		if (getAbility().hasFunction(ScriptFunctionType.canActivate)) {
@@ -423,7 +423,7 @@ public class AbilitySlot implements Saveable {
 	
 	public boolean canDeactivate() {
 		if (abilityID == null) return false;
-		if (!active || !this.getAbility().isCancelable()) return false;
+		if (!active || !getAbility().isCancelable()) return false;
 		
 		return true;
 	}
@@ -439,16 +439,16 @@ public class AbilitySlot implements Saveable {
 		if (cooldownRoundsLeft > 0) return;
 		
 		if (getAbility().isMode()) {
-			this.active = true;
+			active = true;
 			
-			if (this.activeRoundsLeft == 0) {
-				this.activeRoundsLeft = Integer.MAX_VALUE / 2;
+			if (activeRoundsLeft == 0) {
+				activeRoundsLeft = Integer.MAX_VALUE / 2;
 			}
 		}
+
+		cooldownRoundsLeft = getAbility().getCooldown(parent) + activeRoundsLeft;
 		
-		this.cooldownRoundsLeft = getAbility().getCooldown(this.parent) + this.activeRoundsLeft;
-		
-		getAbility().activate(this.getParent());
+		getAbility().activate(getParent());
 	}
 	
 	/**
@@ -460,10 +460,10 @@ public class AbilitySlot implements Saveable {
 	
 	public void deactivate() {
 		if (abilityID == null || !active) return;
-		
-		this.active = false;
-		this.cooldownRoundsLeft = getAbility().getCooldown(this.parent);
-		this.activeRoundsLeft = 0;
+
+		active = false;
+		cooldownRoundsLeft = getAbility().getCooldown(parent);
+		activeRoundsLeft = 0;
 		
 		Iterator<Effect> effectIter = activeEffects.iterator();
 		while (effectIter.hasNext()) {
@@ -613,7 +613,7 @@ public class AbilitySlot implements Saveable {
 		effect.setSlot(this);
 		
 		synchronized(activeEffects) {
-			this.activeEffects.add(effect);
+			activeEffects.add(effect);
 		}
 		
 		return effect;
@@ -635,7 +635,7 @@ public class AbilitySlot implements Saveable {
 		effect.setSlot(this);
 		
 		synchronized(activeEffects) {
-			this.activeEffects.add(effect);
+			activeEffects.add(effect);
 		}
 		
 		return effect;
@@ -657,7 +657,7 @@ public class AbilitySlot implements Saveable {
 		aura.setSlot(this);
 		
 		synchronized(activeEffects) {
-			this.activeEffects.add(aura);
+			activeEffects.add(aura);
 		}
 		
 		return aura;

@@ -50,12 +50,12 @@ public class RightClickMenu extends PopupWindow {
 		super(parent);
 		
 		content = new MenuContent();
-		this.add(content);
+        add(content);
+
+        setCloseOnClickedOutside(true);
+        setCloseOnEscape(true);
 		
-		this.setCloseOnClickedOutside(true);
-		this.setCloseOnEscape(true);
-		
-		levels = new ArrayList<RightClickMenuLevel>();
+		levels = new ArrayList<>();
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class RightClickMenu extends PopupWindow {
 		
 		RightClickMenuLevel newMenu;
 		
-		if (levels.size() == 0) {
+		if (levels.isEmpty()) {
 			newMenu = new RightClickMenuLevel(null, null);
 		} else {
 			RightClickMenuLevel topMenu = levels.get(levels.size() - 1);
@@ -177,7 +177,7 @@ public class RightClickMenu extends PopupWindow {
 	 */
 	
 	public void show() {
-		if (levels.size() != 0 && !this.isOpen()) {
+		if (!levels.isEmpty() && !isOpen()) {
 			popupShouldToggle = true;
 		} else {
 			popupShouldToggle = false;
@@ -192,7 +192,7 @@ public class RightClickMenu extends PopupWindow {
 	 */
 	
 	public void hide() {
-		if (this.isOpen()) {
+		if (isOpen()) {
 			popupShouldToggle = true;
 		} else {
 			popupShouldToggle = false;
@@ -211,7 +211,7 @@ public class RightClickMenu extends PopupWindow {
 	public synchronized void togglePopup() {
 		popupShouldToggle = false;
 		
-		if (this.isOpen()) this.closePopup();
+		if (isOpen()) closePopup();
 		else openPopup();
 		
 		adjustSize();
@@ -243,7 +243,7 @@ public class RightClickMenu extends PopupWindow {
 	
 	private class MenuContent extends Widget {
 		private MenuContent() {
-			this.setTheme("content");
+            setTheme("content");
 		}
 		
 		@Override protected void layout() {

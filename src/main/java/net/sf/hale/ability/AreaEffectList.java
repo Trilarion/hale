@@ -30,6 +30,7 @@ import java.util.Set;
 import net.sf.hale.area.Area;
 import net.sf.hale.area.AreaEntityList;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.bonus.BonusStackTypeList;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -113,7 +114,7 @@ public class AreaEffectList implements Saveable {
 				continue;
 			}
 			
-			List<Point> points = new ArrayList<Point>();
+			List<Point> points = new ArrayList<>();
 			for (SimpleJSONArrayEntry pointEntry : entryObject.getArray("points")) {
 				SimpleJSONObject pointObject = pointEntry.getObject();
 				
@@ -143,7 +144,7 @@ public class AreaEffectList implements Saveable {
 	public AreaEffectList(Area area) {
 		this.area = area;
 		
-		effects = new HashMap<Effect, List<Point>>();
+		effects = new HashMap<>();
 		
 		effectsAtPosition = new EffectList[area.getWidth()][area.getHeight()];
 	}
@@ -171,15 +172,15 @@ public class AreaEffectList implements Saveable {
 		
 		// remove any invalid points from the list of points that
 		// will be used with the effects list
-		ArrayList<Point> newPoints = new ArrayList<Point>(points.size());
+		ArrayList<Point> newPoints = new ArrayList<>(points.size());
 		for (Point p : points) {
 			if (checkCoordinates(p.x, p.y)) newPoints.add(new Point(p));
 		}
 		newPoints.trimToSize();
 		List<Point> oldPoints = effects.get(aura);
 		
-		Set<Creature> oldCreatures = new HashSet<Creature>();
-		Set<Creature> newCreatures = new HashSet<Creature>();
+		Set<Creature> oldCreatures = new HashSet<>();
+		Set<Creature> newCreatures = new HashSet<>();
 		
 		// get the set of creatures previously in the aura
 		for (Point p : oldPoints) {
@@ -244,7 +245,7 @@ public class AreaEffectList implements Saveable {
 		
 		// remove any invalid points from the list of points that
 		// will be used with the effects list
-		ArrayList<Point> newPoints = new ArrayList<Point>(points.size());
+		ArrayList<Point> newPoints = new ArrayList<>(points.size());
 		for (Point p : points) {
 			if (checkCoordinates(p.x, p.y)) newPoints.add(new Point(p));
 		}
@@ -327,7 +328,7 @@ public class AreaEffectList implements Saveable {
 	 */
 	
 	public List<Creature> getAffectedCreatures(Effect effect, AreaEntityList entities) {
-		List<Creature> creatures = new ArrayList<Creature>();
+		List<Creature> creatures = new ArrayList<>();
 		
 		if (effects.get(effect) == null) return creatures;
 		
@@ -350,9 +351,9 @@ public class AreaEffectList implements Saveable {
 	 */
 	
 	public List<Effect> getEffectsAt(int x, int y) {
-		if (!checkCoordinates(x, y) || effectsAtPosition[x][y] == null) return new ArrayList<Effect>(0);
+		if (!checkCoordinates(x, y) || effectsAtPosition[x][y] == null) return new ArrayList<>(0);
 		
-		List<Effect> effects = new ArrayList<Effect>(effectsAtPosition[x][y].size());
+		List<Effect> effects = new ArrayList<>(effectsAtPosition[x][y].size());
 		for (Effect effect : effectsAtPosition[x][y]) {
 			effects.add(effect);
 		}
@@ -371,7 +372,7 @@ public class AreaEffectList implements Saveable {
 	 * found at the specified coordinates
 	 */
 	
-	public boolean hasBonusAt(Bonus.Type bonusType, int x, int y) {
+	public boolean hasBonusAt(Type bonusType, int x, int y) {
 		if (!checkCoordinates(x, y)) return false;
 		
 		if (effectsAtPosition[x][y] == null) return false;
@@ -397,7 +398,7 @@ public class AreaEffectList implements Saveable {
 	 * specified coordinates
 	 */
 	
-	public int getBonusAt(Bonus.Type bonusType, int x, int y) {
+	public int getBonusAt(Type bonusType, int x, int y) {
 		if (!checkCoordinates(x, y)) return 0;
 		
 		if (effectsAtPosition[x][y] == null) return 0;
@@ -441,31 +442,31 @@ public class AreaEffectList implements Saveable {
 	
 	public void resize(int newWidth, int newHeight) {
 		EffectList[][] newEffectsAtPosition = new EffectList[newWidth][newHeight];
-		Map<Effect, List<Point>> newEffects = new HashMap<Effect, List<Point>>();
+		Map<Effect, List<Point>> newEffects = new HashMap<>();
 		
-		int width = Math.min(this.effectsAtPosition.length, newWidth);
-		int height = Math.min(this.effectsAtPosition[0].length, newHeight);
+		int width = Math.min(effectsAtPosition.length, newWidth);
+		int height = Math.min(effectsAtPosition[0].length, newHeight);
 		
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				newEffectsAtPosition[i][j] = this.effectsAtPosition[i][j];
+				newEffectsAtPosition[i][j] = effectsAtPosition[i][j];
 
-				if (this.effectsAtPosition[i][j] == null) continue;
+				if (effectsAtPosition[i][j] == null) continue;
 
-				for (Effect effect : this.effectsAtPosition[i][j]) {
+				for (Effect effect : effectsAtPosition[i][j]) {
 					if (newEffects.containsKey(effect)) {
 						newEffects.get(effect).add(new Point(i, j));
 					} else {
-						List<Point> points = new ArrayList<Point>();
+						List<Point> points = new ArrayList<>();
 						points.add(new Point(i, j));
 						newEffects.put(effect, points);
 					}
 				}
 			}
 		}
-		
-		this.effectsAtPosition = newEffectsAtPosition;
-		this.effects = newEffects;
+
+        effectsAtPosition = newEffectsAtPosition;
+        effects = newEffects;
 	}
 	
 	/**
@@ -482,7 +483,7 @@ public class AreaEffectList implements Saveable {
 	 */
 	
 	private List<Point> getArrayListDeepCopy(List<Point> points) {
-		List<Point> newPoints = new ArrayList<Point>(points.size());
+		List<Point> newPoints = new ArrayList<>(points.size());
 		
 		for (Point p : points) {
 			newPoints.add(new Point(p));
@@ -503,7 +504,7 @@ public class AreaEffectList implements Saveable {
 			return true;
 	}
 	
-	private class EffectList extends ArrayList<Effect> {
+	private static class EffectList extends ArrayList<Effect> {
 		private static final long serialVersionUID = 877898924941324323L;
 		
 		// create an ArrayList with default capacity 1

@@ -27,6 +27,7 @@ import java.util.List;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
@@ -83,13 +84,13 @@ public class HTMLPopup extends PopupWindow {
 	private HTMLPopup(String htmlContent, Widget parent) {
 		super(parent);
 		
-		scriptCallbacks = new ArrayList<DelayedScriptCallback>();
-		
-		this.setCloseOnClickedOutside(false);
+		scriptCallbacks = new ArrayList<>();
+
+        setCloseOnClickedOutside(false);
 		
 		content = new Content();
-		
-		this.add(content);
+
+        add(content);
 
 		HTMLTextAreaModel model = new HTMLTextAreaModel();
 		model.setHtml(htmlContent);
@@ -97,7 +98,7 @@ public class HTMLPopup extends PopupWindow {
 
 		textArea = new TextArea(textAreaModel);
 		textPane = new ScrollPane(textArea);
-		textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		textPane.setFixed(Fixed.HORIZONTAL);
 		textPane.setCanAcceptKeyboardFocus(false);
 
 		content.add(textPane);
@@ -188,11 +189,11 @@ public class HTMLPopup extends PopupWindow {
 	private class CloseButton extends Button implements Runnable {
 		private CloseButton() {
 			super("Continue");
-			this.addCallback(this);
+            addCallback(this);
 		}
 		
 		@Override public void run() {
-			HTMLPopup.this.closePopup();
+            closePopup();
 			
 			for (DelayedScriptCallback callback : scriptCallbacks) {
 				callback.start();

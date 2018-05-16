@@ -76,7 +76,7 @@ public class Encounter implements Iterable<Creature> {
 			data.put("xpToReward", xpToReward);
 
 		// store the list of creatures for this encounter
-		List<Object> creaturesData = new ArrayList<Object>();
+		List<Object> creaturesData = new ArrayList<>();
 		for (Creature creature : creaturesInArea) {
 			
 			creaturesData.add(SaveGameUtil.getRef(creature));
@@ -143,15 +143,15 @@ public class Encounter implements Iterable<Creature> {
 		this.template = template;
 		
 		this.location = location;
-		
-		this.lastSpawnRound = -1;
-		
-		this.creaturesInArea = new ArrayList<Creature>();
-		
-		this.faction = template.getDefaultFaction();
-		
-		this.aiActive = false;
-		this.knownHostiles = new ArrayList<Creature>();
+
+        lastSpawnRound = -1;
+
+        creaturesInArea = new ArrayList<>();
+
+        faction = template.getDefaultFaction();
+
+        aiActive = false;
+        knownHostiles = new ArrayList<>();
 	}
 	
 	/**
@@ -218,7 +218,7 @@ public class Encounter implements Iterable<Creature> {
 	 */
 	
 	public List<Creature> getHostiles() {
-		return new ArrayList<Creature>(this.knownHostiles);
+		return new ArrayList<>(knownHostiles);
 	}
 	
 	/**
@@ -226,7 +226,7 @@ public class Encounter implements Iterable<Creature> {
 	 */
 	
 	public void removeAllHostiles() {
-		this.knownHostiles.clear();
+        knownHostiles.clear();
 	}
 	
 	

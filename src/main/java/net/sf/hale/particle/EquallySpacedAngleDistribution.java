@@ -35,7 +35,7 @@ public class EquallySpacedAngleDistribution implements DistributionTwoValue {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("class", this.getClass().getName());
+		data.put("class", getClass().getName());
 		data.put("angleStepSize", angleStepSize);
 		data.put("magnitudeStepSize", magnitudeStepSize);
 		data.put("particlesPerRadius", particlesPerRadius);
@@ -62,7 +62,7 @@ public class EquallySpacedAngleDistribution implements DistributionTwoValue {
 	
 	private EquallySpacedAngleDistribution(float angleStepSize, float magStepSize, float particlesPerRadius, float jitter) {
 		this.angleStepSize = angleStepSize;
-		this.magnitudeStepSize = magStepSize;
+		magnitudeStepSize = magStepSize;
 		this.particlesPerRadius = particlesPerRadius;
 		this.jitter = jitter;
 	}
@@ -84,13 +84,13 @@ public class EquallySpacedAngleDistribution implements DistributionTwoValue {
 	}
 	
 	public EquallySpacedAngleDistribution(EquallySpacedAngleDistribution other) {
-		this.angleStepSize = other.angleStepSize;
-		this.magnitudeStepSize = other.magnitudeStepSize;
-		this.particlesPerRadius = other.particlesPerRadius;
-		this.jitter = other.jitter;
-		
-		this.count = other.count;
-		this.curMagnitude = other.curMagnitude;
+		angleStepSize = other.angleStepSize;
+		magnitudeStepSize = other.magnitudeStepSize;
+		particlesPerRadius = other.particlesPerRadius;
+		jitter = other.jitter;
+
+		count = other.count;
+		curMagnitude = other.curMagnitude;
 	}
 	
 	@Override public float[] generate(Particle particle) {

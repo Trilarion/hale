@@ -79,7 +79,7 @@ public class Ability extends Scriptable {
 		 * Often, provides some benefit or drawback to hostiles and friendlies alike, or a combination of
 		 * benefits and drawbacks to a single target.
 		 **/
-		Tactical;
+		Tactical
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class Ability extends Scriptable {
 		Single,
 		
 		/** Affects one or potentially more Creatures */
-		Multiple;
+		Multiple
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class Ability extends Scriptable {
 		Short,
 		
 		/** targetable on Creatures up to a long distance away, usually any visible Creature */
-		Long;
+		Long
 	}
 
 	private final String id;
@@ -230,19 +230,19 @@ public class Ability extends Scriptable {
 	protected Ability(String id, String script, String scriptLocation, SimpleJSONObject map, boolean inline) {
 		super(script, scriptLocation, inline);
 		this.id = id;
-		
-		this.name = map.get("name", id);
-		this.type = map.get("type", this.getClass().getSimpleName());
+
+		name = map.get("name", id);
+		type = map.get("type", getClass().getSimpleName());
 		
 		if (map.containsKey("icon")) {
 			icon = IconFactory.createIcon(map.getObject("icon"));
 		} else {
 			icon = IconFactory.emptyIcon;
 		}
+
+		description = map.get("description", null);
 		
-		this.description = map.get("description", null);
-		
-		upgrades = new ArrayList<AbilityUpgrade>();
+		upgrades = new ArrayList<>();
 		for (SimpleJSONArrayEntry entry : map.getArray("upgrades")) {
 			SimpleJSONObject entryObj = entry.getObject();
 			
@@ -251,44 +251,44 @@ public class Ability extends Scriptable {
 		}
 		
 		if (map.containsKey("canActivateOutsideCombat")) {
-			this.canActivateOutsideCombat = map.get("canActivateOutsideCombat", false);
+			canActivateOutsideCombat = map.get("canActivateOutsideCombat", false);
 		} else {
-			this.canActivateOutsideCombat = false;
+			canActivateOutsideCombat = false;
 		}
 		
 		if (map.containsKey("isActivateable")) {
-			this.isActivateable = map.get("isActivateable", false);
+			isActivateable = map.get("isActivateable", false);
 		} else {
-			this.isActivateable = false;
+			isActivateable = false;
 		}
 		
 		if (map.containsKey("isFixed")) {
-			this.isFixed = map.get("isFixed", false);
+			isFixed = map.get("isFixed", false);
 		} else {
-			this.isFixed = false;
+			isFixed = false;
 		}
 		
 		if (map.containsKey("isMode")) {
-			this.isMode = map.get("isMode", false);
+			isMode = map.get("isMode", false);
 		} else {
-			this.isMode = false;
+			isMode = false;
 		}
 		
 		if (map.containsKey("isCancelable")) {
-			this.isCancelable = map.get("isCancelable", false);
+			isCancelable = map.get("isCancelable", false);
 		} else {
-			this.isCancelable = false;
+			isCancelable = false;
 		}
 		
 		if (map.containsKey("spellLevel"))
-			this.spellLevel = map.get("spellLevel", 0);
+			spellLevel = map.get("spellLevel", 0);
 		else
-			this.spellLevel = 0;
+			spellLevel = 0;
 		
 		if (map.containsKey("quickbarGroup")) {
-			this.quickbarGroup = map.get("quickbarGroup", null);
+			quickbarGroup = map.get("quickbarGroup", null);
 		} else {
-			this.quickbarGroup = null;
+			quickbarGroup = null;
 		}
 		
 		if (!isActivateable && isMode)
@@ -310,20 +310,20 @@ public class Ability extends Scriptable {
 		
 		
 		if (map.containsKey("cooldown")) {
-			this.cooldown = map.get("cooldown", 0);
+			cooldown = map.get("cooldown", 0);
 		} else {
-			this.cooldown = 0;
+			cooldown = 0;
 		}
 		
 		if (map.isInteger("actionPointCost")) {
-			this.actionPointCost = map.get("actionPointCost", 0);
-			this.actionPointCostDescription = Integer.toString(this.actionPointCost / 100);
+			actionPointCost = map.get("actionPointCost", 0);
+			actionPointCostDescription = Integer.toString(actionPointCost / 100);
 		} else if (map.isString("actionPointCost")) {
-			this.actionPointCost = 0;
-			this.actionPointCostDescription = map.get("actionPointCost", null);
+			actionPointCost = 0;
+			actionPointCostDescription = map.get("actionPointCost", null);
 		} else {
-			this.actionPointCost = 0;
-			this.actionPointCostDescription = Integer.toString(this.actionPointCost / 100);
+			actionPointCost = 0;
+			actionPointCostDescription = Integer.toString(actionPointCost / 100);
 		}
 		
 		int aiPower = 0;
@@ -379,7 +379,7 @@ public class Ability extends Scriptable {
 	 */
 	
 	public int getSpellLevel() {
-		return this.spellLevel;
+		return spellLevel;
 	}
 	
 	/**
@@ -393,9 +393,9 @@ public class Ability extends Scriptable {
 	 */
 	
 	public int getSpellLevel(Creature parent) {
-		int level = this.spellLevel;
+		int level = spellLevel;
 		
-		if (parent == null) return this.spellLevel;
+		if (parent == null) return spellLevel;
 		
 		for (AbilityUpgrade upgrade : upgrades) {
 			if (parent.abilities.has(upgrade.id)) {
@@ -658,7 +658,7 @@ public class Ability extends Scriptable {
 		
 		Game.mainViewer.addFadeAway(getName(), parent.getLocation().getX(), parent.getLocation().getY(), new Color(0xFF00FF00));
 		
-		parent.timer.performAction(this.actionPointCost);
+		parent.timer.performAction(actionPointCost);
 	}
 	
 	/**
@@ -685,7 +685,7 @@ public class Ability extends Scriptable {
 			sb.append("<div style=\"font-family: medium;\">");
 			sb.append("Base Ability ");
 			sb.append("<span style=\"font-family: medium-red\">");
-			sb.append(this.getName());
+			sb.append(getName());
 			sb.append("</span>");
 			sb.append("</div>");
 		}
@@ -749,10 +749,10 @@ public class Ability extends Scriptable {
 			}
 		}
 		sb.append("</table>");
-		
-		this.prereqs.appendDescription(sb, parent, "Prerequisites");
-		
-		this.restrictions.appendDescription(sb, parent, "Restrictions");
+
+		prereqs.appendDescription(sb, parent, "Prerequisites");
+
+		restrictions.appendDescription(sb, parent, "Restrictions");
 	}
 	
 	/**
@@ -765,7 +765,7 @@ public class Ability extends Scriptable {
 	public void appendUpgradesDescription(StringBuilder sb, Creature parent) {
 		if (parent == null) return;
 		
-		List<String> upgradesToShow = new ArrayList<String>();
+		List<String> upgradesToShow = new ArrayList<>();
 		
 		for (AbilityUpgrade upgrade : upgrades) {
 			String abilityID = upgrade.id;
@@ -796,7 +796,7 @@ public class Ability extends Scriptable {
 			}
 		}
 		
-		return this.name;
+		return name;
 	}
 	
 	/**
@@ -814,11 +814,11 @@ public class Ability extends Scriptable {
 			}
 		}
 		
-		return this.icon;
+		return icon;
 	}
 	
 	@Override public String toString() {
-		return this.name;
+		return name;
 	}
 	
 	/*
@@ -855,7 +855,7 @@ public class Ability extends Scriptable {
 	
 	public void setSpellDuration(Effect effect, Creature parent) { }
 	
-	private class AbilityUpgrade {
+	private static class AbilityUpgrade {
 		private final String id;
 		private final String description;
 		private final boolean override;

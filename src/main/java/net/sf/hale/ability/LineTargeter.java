@@ -66,10 +66,10 @@ public class LineTargeter extends AreaTargeter {
 	
 	public LineTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
-		
-		this.lineGridLength = 0;
-		this.stopLineAtCreature = false;
-		this.stopLineAtImpassable = false;
+
+        lineGridLength = 0;
+        stopLineAtCreature = false;
+        stopLineAtImpassable = false;
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class LineTargeter extends AreaTargeter {
 	 */
 	
 	public void setStopLineAtImpassable(boolean stopLine) {
-		this.stopLineAtImpassable = stopLine;
+        stopLineAtImpassable = stopLine;
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class LineTargeter extends AreaTargeter {
 	 */
 	
 	public void setStopLineAtCreature(boolean stopLine) {
-		this.stopLineAtCreature = stopLine;
+        stopLineAtCreature = stopLine;
 	}
 	
 	/**
@@ -112,8 +112,8 @@ public class LineTargeter extends AreaTargeter {
 	 */
 	
 	public void setOrigin(Point origin) {
-		this.gridOrigin = new Point(origin);
-		this.screenOrigin = AreaUtil.convertGridToScreenAndCenter(gridOrigin);
+        gridOrigin = new Point(origin);
+        screenOrigin = AreaUtil.convertGridToScreenAndCenter(gridOrigin);
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class LineTargeter extends AreaTargeter {
 	 */
 	
 	public void setForceLineLength(int gridLength) {
-		this.lineGridLength = gridLength;
+        lineGridLength = gridLength;
 	}
 	
 	@Override public boolean draw(AnimationState as) {
@@ -178,7 +178,7 @@ public class LineTargeter extends AreaTargeter {
 	}
 	
 	@Override protected void computeAffectedPoints(int x, int y, Point gridPoint) {
-		List<Point> affectedPoints = this.getAffectedPoints();
+		List<Point> affectedPoints = getAffectedPoints();
 		
 		// compute the angle of the line to draw
 		lineAngle = AreaUtil.angle(screenOrigin.x, screenOrigin.y, x, y);

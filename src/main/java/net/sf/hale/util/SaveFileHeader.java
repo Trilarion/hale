@@ -56,7 +56,7 @@ public class SaveFileHeader {
 	
 	public SaveFileHeader(Campaign campaign) {
 		int maxLevel = 0;
-		this.characterNames = new ArrayList<String>(campaign.party.size());
+        characterNames = new ArrayList<>(campaign.party.size());
 		for (Creature pc : campaign.party) {
 			// don't write out summoned creature names
 			if (pc.isSummoned()) continue;
@@ -65,12 +65,12 @@ public class SaveFileHeader {
 			
 			maxLevel = Math.max(maxLevel, pc.stats.getCreatureLevel());
 		}
-		
-		this.level = maxLevel;
-		
-		this.areaName = campaign.curArea.getName();
-		
-		this.versionID = Game.config.getVersionID();
+
+        level = maxLevel;
+
+        areaName = campaign.curArea.getName();
+
+        versionID = Game.config.getVersionID();
 	}
 	
 	/**
@@ -227,7 +227,7 @@ public class SaveFileHeader {
 		nextToken(in);
 		header.level = Integer.parseInt(nextToken(in));
 		
-		header.characterNames = new ArrayList<String>();
+		header.characterNames = new ArrayList<>();
 		while (true) {
 			String line = nextLine(in);
 			

@@ -34,8 +34,8 @@ public interface EffectTarget {
 	 * 
 	 * @param effect the Effect to remove
 	 */
-	
-	public void removeEffect(Effect effect);
+
+    void removeEffect(Effect effect);
 	
 	/**
 	 * Returns the number of points of spell resistance applied to this EffectTarget,
@@ -44,8 +44,8 @@ public interface EffectTarget {
 	 * when the effect is applied.
 	 * @return the number of points of spell resistance on this EffectTarget
 	 */
-	
-	public int getSpellResistance();
+
+    int getSpellResistance();
 	
 	
 	/**
@@ -53,6 +53,6 @@ public interface EffectTarget {
 	 * It can return false if the effect should be removed due to the target no longer being valid
 	 * @return whether the effect target is a valid target
 	 */
-	
-	public boolean isValidEffectTarget();
+
+    boolean isValidEffectTarget();
 }

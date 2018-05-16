@@ -19,9 +19,11 @@
 
 package net.sf.hale.widgets;
 
+import de.matthiasmann.twl.Event.Type;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Inventory.Slot;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.Icon;
@@ -130,10 +132,10 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		this.quantity = quantity;
 		
 		if (item != null) {
-			super.setIcon(item.getTemplate().getIcon());
+			setIcon(item.getTemplate().getIcon());
 			
 		} else {
-			super.setIcon(IconFactory.emptyIcon);
+			setIcon(IconFactory.emptyIcon);
 			setTooltipContent(null);
 		}
 		
@@ -185,7 +187,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 	
 	@Override protected boolean handleEvent(Event evt) {
 		if (evt.isMouseEvent()) {
-			boolean hover = (evt.getType() != Event.Type.MOUSE_EXITED) && isMouseInside(evt);
+			boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
 			if (hover && !isHovering) {
 				if (callback != null) callback.hoverStarted(this);
 				isHovering = true;
@@ -246,21 +248,21 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		 * @param x the x coordinate of the mouse
 		 * @param y the y coordinate of the mouse
 		 */
-		public void rightClicked(ItemIconViewer viewer, int x, int y);
+        void rightClicked(ItemIconViewer viewer, int x, int y);
 		
 		/**
 		 * Called when the mouse enters this widget
 		 * @param viewer the viewer being hovered
 		 */
-		
-		public void hoverStarted(ItemIconViewer viewer);
+
+        void hoverStarted(ItemIconViewer viewer);
 		
 		/**
 		 * Called when the mouse exits this widget
 		 * @param viewer the viewer being hovered
 		 */
-		
-		public void hoverEnded(ItemIconViewer viewer);
+
+        void hoverEnded(ItemIconViewer viewer);
 	}
 
 	@Override public Icon getDragIcon() {
@@ -268,7 +270,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 	}
 
 	@Override public Ability getAbility() { return null; }
-	@Override public Inventory.Slot getItemEquipSlot() { return null; }
+	@Override public Slot getItemEquipSlot() { return null; }
 	
 	@Override public PC getParentPC() {
 		return parent;

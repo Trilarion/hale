@@ -47,7 +47,7 @@ public class InterfaceTargeterLock extends InterfaceLock {
 		super.setCurrentTime(curTime);
 		
 		if (!finishing) {
-			super.setUnlockTime(curTime + 800);
+			setUnlockTime(curTime + 800);
 			
 			if (!Game.areaListener.getTargeterManager().isInTargetMode())
 				finishing = true;

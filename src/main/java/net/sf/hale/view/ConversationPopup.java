@@ -21,6 +21,7 @@ package net.sf.hale.view;
 
 import java.util.ArrayList;
 
+import de.matthiasmann.twl.ScrollPane.Fixed;
 import net.sf.hale.Game;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Scriptable;
@@ -80,12 +81,12 @@ public class ConversationPopup extends PopupWindow {
 		add(content);
 		
 		if (parent instanceof Creature) {
-			parentPortrait = new PortraitViewer( (Creature)parent );
+			parentPortrait = new PortraitViewer((Creature) parent);
 			parentName = new Label(parent.getTemplate().getName());
 		}
 		
 		if (target instanceof Creature) {
-			targetPortrait = new PortraitViewer( (Creature)target );
+			targetPortrait = new PortraitViewer((Creature) target);
 			targetName = new Label(target.getTemplate().getName());
 		}
 	}
@@ -96,10 +97,10 @@ public class ConversationPopup extends PopupWindow {
 	 */
 	
 	public void startConversation() {
-		responses = new ArrayList<ResponseWidget>();
+		responses = new ArrayList<>();
 		text = new StringBuilder();
-		
-		this.script.executeFunction(ScriptFunctionType.startConversation, parent, target, this);
+
+        script.executeFunction(ScriptFunctionType.startConversation, parent, target, this);
 		
 		// add text and responses added from script to content
 		content.addWidgets();
@@ -218,7 +219,7 @@ public class ConversationPopup extends PopupWindow {
 		}
 	}
 	
-	private class PortraitViewer extends BasePortraitViewer {
+	private static class PortraitViewer extends BasePortraitViewer {
 		private PortraitViewer(Creature creature) {
 			super(creature);
 		}
@@ -245,13 +246,13 @@ public class ConversationPopup extends PopupWindow {
 			textAreaModel = new HTMLTextAreaModel();
 	        textArea = new TextArea(textAreaModel);
 	        textPane = new ScrollPane(textArea);
-	        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+	        textPane.setFixed(Fixed.HORIZONTAL);
 	        textPane.setTheme("dialogpane");
 	        
 	        responseContent = new ResponseContent();
 	        responseContent.setTheme("content");
 	        responsePane = new ScrollPane(responseContent);
-	        responsePane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+	        responsePane.setFixed(Fixed.HORIZONTAL);
 	        responsePane.setTheme("responsepane");
 		}
 		

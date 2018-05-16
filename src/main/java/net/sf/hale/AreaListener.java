@@ -19,14 +19,17 @@
 
 package net.sf.hale;
 
+import de.matthiasmann.twl.Event.Type;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Targeter;
 import net.sf.hale.area.Area;
 import net.sf.hale.defaultability.DefaultAbility;
 import net.sf.hale.defaultability.MouseActionList;
+import net.sf.hale.defaultability.MouseActionList.Condition;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
 import net.sf.hale.entity.Location;
 import net.sf.hale.entity.NPC;
 import net.sf.hale.entity.Entity;
@@ -43,7 +46,7 @@ public class AreaListener {
 	private int lastMouseX, lastMouseY;
 	
 	private Point curGridPoint;
-	private MouseActionList.Condition curMouseCondition;
+	private Condition curMouseCondition;
 	
 	private ThemeInfo themeInfo;
 	
@@ -123,7 +126,7 @@ public class AreaListener {
 				
 				ItemList loot = npc.getTemplate().generateLoot();
 				
-				for (ItemList.Entry entry : loot) {
+				for (Entry entry : loot) {
 					Item item = entry.createItem();
 					item.setLocation(entity.getLocation());
 					
@@ -177,9 +180,9 @@ public class AreaListener {
 	public TargeterManager getTargeterManager() { return targeterManager; }
 	
 	public boolean handleEvent(Event evt) {
-		if (evt.getType() == Event.Type.MOUSE_MOVED) {
-			this.lastMouseX = evt.getMouseX();
-			this.lastMouseY = evt.getMouseY();
+		if (evt.getType() == Type.MOUSE_MOVED) {
+            lastMouseX = evt.getMouseX();
+            lastMouseY = evt.getMouseY();
 			
 			computeMouseState();
 		}
@@ -271,7 +274,7 @@ public class AreaListener {
 			}
 			
 		} else if (Game.interfaceLocker.locked()) {
-			curMouseCondition = MouseActionList.Condition.Cancel;
+			curMouseCondition = Condition.Cancel;
 			areaViewer.mouseHoverValid = false;
 			
 			Game.mainViewer.clearTargetTitleText();
@@ -281,7 +284,7 @@ public class AreaListener {
 			curMouseCondition = Game.mouseActions.getDefaultMouseCondition(Game.curCampaign.party.getSelected(),
 					curLocation);
 			
-			areaViewer.mouseHoverValid = curMouseCondition != MouseActionList.Condition.Cancel;
+			areaViewer.mouseHoverValid = curMouseCondition != Condition.Cancel;
 			
 			Game.mainViewer.clearTargetTitleText();
 		}

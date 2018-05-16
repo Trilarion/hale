@@ -44,8 +44,8 @@ public interface DistributionTwoValue extends Saveable {
 	 * @return a float[] of size 4.  The first two values are the x and y values of the
 	 * generated vector.  The second two values are the magnitude and angle of the vector.
 	 */
-	
-	public float[] generate(Particle particle);
+
+    float[] generate(Particle particle);
 	
 	/**
 	 * If this DistributionTwoValue has any internal state, returns a copy
@@ -54,6 +54,6 @@ public interface DistributionTwoValue extends Saveable {
 	 * 
 	 * @return a copy of this Distribution or this Distribution
 	 */
-	
-	public DistributionTwoValue getCopyIfHasState();
+
+    DistributionTwoValue getCopyIfHasState();
 }

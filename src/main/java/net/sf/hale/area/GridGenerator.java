@@ -5,6 +5,7 @@ import net.sf.hale.rules.Dice;
 import net.sf.hale.tileset.Border;
 import net.sf.hale.tileset.BorderTile;
 import net.sf.hale.tileset.ElevationList;
+import net.sf.hale.tileset.ElevationList.Elevation;
 import net.sf.hale.tileset.Tileset;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.PointImmutable;
@@ -33,9 +34,9 @@ public class GridGenerator implements Generator {
 	
 	public GridGenerator(Area area, SimpleJSONObject data) {
 		this.area = area;
-		this.tileset = Game.curCampaign.getTileset(area.getTileset());
-		
-		this.gridSize = data.get("gridSize", 0);
+		tileset = Game.curCampaign.getTileset(area.getTileset());
+
+		gridSize = data.get("gridSize", 0);
 		
 		gridWidth = area.getWidth() / gridSize;
 		gridHeight = area.getHeight() / gridSize;
@@ -108,7 +109,7 @@ public class GridGenerator implements Generator {
 			for (int y = 0; y < area.getHeight(); y++) {
 				Point p = new Point(x, y);
 
-				for (ElevationList.Elevation elevation : tileset.getElevationList().
+				for (Elevation elevation : tileset.getElevationList().
 						getMatchingElevationRules(area.getElevationGrid(), p)) {
 
 					Border border = elevation.getBorder();
@@ -180,10 +181,10 @@ public class GridGenerator implements Generator {
 			West.opposite = East;
 		}
  
-		private Direction(int bit, int dx, int dy) {
+		Direction(int bit, int dx, int dy) {
 			this.bit = bit;
 			this.dx = dx;
 			this.dy = dy;
 		}
-	};
+	}
 }

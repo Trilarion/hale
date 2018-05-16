@@ -81,7 +81,7 @@ public class CharacterWindow extends GameSubWindow implements EntityListener {
 	 */
 	
 	public void updateContent(PC creature) {
-		this.setTitle("Character Record for " + creature.getTemplate().getName());
+        setTitle("Character Record for " + creature.getTemplate().getName());
 		
 		characterSheet.updateContent(creature);
 		skillSetViewer.updateContent(creature);

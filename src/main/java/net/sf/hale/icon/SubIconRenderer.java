@@ -25,8 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.icon.ComposedCreatureIcon.Entry;
+import net.sf.hale.icon.SubIcon.Factory;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.Point;
 
 import org.lwjgl.opengl.GL11;
@@ -57,18 +61,18 @@ public class SubIconRenderer implements IconRenderer {
 	 * @param gender
 	 */
 	
-	public SubIconRenderer(ComposedCreatureIcon icon, Race race, Ruleset.Gender gender) {
-		subIcons = new ArrayList<SubIcon>();
-		
-		this.skinColor = icon.getSkinColor();
-		this.clothingColor = icon.getClothingColor();
+	public SubIconRenderer(ComposedCreatureIcon icon, Race race, Gender gender) {
+		subIcons = new ArrayList<>();
+
+        skinColor = icon.getSkinColor();
+        clothingColor = icon.getClothingColor();
 		
 		if (!icon.containsBaseBackgroundSubIcon()) {
 			addBaseRacialSubIcons(race, gender);
 		}
 		
-		for (ComposedCreatureIcon.Entry entry : icon) {
-			SubIcon.Factory factory = new SubIcon.Factory(entry.type, race, gender);
+		for (Entry entry : icon) {
+			Factory factory = new Factory(entry.type, race, gender);
 			factory.setPrimaryIcon(entry.spriteID, entry.color);
 			
 			add(factory.createSubIcon());
@@ -84,7 +88,7 @@ public class SubIconRenderer implements IconRenderer {
 	 */
 	
 	protected SubIconRenderer(SubIconRenderer other) {
-		subIcons = new ArrayList<SubIcon>(other.subIcons);
+		subIcons = new ArrayList<>(other.subIcons);
 		
 		beard = other.beard;
 		hair = other.hair;
@@ -95,11 +99,11 @@ public class SubIconRenderer implements IconRenderer {
 	}
 	
 	public void setSkinColor(Color color) {
-		this.skinColor = color;
+        skinColor = color;
 	}
 	
 	public void setClothingColor(Color color) {
-		this.clothingColor = color;
+        clothingColor = color;
 	}
 	
 	public Color getSkinColor() {
@@ -117,49 +121,49 @@ public class SubIconRenderer implements IconRenderer {
 	 * @param gender
 	 */
 	
-	private void addBaseRacialSubIcons(Race race, Ruleset.Gender gender) {
+	private void addBaseRacialSubIcons(Race race, Gender gender) {
 		// remove any old base icons
-		remove(SubIcon.Type.BaseBackground);
-		remove(SubIcon.Type.BaseForeground);
-		remove(SubIcon.Type.Ears);
+		remove(Type.BaseBackground);
+		remove(Type.BaseForeground);
+		remove(Type.Ears);
 		
 		switch (gender) {
 		case Male:
 			if (race.getMaleBackgroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseBackground, race, gender);
+				Factory factory = new Factory(Type.BaseBackground, race, gender);
 				factory.setPrimaryIcon(race.getMaleBackgroundIcon(), getSkinColor());
 				factory.setSecondaryIcon(race.getMaleClothesIcon(), getClothingColor());
 				add(factory.createSubIcon());
 			}
 			
 			if (race.getMaleForegroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseForeground, race, gender);
+				Factory factory = new Factory(Type.BaseForeground, race, gender);
 				factory.setPrimaryIcon(race.getMaleForegroundIcon(), getSkinColor());
 				add(factory.createSubIcon());
 			}
 			
 			if (race.getMaleEarsIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Ears, race, gender);
+				Factory factory = new Factory(Type.Ears, race, gender);
 				factory.setPrimaryIcon(race.getMaleEarsIcon(), getSkinColor());
 				add(factory.createSubIcon());
 			}
 			break;
 		case Female:
 			if (race.getFemaleBackgroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseBackground, race, gender);
+				Factory factory = new Factory(Type.BaseBackground, race, gender);
 				factory.setPrimaryIcon(race.getFemaleBackgroundIcon(), getSkinColor());
 				factory.setSecondaryIcon(race.getFemaleClothesIcon(), getClothingColor());
 				add(factory.createSubIcon());
 			}
 			
 			if (race.getFemaleForegroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseForeground, race, gender);
+				Factory factory = new Factory(Type.BaseForeground, race, gender);
 				factory.setPrimaryIcon(race.getFemaleForegroundIcon(), getSkinColor());
 				add(factory.createSubIcon());
 			}
 			
 			if (race.getFemaleEarsIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Ears, race, gender);
+				Factory factory = new Factory(Type.Ears, race, gender);
 				factory.setPrimaryIcon(race.getFemaleEarsIcon(), getSkinColor());
 				add(factory.createSubIcon());
 			}
@@ -196,17 +200,17 @@ public class SubIconRenderer implements IconRenderer {
 			hair = subIcon;
 			break;
 		case Head:
-			remove(SubIcon.Type.Ears);
+			remove(Type.Ears);
 			break;
 		default:
 			// do nothing special
 		}
 		
 		if (subIcon.coversHair())
-			remove(SubIcon.Type.Hair);
+			remove(Type.Hair);
 		
 		if (subIcon.coversBeard())
-			remove(SubIcon.Type.Beard);
+			remove(Type.Beard);
 	}
 	
 	/**
@@ -225,7 +229,7 @@ public class SubIconRenderer implements IconRenderer {
 	 * @param type
 	 */
 	
-	public synchronized void remove(SubIcon.Type type) {
+	public synchronized void remove(Type type) {
 		Iterator<SubIcon> iter = subIcons.iterator();
 		while (iter.hasNext()) {
 			if (iter.next().getType() == type) {
@@ -233,11 +237,11 @@ public class SubIconRenderer implements IconRenderer {
 			}
 		}
 		
-		if (type == SubIcon.Type.Head && this.ears != null) {
-			add(this.ears);
+		if (type == Type.Head && ears != null) {
+			add(ears);
 		}
 		
-		if (type != SubIcon.Type.Beard) { 
+		if (type != Type.Beard) {
 			boolean addBeard = true;
 			for (SubIcon subIcon : subIcons) {
 				if (subIcon.coversBeard()) {
@@ -245,17 +249,17 @@ public class SubIconRenderer implements IconRenderer {
 					break;
 				}
 
-				if (subIcon.getType() == SubIcon.Type.Beard) {
+				if (subIcon.getType() == Type.Beard) {
 					addBeard = false;
 					break;
 				}
 			}
 
-			if (addBeard && this.beard != null)
-				add(this.beard);
+			if (addBeard && beard != null)
+				add(beard);
 		}
 		
-		if (type != SubIcon.Type.Hair) {
+		if (type != Type.Hair) {
 			boolean addHair = true;
 			for (SubIcon subIcon : subIcons) {
 				if (subIcon.coversHair()) {
@@ -263,14 +267,14 @@ public class SubIconRenderer implements IconRenderer {
 					break;
 				}
 				
-				if (subIcon.getType() == SubIcon.Type.Hair) {
+				if (subIcon.getType() == Type.Hair) {
 					addHair = false;
 					break;
 				}
 			}
 			
-			if (addHair && this.hair != null)
-				add(this.hair);
+			if (addHair && hair != null)
+				add(hair);
 		}
 	}
 	
@@ -321,13 +325,13 @@ public class SubIconRenderer implements IconRenderer {
 		return hair.getColor();
 	}
 	
-	public Point getOffset(String type) { return getOffset(SubIcon.Type.valueOf(type)); }
-	public Color getColor(String type) { return getColor(SubIcon.Type.valueOf(type)); }
-	public String getIcon(String type) { return getIcon(SubIcon.Type.valueOf(type)); }
+	public Point getOffset(String type) { return getOffset(Type.valueOf(type)); }
+	public Color getColor(String type) { return getColor(Type.valueOf(type)); }
+	public String getIcon(String type) { return getIcon(Type.valueOf(type)); }
 	
-	public SubIcon getSubIcon(String type) { return getSubIcon(SubIcon.Type.valueOf(type)); }
+	public SubIcon getSubIcon(String type) { return getSubIcon(Type.valueOf(type)); }
 	
-	public SubIcon getSubIcon(SubIcon.Type type) {
+	public SubIcon getSubIcon(Type type) {
 		for (SubIcon subIcon : subIcons) {
 			if (subIcon.getType() == type) return subIcon;
 		}
@@ -335,7 +339,7 @@ public class SubIconRenderer implements IconRenderer {
 		return null;
 	}
 	
-	public Point getOffset(SubIcon.Type type) {
+	public Point getOffset(Type type) {
 		for (SubIcon subIcon : subIcons) {
 			if (subIcon.getType() == type) return subIcon.getOffset();
 		}
@@ -343,7 +347,7 @@ public class SubIconRenderer implements IconRenderer {
 		return new Point(0, 0);
 	}
 	
-	public Color getColor(SubIcon.Type type) {
+	public Color getColor(Type type) {
 		for (SubIcon subIcon : subIcons) {
 			if (subIcon.getType() == type) return subIcon.getColor();
 		}
@@ -351,7 +355,7 @@ public class SubIconRenderer implements IconRenderer {
 		return null;
 	}
 	
-	public String getIcon(SubIcon.Type type) {
+	public String getIcon(Type type) {
 		for (SubIcon subIcon : subIcons) {
 			if (subIcon.getType() == type) return subIcon.getIcon();
 		}
