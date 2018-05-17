@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -22,27 +22,26 @@ package net.sf.hale.icon;
 /**
  * An IconRenderer is a class that draws an Icon.  Most icons are their own renderers,
  * but ComposedCreatureIcons have a special SubIconRenderer class
- * @author Jared
  *
+ * @author Jared
  */
-
 public interface IconRenderer {
-	
-	/**
-	 * Draws the icon at the specified position
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 */
 
+    /**
+     * Draws the icon at the specified position
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     void draw(int x, int y);
-	
-	/**
-	 * Draws this icon centered on the specified position
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 * @param width the width of the region to center on
-	 * @param height the height of the region to center on
-	 */
 
+    /**
+     * Draws this icon centered on the specified position
+     *
+     * @param x      the x coordinate
+     * @param y      the y coordinate
+     * @param width  the width of the region to center on
+     * @param height the height of the region to center on
+     */
     void drawCentered(int x, int y, int width, int height);
 }

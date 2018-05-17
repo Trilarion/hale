@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -32,78 +32,75 @@ import net.sf.hale.widgets.IconViewer;
 
 /**
  * A widget for displaying all of the details about an Ability in a single window.
- * 
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class AbilityDetailsWindow extends GameSubWindow {
-	/**
-	 * Create a new AbilityDetailsWindow displaying information about the
-	 * specified Ability
-	 * 
-	 * @param ability the Ability to view
-	 * @param parent the owner of the specified ability, or null to specify no owner
-	 * @param upgrade whether to base on the upgraded version (true) of the base version (false)
-	 */
-	
-	public AbilityDetailsWindow(Ability ability, Creature parent, boolean upgrade) {
-        setTitle( "Details for " + (upgrade ? ability.getUpgradedName(parent) : ability.getName()) );
-		
-		DialogLayout layout = new DialogLayout();
-		layout.setTheme("content");
+    /**
+     * Create a new AbilityDetailsWindow displaying information about the
+     * specified Ability
+     *
+     * @param ability the Ability to view
+     * @param parent  the owner of the specified ability, or null to specify no owner
+     * @param upgrade whether to base on the upgraded version (true) of the base version (false)
+     */
+    public AbilityDetailsWindow(Ability ability, Creature parent, boolean upgrade) {
+        setTitle("Details for " + (upgrade ? ability.getUpgradedName(parent) : ability.getName()));
+
+        DialogLayout layout = new DialogLayout();
+        layout.setTheme("content");
         add(layout);
-		
-		// set up the widgets for the top row
-		IconViewer iconViewer = new IconViewer(upgrade ? ability.getUpgradedIcon(parent) : ability.getIcon());
-		iconViewer.setEventHandlingEnabled(false);
-		
-		Label title = new Label(upgrade ? ability.getUpgradedName(parent) : ability.getName());
-		title.setTheme("titlelabel");
-		
-		Group topV = layout.createParallelGroup(iconViewer, title);
-		
-		Group topH = layout.createSequentialGroup(iconViewer);
-		topH.addGap(10);
-		topH.addWidget(title);
-		topH.addGap(10);
-		
-		// set up the widgets for the bottom area
-		HTMLTextAreaModel textAreaModel = new HTMLTextAreaModel();
+
+        // set up the widgets for the top row
+        IconViewer iconViewer = new IconViewer(upgrade ? ability.getUpgradedIcon(parent) : ability.getIcon());
+        iconViewer.setEventHandlingEnabled(false);
+
+        Label title = new Label(upgrade ? ability.getUpgradedName(parent) : ability.getName());
+        title.setTheme("titlelabel");
+
+        Group topV = layout.createParallelGroup(iconViewer, title);
+
+        Group topH = layout.createSequentialGroup(iconViewer);
+        topH.addGap(10);
+        topH.addWidget(title);
+        topH.addGap(10);
+
+        // set up the widgets for the bottom area
+        HTMLTextAreaModel textAreaModel = new HTMLTextAreaModel();
         TextArea textArea = new TextArea(textAreaModel);
         ScrollPane textPane = new ScrollPane(textArea);
         textPane.setFixed(Fixed.HORIZONTAL);
-		
+
         // set up the main layout
-		Group mainH = layout.createParallelGroup(topH);
-		mainH.addWidget(textPane);
-		
-		Group mainV = layout.createSequentialGroup(topV);
-		mainV.addGap(5);
-		mainV.addWidget(textPane);
-		
-		layout.setHorizontalGroup(mainH);
-		layout.setVerticalGroup(mainV);
-		
-		// create the text area contents
-		StringBuilder sb = new StringBuilder();
-		
-		ability.appendDetails(sb, parent, upgrade);
-		
-		sb.append("<div style=\"margin-top: 1em\">");
-		sb.append(ability.getDescription());
-		sb.append("</div>");
-		
-		ability.appendUpgradesDescription(sb, parent);
-		textAreaModel.setHtml(sb.toString());
-	}
-	
-	/*
-	 * This overrides the default close behavior of GameSubWindow
-	 * @see net.sf.hale.view.GameSubWindow#run()
-	 */
-	
-	@Override public void run() {
-		getParent().removeChild(this);
-	}
+        Group mainH = layout.createParallelGroup(topH);
+        mainH.addWidget(textPane);
+
+        Group mainV = layout.createSequentialGroup(topV);
+        mainV.addGap(5);
+        mainV.addWidget(textPane);
+
+        layout.setHorizontalGroup(mainH);
+        layout.setVerticalGroup(mainV);
+
+        // create the text area contents
+        StringBuilder sb = new StringBuilder();
+
+        ability.appendDetails(sb, parent, upgrade);
+
+        sb.append("<div style=\"margin-top: 1em\">");
+        sb.append(ability.getDescription());
+        sb.append("</div>");
+
+        ability.appendUpgradesDescription(sb, parent);
+        textAreaModel.setHtml(sb.toString());
+    }
+
+    /*
+     * This overrides the default close behavior of GameSubWindow
+     * @see net.sf.hale.view.GameSubWindow#run()
+     */
+    @Override
+    public void run() {
+        getParent().removeChild(this);
+    }
 }

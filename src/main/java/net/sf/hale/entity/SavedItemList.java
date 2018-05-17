@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -24,47 +24,46 @@ import net.sf.hale.util.SimpleJSONObject;
 /**
  * An item list that has been saved on disk, with some associated additional
  * data
- * @author Jared
  *
+ * @author Jared
  */
-
 public class SavedItemList extends ItemList {
-	private final int enchantmentPercentage;
-	private final int enchantmentSkillModifier;
-	
-	public SavedItemList(SimpleJSONObject data) {
-		super(data.getArray("items"));
-		
-		if (data.containsKey("enchantmentChance")) {
+    private final int enchantmentPercentage;
+    private final int enchantmentSkillModifier;
+
+    public SavedItemList(SimpleJSONObject data) {
+        super(data.getArray("items"));
+
+        if (data.containsKey("enchantmentChance")) {
             enchantmentPercentage = data.get("enchantmentChance", 0);
-		} else {
+        } else {
             enchantmentPercentage = 0;
-		}
-		
-		if (data.containsKey("enchantmentSkillModifier")) {
+        }
+
+        if (data.containsKey("enchantmentSkillModifier")) {
             enchantmentSkillModifier = data.get("enchantmentSkillModifier", 0);
-		} else {
+        } else {
             enchantmentSkillModifier = 0;
-		}
-	}
-	
-	/**
-	 * Returns the percentage chance that a given item which has valid enchantments,
-	 * should be enchanted, when generating loot from this list
-	 * @return the chance of an item being enchanted
-	 */
-	
-	public int getEnchantmentChance() {
-		return enchantmentPercentage;
-	}
-	
-	/**
-	 * Returns the skill modifier that should be used when enchanting an item as
-	 * part of generating loot from this item list
-	 * @return the skill modifier for enchantments
-	 */
-	
-	public int getEnchantmentSkillModifier() {
-		return enchantmentSkillModifier;
-	}
+        }
+    }
+
+    /**
+     * Returns the percentage chance that a given item which has valid enchantments,
+     * should be enchanted, when generating loot from this list
+     *
+     * @return the chance of an item being enchanted
+     */
+    public int getEnchantmentChance() {
+        return enchantmentPercentage;
+    }
+
+    /**
+     * Returns the skill modifier that should be used when enchanting an item as
+     * part of generating loot from this item list
+     *
+     * @return the skill modifier for enchantments
+     */
+    public int getEnchantmentSkillModifier() {
+        return enchantmentSkillModifier;
+    }
 }

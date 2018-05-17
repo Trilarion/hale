@@ -19,20 +19,16 @@
 
 package net.sf.hale.quickbar;
 
-import java.util.Iterator;
-import java.util.List;
-
 import de.matthiasmann.twl.Button;
 import net.sf.hale.Game;
-import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilityActivateCallback;
-import net.sf.hale.ability.AbilityExamineCallback;
-import net.sf.hale.ability.AbilitySlot;
-import net.sf.hale.ability.ScriptFunctionType;
+import net.sf.hale.ability.*;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.widgets.RightClickMenu;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -42,137 +38,147 @@ import net.sf.hale.widgets.RightClickMenu;
  * have this Ability readied, then this return values based either the first AbilitySlot
  * found that has cooldownRounds = 0, or if none of those are available, the AbilitySlot
  * with the smallest cooldownRounds remaining.
- * 
- * 
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class AbilityActivateSlot extends QuickbarSlot {
-	private final String abilityID;
-	private PC parent;
-	
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("type", "ability");
-		data.put("abilityID", abilityID);
-		
-		return data;
-	}
-	
-	/**
-	 * Creates a new AbilityActivateSlot for the specified Ability
-	 * @param ability the Ability
-	 * @param parent the activator for this Ability
-	 */
-	
-	public AbilityActivateSlot(Ability ability, PC parent) {
+    private final String abilityID;
+    private PC parent;
+
+    /**
+     * Creates a new AbilityActivateSlot for the specified Ability
+     *
+     * @param ability the Ability
+     * @param parent  the activator for this Ability
+     */
+    public AbilityActivateSlot(Ability ability, PC parent) {
         abilityID = ability.getID();
-		this.parent = parent;
-	}
-	
-	@Override public Icon getIcon() {
-		return parent.abilities.getUpgradedIcon(abilityID);
-	}
+        this.parent = parent;
+    }
 
-	public String getAbilityName() {
-		return parent.abilities.getUpgradedName(abilityID);
-	}
-	
-	@Override public String getLabelText() {
-		AbilitySlot slot = getBestSlot();
-		if (slot != null) return slot.getLabelText();
-		else return "";
-	}
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
 
-	@Override public boolean isChildActivateable() {
-		Ability ability = Game.ruleset.getAbility(abilityID);
-		
-		if (!Game.isInTurnMode() && !ability.canActivateOutsideCombat()) return false;
-		if (!parent.timer.canPerformAction(ability.getAPCost())) return false;
-		
-		for (AbilitySlot slot : parent.abilities.getSlotsWithReadiedAbility(ability)) {
-			if (slot.getCooldownRoundsLeft() == 0) return true;
-		}
-		
-		return false;
-	}
+        data.put("type", "ability");
+        data.put("abilityID", abilityID);
 
-	@Override public void childActivate(QuickbarSlotButton button) {
-		AbilitySlot slot = getBestSlot();
-		if (slot == null) return;
-		
-		if (slot.canActivate()) {
-			new AbilityActivateCallback(slot, ScriptFunctionType.onActivate).run();
-		} else if (slot.canDeactivate()) {
-			new AbilityActivateCallback(slot, ScriptFunctionType.onDeactivate).run();
-		}
-	}
-	
-	@Override public void showExamineWindow(QuickbarSlotButton button) {
-		AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
-		cb.setWindowCenter(button.getX(), button.getY());
-		cb.run();
-	}
-	
-	@Override public void createRightClickMenu(QuickbarSlotButton button) {
-		RightClickMenu menu = Game.mainViewer.getMenu();
-		menu.addMenuLevel(getAbilityName());
-		
-		Button activate = new Button("Activate");
-		activate.setEnabled(isActivateable());
-		activate.addCallback(button.getActivateSlotCallback(this));
-		menu.addButton(activate);
-		
-		Button examine = new Button("View Details");
-		AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
-		cb.setWindowCenter(menu.getX(), menu.getY());
-		examine.addCallback(cb);
-		menu.addButton(examine);
-		
-		Button clearSlot = new Button("Clear Slot");
-		clearSlot.addCallback(button.getClearSlotCallback());
-		menu.addButton(clearSlot);
-		
-		menu.show();
-		// show popup immediately
-		if (menu.shouldPopupToggle()) {
-			menu.togglePopup();
-		}
-	}
+        return data;
+    }
 
-	private AbilitySlot getBestSlot() {
-		Ability ability = Game.ruleset.getAbility(abilityID);
-		
-		List<AbilitySlot> slots = parent.abilities.getSlotsWithReadiedAbility(ability);
-		
-		if (slots.isEmpty()) return null;
-		
-		Iterator<AbilitySlot> iter = slots.iterator();
-		AbilitySlot bestSlot = iter.next();
-		
-		while (iter.hasNext()) {
-			AbilitySlot nextSlot = iter.next();
-			
-			if (nextSlot.getCooldownRoundsLeft() < bestSlot.getCooldownRoundsLeft())
-				bestSlot = nextSlot;
-		}
-		
-		return bestSlot;
-	}
-	
-	@Override public String getTooltipText() {
-		return "Activate " + getAbilityName();
-	}
-	
-	@Override public Icon getSecondaryIcon() { return null; }
+    @Override
+    public Icon getIcon() {
+        return parent.abilities.getUpgradedIcon(abilityID);
+    }
 
-	@Override public String getSaveDescription() {
-		return "Ability \"" + abilityID + "\"";
-	}
+    public String getAbilityName() {
+        return parent.abilities.getUpgradedName(abilityID);
+    }
 
-	@Override public QuickbarSlot getCopy(PC parent) {
-		return new AbilityActivateSlot(Game.ruleset.getAbility(abilityID), parent);
-	}
+    @Override
+    public String getLabelText() {
+        AbilitySlot slot = getBestSlot();
+        if (slot != null) return slot.getLabelText();
+        else return "";
+    }
+
+    @Override
+    public boolean isChildActivateable() {
+        Ability ability = Game.ruleset.getAbility(abilityID);
+
+        if (!Game.isInTurnMode() && !ability.canActivateOutsideCombat()) return false;
+        if (!parent.timer.canPerformAction(ability.getAPCost())) return false;
+
+        for (AbilitySlot slot : parent.abilities.getSlotsWithReadiedAbility(ability)) {
+            if (slot.getCooldownRoundsLeft() == 0) return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void childActivate(QuickbarSlotButton button) {
+        AbilitySlot slot = getBestSlot();
+        if (slot == null) return;
+
+        if (slot.canActivate()) {
+            new AbilityActivateCallback(slot, ScriptFunctionType.onActivate).run();
+        } else if (slot.canDeactivate()) {
+            new AbilityActivateCallback(slot, ScriptFunctionType.onDeactivate).run();
+        }
+    }
+
+    @Override
+    public void showExamineWindow(QuickbarSlotButton button) {
+        AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
+        cb.setWindowCenter(button.getX(), button.getY());
+        cb.run();
+    }
+
+    @Override
+    public void createRightClickMenu(QuickbarSlotButton button) {
+        RightClickMenu menu = Game.mainViewer.getMenu();
+        menu.addMenuLevel(getAbilityName());
+
+        Button activate = new Button("Activate");
+        activate.setEnabled(isActivateable());
+        activate.addCallback(button.getActivateSlotCallback(this));
+        menu.addButton(activate);
+
+        Button examine = new Button("View Details");
+        AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
+        cb.setWindowCenter(menu.getX(), menu.getY());
+        examine.addCallback(cb);
+        menu.addButton(examine);
+
+        Button clearSlot = new Button("Clear Slot");
+        clearSlot.addCallback(button.getClearSlotCallback());
+        menu.addButton(clearSlot);
+
+        menu.show();
+        // show popup immediately
+        if (menu.shouldPopupToggle()) {
+            menu.togglePopup();
+        }
+    }
+
+    private AbilitySlot getBestSlot() {
+        Ability ability = Game.ruleset.getAbility(abilityID);
+
+        List<AbilitySlot> slots = parent.abilities.getSlotsWithReadiedAbility(ability);
+
+        if (slots.isEmpty()) return null;
+
+        Iterator<AbilitySlot> iter = slots.iterator();
+        AbilitySlot bestSlot = iter.next();
+
+        while (iter.hasNext()) {
+            AbilitySlot nextSlot = iter.next();
+
+            if (nextSlot.getCooldownRoundsLeft() < bestSlot.getCooldownRoundsLeft())
+                bestSlot = nextSlot;
+        }
+
+        return bestSlot;
+    }
+
+    @Override
+    public String getTooltipText() {
+        return "Activate " + getAbilityName();
+    }
+
+    @Override
+    public Icon getSecondaryIcon() {
+        return null;
+    }
+
+    @Override
+    public String getSaveDescription() {
+        return "Ability \"" + abilityID + "\"";
+    }
+
+    @Override
+    public QuickbarSlot getCopy(PC parent) {
+        return new AbilityActivateSlot(Game.ruleset.getAbility(abilityID), parent);
+    }
 }

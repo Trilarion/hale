@@ -28,29 +28,26 @@ import net.sf.hale.util.SimpleJSONObject;
  * the color for a given particle, you can have the color be based on the speed of
  * the particle.  So, you might have faster particles be more red while slower
  * particles are more white.
- * 
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public interface DistributionBase extends Saveable {
-	
-	/**
-	 * Returns the float value for the property of the specified particle
-	 * for this DistributionBase.
-	 * 
-	 * @param particle the Particle to get the property from
-	 * @return the value for the property of the specified particle for this
-	 * DistributionBase
-	 */
 
+    /**
+     * Returns the float value for the property of the specified particle
+     * for this DistributionBase.
+     *
+     * @param particle the Particle to get the property from
+     * @return the value for the property of the specified particle for this
+     * DistributionBase
+     */
     float getBase(Particle particle);
-	
-	/**
-	 * Loads the distribution base from the specified JSON data
-	 * @param data the JSON data to load from
-	 * @return the distribution base
-	 */
 
+    /**
+     * Loads the distribution base from the specified JSON data
+     *
+     * @param data the JSON data to load from
+     * @return the distribution base
+     */
     DistributionBase load(SimpleJSONObject data);
 }

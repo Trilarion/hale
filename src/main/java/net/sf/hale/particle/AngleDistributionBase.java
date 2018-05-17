@@ -23,20 +23,23 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class AngleDistributionBase implements DistributionBase {
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		
-		return data;
-	}
-	
-	@Override public float getBase(Particle particle) {
-		return particle.getVelocityAngle();
-	}
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
 
-	@Override public DistributionBase load(SimpleJSONObject data) {
-		return new AngleDistributionBase();
-	}
+        data.put("class", getClass().getName());
+
+        return data;
+    }
+
+    @Override
+    public float getBase(Particle particle) {
+        return particle.getVelocityAngle();
+    }
+
+    @Override
+    public DistributionBase load(SimpleJSONObject data) {
+        return new AngleDistributionBase();
+    }
 
 }

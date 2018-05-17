@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -23,29 +23,29 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ProficiencyList {
-	private Set<String> proficiencies;
-	
-	public ProficiencyList() {
-		proficiencies = new LinkedHashSet<>();
-	}
-	
-	public ProficiencyList(ProficiencyList other) {
-		proficiencies = new LinkedHashSet<>(other.proficiencies);
-	}
-	
-	public void add(String proficiency) {
-		proficiencies.add(proficiency);
-	}
-	
-	public void remove(String proficiency) {
-		proficiencies.remove(proficiency);
-	}
-	
-	public void clear() {
-		proficiencies.clear();
-	}
-	
-	public boolean hasProficiency(String proficiency) {
-		return proficiencies.contains(proficiency);
-	}
+    private Set<String> proficiencies;
+
+    public ProficiencyList() {
+        proficiencies = new LinkedHashSet<>();
+    }
+
+    public ProficiencyList(ProficiencyList other) {
+        proficiencies = new LinkedHashSet<>(other.proficiencies);
+    }
+
+    public void add(String proficiency) {
+        proficiencies.add(proficiency);
+    }
+
+    public void remove(String proficiency) {
+        proficiencies.remove(proficiency);
+    }
+
+    public void clear() {
+        proficiencies.clear();
+    }
+
+    public boolean hasProficiency(String proficiency) {
+        return proficiencies.contains(proficiency);
+    }
 }

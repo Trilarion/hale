@@ -11,22 +11,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package net.sf.hale.swingeditor;
-
-import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
-import javax.swing.JFrame;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import net.sf.hale.Config;
 import net.sf.hale.Game;
@@ -37,151 +28,160 @@ import net.sf.hale.rules.Dice;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.util.JSEngineManager;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
 /**
  * A campaign editor using swing widgets rather than TWL
- * @author Jared
  *
+ * @author Jared
  */
-
 public class SwingEditor extends JFrame implements ComponentListener {
-	public static final String NewLine = System.getProperty("line.separator");
+    public static final String NewLine = System.getProperty("line.separator");
     private static final long serialVersionUID = -7859364367684081584L;
+    private EditorMenuBar menuBar;
+    private AreaPalette palette;
+    private Canvas canvas;
+    private OpenGLThread glThread;
+    private SwingEditor() {
+        addComponentListener(this);
+        setSize(Game.config.getResolutionX(), Game.config.getResolutionY());
+        setTitle("Hale Campaign Editor");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // set up the OpenGL canvas
+        canvas = new Canvas() {
+            private static final long serialVersionUID = -7707592117754000398L;
+
+            @Override
+            public void addNotify() {
+                super.addNotify();
+                glThread = new OpenGLThread(SwingEditor.this);
+                glThread.start();
+            }
+
+            @Override
+            public void removeNotify() {
+                glThread.destroyDisplay();
+            }
+        };
+        add(canvas, BorderLayout.CENTER);
+
+        palette = new AreaPalette();
+        add(palette, BorderLayout.EAST);
+
+        // make the menu bar appear on top of the canvas rather than below
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+
+        menuBar = new EditorMenuBar(this);
+        setJMenuBar(menuBar);
+    }
 
     /**
-	 * The main entry point for the editor.  Any arguments are ignored
-	 * @param args
-	 */
-	
-	public static void main(String[] args) {
-		// determine system type
-		String osString = System.getProperty("os.name").toLowerCase();
+     * The main entry point for the editor.  Any arguments are ignored
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        // determine system type
+        String osString = System.getProperty("os.name").toLowerCase();
 
-		OSType osType;
-		if (osString.contains("win")) osType = OSType.Windows;
-		else if (osString.contains("mac")) osType = OSType.Mac;
-		else osType = OSType.Unix;
+        OSType osType;
+        if (osString.contains("win")) osType = OSType.Windows;
+        else if (osString.contains("mac")) osType = OSType.Mac;
+        else osType = OSType.Unix;
 
-		Game.initializeOSSpecific(osType);
-		
-		// create the basic objects used by the campaign editor
-		Game.textureLoader = new AsyncTextureLoader();
-		Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
-		Game.scriptEngineManager = new JSEngineManager();
-		Game.dice = new Dice();
-		
-		ResourceManager.registerCorePackage();
-		
-		Game.ruleset = new Ruleset();
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override public void run() {
-				// create the editor frame
-				SwingEditor editor = new SwingEditor();
-				
-				EditorManager.initialize(editor);
-				
-				editor.setVisible(true);
-			}
-		});
-	}
+        Game.initializeOSSpecific(osType);
 
-	private EditorMenuBar menuBar;
-	private AreaPalette palette;
-	private Canvas canvas;
-	private OpenGLThread glThread;
-	
-	private SwingEditor() {
-		addComponentListener(this);
-		setSize(Game.config.getResolutionX(), Game.config.getResolutionY());
-		setTitle("Hale Campaign Editor");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		// set up the OpenGL canvas
-		canvas = new Canvas() {
-			private static final long serialVersionUID = -7707592117754000398L;
+        // create the basic objects used by the campaign editor
+        Game.textureLoader = new AsyncTextureLoader();
+        Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
+        Game.scriptEngineManager = new JSEngineManager();
+        Game.dice = new Dice();
 
-            @Override public void addNotify() {
-				super.addNotify();
-				glThread = new OpenGLThread(SwingEditor.this);
-				glThread.start();
-			}
-			
-			@Override public void removeNotify() {
-				glThread.destroyDisplay();
-			}
-		};
-		add(canvas, BorderLayout.CENTER);
-		
-		palette = new AreaPalette();
-		add(palette, BorderLayout.EAST);
-		
-		// make the menu bar appear on top of the canvas rather than below
-		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		
-		menuBar = new EditorMenuBar(this);
-		setJMenuBar(menuBar);
-	}
-	
-	/**
-	 * Shows the specified log entry in the upper right of the editor
-	 * @param entry the entry to add
-	 */
-	
-	public void setLogEntry(String entry) {
-		menuBar.setLogText(entry);
-	}
-	
-	/**
-	 * Returns the palette used for selecting components to be painted
-	 * to the current area
-	 * @return the area palette
-	 */
-	
-	public AreaPalette getPalette() {
-		return palette;
-	}
-	
-	/**
-	 * Returns the Canvas that the OpenGL context is drawing on
-	 * @return the OpenGL canvas
-	 */
-	
-	public Canvas getOpenGLCanvas() {
-		return canvas;
-	}
+        ResourceManager.registerCorePackage();
 
-	/**
-	 * Updates the list of campaign assets, areas, etc
-	 */
-	
-	public void updateCampaign() {
-		menuBar.updateCampaign();
-	}
-	
-	/**
-	 * Sets the AreaViewer that is used to draw the OpenGL content
-	 * @param viewer
-	 */
-	
-	public void setAreaViewer(AreaRenderer viewer) {
-		if (glThread != null)
-			glThread.setAreaViewer(viewer);
-	}
+        Game.ruleset = new Ruleset();
 
-	@Override public void componentHidden(ComponentEvent arg0) {
-		if (glThread != null)
-			glThread.setDrawingEnabled(false);
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // create the editor frame
+                SwingEditor editor = new SwingEditor();
 
-	@Override public void componentMoved(ComponentEvent arg0) { }
+                EditorManager.initialize(editor);
 
-	@Override public void componentResized(ComponentEvent arg0) {
-		if (glThread != null)
-			glThread.canvasResized();
-	}
+                editor.setVisible(true);
+            }
+        });
+    }
 
-	@Override public void componentShown(ComponentEvent arg0) {
-		if (glThread != null)
-			glThread.setDrawingEnabled(true);
-	}
+    /**
+     * Shows the specified log entry in the upper right of the editor
+     *
+     * @param entry the entry to add
+     */
+    public void setLogEntry(String entry) {
+        menuBar.setLogText(entry);
+    }
+
+    /**
+     * Returns the palette used for selecting components to be painted
+     * to the current area
+     *
+     * @return the area palette
+     */
+    public AreaPalette getPalette() {
+        return palette;
+    }
+
+    /**
+     * Returns the Canvas that the OpenGL context is drawing on
+     *
+     * @return the OpenGL canvas
+     */
+    public Canvas getOpenGLCanvas() {
+        return canvas;
+    }
+
+    /**
+     * Updates the list of campaign assets, areas, etc
+     */
+    public void updateCampaign() {
+        menuBar.updateCampaign();
+    }
+
+    /**
+     * Sets the AreaViewer that is used to draw the OpenGL content
+     *
+     * @param viewer
+     */
+    public void setAreaViewer(AreaRenderer viewer) {
+        if (glThread != null)
+            glThread.setAreaViewer(viewer);
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent arg0) {
+        if (glThread != null)
+            glThread.setDrawingEnabled(false);
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent arg0) {
+    }
+
+    @Override
+    public void componentResized(ComponentEvent arg0) {
+        if (glThread != null)
+            glThread.canvasResized();
+    }
+
+    @Override
+    public void componentShown(ComponentEvent arg0) {
+        if (glThread != null)
+            glThread.setDrawingEnabled(true);
+    }
 }

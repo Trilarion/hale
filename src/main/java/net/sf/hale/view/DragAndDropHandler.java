@@ -27,90 +27,88 @@ import net.sf.hale.widgets.IconViewer;
 
 /**
  * This class is used by widgets that want to have drag and drop functionality
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class DragAndDropHandler {
-	public static final StateKey STATE_DRAG_HOVER = StateKey.get("draghover");
-	
-	private IconViewer viewer;
-	
-	private DragTarget dragTarget;
-	
-	private DropTarget dropTarget;
-	
-	/**
-	 * Creates a new handler dragging the specified drag target
-	 * @param dragTarget the target being drapped
-	 */
-	
-	public DragAndDropHandler(DragTarget dragTarget) {
-		this.dragTarget = dragTarget;
-		
-		viewer = new IconViewer(dragTarget.getDragIcon());
-		viewer.setTheme("");
-		Game.mainViewer.add(viewer);
-	}
-	
-	/**
-	 * Handles the specified event.  The drag and drop viewer widget is repositioned under
-	 * the mouse cursor.  If the user releases the mouse while over a drop target, the
-	 * drag and drop is applied
-	 * 
-	 * @param evt the Event to handle
-	 * @return true if this DragAndDropHandler is still active, false if it has been
-	 * deactivated (by releasing the mouse button) and can be discarded
-	 */
-	
-	public boolean handleEvent(Event evt) {
-		int x = evt.getMouseX();
-		int y = evt.getMouseY();
-		
-		if (Game.interfaceLocker.locked()) return false;
-		
-		switch (evt.getType()) {
-		case MOUSE_DRAGGED:
-			viewer.setPosition(x, y);
-			
-			handleDrag(x, y);
-			return true;
-		case MOUSE_BTNUP:
-			handleDrop();
-			
-			Game.mainViewer.removeChild(viewer);
-			return false;
-		default:
-		}
-		
-		return true;
-	}
-	
-	private void handleDrag(int x, int y) {
-		Widget widget = Game.mainViewer.getWidgetAt(x, y);
-		
-		DropTarget newTarget;
-		
-		if ( (widget instanceof DropTarget) && (widget != dragTarget) ) {
-			newTarget = (DropTarget)widget;
-		} else {
-			newTarget = null;
-		}
-		
-		if (newTarget != dropTarget) {
-			if (dropTarget != null)
-				dropTarget.dragAndDropStopHover(dragTarget);
-			
-			if (newTarget != null)
-				newTarget.dragAndDropStartHover(dragTarget);
-		}
-		
-		dropTarget = newTarget;
-	}
-	
-	private void handleDrop() {
-		if (dropTarget == null) return;
-		
-		dropTarget.dropDragTarget(dragTarget);
-	}
+    public static final StateKey STATE_DRAG_HOVER = StateKey.get("draghover");
+
+    private IconViewer viewer;
+
+    private DragTarget dragTarget;
+
+    private DropTarget dropTarget;
+
+    /**
+     * Creates a new handler dragging the specified drag target
+     *
+     * @param dragTarget the target being drapped
+     */
+    public DragAndDropHandler(DragTarget dragTarget) {
+        this.dragTarget = dragTarget;
+
+        viewer = new IconViewer(dragTarget.getDragIcon());
+        viewer.setTheme("");
+        Game.mainViewer.add(viewer);
+    }
+
+    /**
+     * Handles the specified event.  The drag and drop viewer widget is repositioned under
+     * the mouse cursor.  If the user releases the mouse while over a drop target, the
+     * drag and drop is applied
+     *
+     * @param evt the Event to handle
+     * @return true if this DragAndDropHandler is still active, false if it has been
+     * deactivated (by releasing the mouse button) and can be discarded
+     */
+    public boolean handleEvent(Event evt) {
+        int x = evt.getMouseX();
+        int y = evt.getMouseY();
+
+        if (Game.interfaceLocker.locked()) return false;
+
+        switch (evt.getType()) {
+            case MOUSE_DRAGGED:
+                viewer.setPosition(x, y);
+
+                handleDrag(x, y);
+                return true;
+            case MOUSE_BTNUP:
+                handleDrop();
+
+                Game.mainViewer.removeChild(viewer);
+                return false;
+            default:
+        }
+
+        return true;
+    }
+
+    private void handleDrag(int x, int y) {
+        Widget widget = Game.mainViewer.getWidgetAt(x, y);
+
+        DropTarget newTarget;
+
+        if ((widget instanceof DropTarget) && (widget != dragTarget)) {
+            newTarget = (DropTarget) widget;
+        } else {
+            newTarget = null;
+        }
+
+        if (newTarget != dropTarget) {
+            if (dropTarget != null)
+                dropTarget.dragAndDropStopHover(dragTarget);
+
+            if (newTarget != null)
+                newTarget.dragAndDropStartHover(dragTarget);
+        }
+
+        dropTarget = newTarget;
+    }
+
+    private void handleDrop() {
+        if (dropTarget == null) return;
+
+        dropTarget.dropDragTarget(dragTarget);
+    }
 }

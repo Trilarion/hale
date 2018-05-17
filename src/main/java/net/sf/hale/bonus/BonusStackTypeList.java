@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -23,57 +23,61 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BonusStackTypeList {
-	private int currentTotal;
-	private List<Bonus> bonuses;
-	
-	public BonusStackTypeList() {
-		bonuses = new LinkedList<>();
-		currentTotal = 0;
-	}
-	
-	public BonusStackTypeList(BonusStackTypeList other) {
+    private int currentTotal;
+    private List<Bonus> bonuses;
+
+    public BonusStackTypeList() {
+        bonuses = new LinkedList<>();
+        currentTotal = 0;
+    }
+
+    public BonusStackTypeList(BonusStackTypeList other) {
         bonuses = new LinkedList<>(other.bonuses);
         currentTotal = other.currentTotal;
-	}
-	
-	public void add(Bonus bonus) {
-		bonuses.add(bonus);
-		
-		if (!bonus.hasValue()) return;
-		
-		switch (bonus.getStackType()) {
-		case StackableBonus:
-		case StackablePenalty:
-			currentTotal += bonus.getValue();
-			break;
-		default:
-			if (Math.abs(bonus.getValue()) > Math.abs(currentTotal)) currentTotal = bonus.getValue();
-		}
-	}
-	
-	public void remove(Bonus bonus) {
-		bonuses.remove(bonus);
-		
-		if (!bonus.hasValue()) return;
-		
-		currentTotal = 0;
-		
-		// we need to recompute the total for this stack type from scratch
-		switch (bonus.getStackType()) {
-		case StackableBonus:
-		case StackablePenalty:
-			for (Bonus b : bonuses) {
-				currentTotal += b.getValue();
-			}
-			break;
-		default:
-			for (Bonus b : bonuses) {
-				if (Math.abs(b.getValue()) > Math.abs(currentTotal)) currentTotal = b.getValue();
-			}
-		}
-	}
-	
-	public int getCurrentTotal() { return currentTotal; }
-	
-	public boolean isEmpty() { return bonuses.isEmpty(); }
+    }
+
+    public void add(Bonus bonus) {
+        bonuses.add(bonus);
+
+        if (!bonus.hasValue()) return;
+
+        switch (bonus.getStackType()) {
+            case StackableBonus:
+            case StackablePenalty:
+                currentTotal += bonus.getValue();
+                break;
+            default:
+                if (Math.abs(bonus.getValue()) > Math.abs(currentTotal)) currentTotal = bonus.getValue();
+        }
+    }
+
+    public void remove(Bonus bonus) {
+        bonuses.remove(bonus);
+
+        if (!bonus.hasValue()) return;
+
+        currentTotal = 0;
+
+        // we need to recompute the total for this stack type from scratch
+        switch (bonus.getStackType()) {
+            case StackableBonus:
+            case StackablePenalty:
+                for (Bonus b : bonuses) {
+                    currentTotal += b.getValue();
+                }
+                break;
+            default:
+                for (Bonus b : bonuses) {
+                    if (Math.abs(b.getValue()) > Math.abs(currentTotal)) currentTotal = b.getValue();
+                }
+        }
+    }
+
+    public int getCurrentTotal() {
+        return currentTotal;
+    }
+
+    public boolean isEmpty() {
+        return bonuses.isEmpty();
+    }
 }

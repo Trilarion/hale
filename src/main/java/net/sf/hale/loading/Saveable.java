@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -21,16 +21,15 @@ package net.sf.hale.loading;
 
 /**
  * An interface that is implemented by classes that can be saved to disk
- * @author Jared
  *
+ * @author Jared
  */
-
 public interface Saveable {
-	/**
-	 * Called whenever this object is being saved.  This object should store all of its
-	 * data in a JSONObject and return it
-	 * @return the JSONObject storing all of this Saveable's data
-	 */
-
+    /**
+     * Called whenever this object is being saved.  This object should store all of its
+     * data in a JSONObject and return it
+     *
+     * @return the JSONObject storing all of this Saveable's data
+     */
     Object save();
 }

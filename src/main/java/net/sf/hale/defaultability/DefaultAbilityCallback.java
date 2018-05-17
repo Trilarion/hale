@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -28,46 +28,44 @@ import net.sf.hale.entity.PC;
  * {@link DefaultAbility#activate(PC, Location)}
  * a DefaultAbility.  Can be added as a Callback to a button so that it runs (activating
  * the specified DefaultAbility) when the button is clicked.
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class DefaultAbilityCallback implements Runnable {
-	private DefaultAbility ability;
-	private PC parent;
-	private Location targetPosition;
-	
-	/**
-	 * Creates a new DefaultAbilityCallback that will activate the
-	 * specified DefaultAbility when run.
-	 * @param ability the DefaultAbility to activate
-	 */
-	
-	public DefaultAbilityCallback(DefaultAbility ability) {
-		this.ability = ability;
-	}
-	
-	/**
-	 * Sets the paramaters that will be passed to the DefaultAbility activate
-	 * method.
-	 * 
-	 * @param parent the parent Creature
-	 * @param targetPosition the targeted grid Point
-	 */
-	
-	public void setActivateParameters(PC parent, Location targetPosition) {
-		this.parent = parent;
-		this.targetPosition = targetPosition;
-	}
-	
-	/*
-	 * Activate the DefaultAbility (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	
-	@Override public void run() {
-		ability.activate(parent, targetPosition);
-		
-		Game.mainViewer.getMenu().hide();
-	}
+    private DefaultAbility ability;
+    private PC parent;
+    private Location targetPosition;
+
+    /**
+     * Creates a new DefaultAbilityCallback that will activate the
+     * specified DefaultAbility when run.
+     *
+     * @param ability the DefaultAbility to activate
+     */
+    public DefaultAbilityCallback(DefaultAbility ability) {
+        this.ability = ability;
+    }
+
+    /**
+     * Sets the paramaters that will be passed to the DefaultAbility activate
+     * method.
+     *
+     * @param parent         the parent Creature
+     * @param targetPosition the targeted grid Point
+     */
+    public void setActivateParameters(PC parent, Location targetPosition) {
+        this.parent = parent;
+        this.targetPosition = targetPosition;
+    }
+
+    /*
+     * Activate the DefaultAbility (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    @Override
+    public void run() {
+        ability.activate(parent, targetPosition);
+
+        Game.mainViewer.getMenu().hide();
+    }
 }

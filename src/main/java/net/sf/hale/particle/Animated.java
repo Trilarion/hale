@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -22,28 +22,30 @@ package net.sf.hale.particle;
 import net.sf.hale.loading.Saveable;
 
 public interface Animated extends Saveable {
-	void setDuration(float seconds);
-	void setDurationInfinite();
-	
-	boolean isDrawable();
-	
-	void offsetPosition(float x, float y);
-	void setPosition(float x, float y);
-	
-	boolean initialize();
-	
-	void draw();
-	
-	boolean elapseTime(float seconds);
-	
-	DrawingMode getDrawingMode();
-	
-	Animated getCopy();
-	
-	void cacheSprite();
-	
-	enum DrawingMode {
-		BelowEntities,
-		AboveEntities
-	}
+    void setDuration(float seconds);
+
+    void setDurationInfinite();
+
+    boolean isDrawable();
+
+    void offsetPosition(float x, float y);
+
+    void setPosition(float x, float y);
+
+    boolean initialize();
+
+    void draw();
+
+    boolean elapseTime(float seconds);
+
+    DrawingMode getDrawingMode();
+
+    Animated getCopy();
+
+    void cacheSprite();
+
+    enum DrawingMode {
+        BelowEntities,
+        AboveEntities
+    }
 }

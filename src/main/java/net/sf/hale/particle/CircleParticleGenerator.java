@@ -25,68 +25,72 @@ import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class CircleParticleGenerator extends ParticleGenerator {
-	private float minBound, maxBound;
-	
-	private static final float twoPi = 2.0f * (float)Math.PI;
-	
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = super.save();
-		
-		data.put("minCircleBound", minBound);
-		data.put("maxCircleBound", maxBound);
-		
-		return data;
-	}
-	
-	public static ParticleGenerator load(SimpleJSONObject data) throws LoadGameException {
-		Mode mode = Mode.valueOf(data.get("generatorMode", null));
-		String particleSprite = data.get("sprite", null);
-		float numParticles = data.get("numParticles", 0.0f);
-		
-		CircleParticleGenerator generator = new CircleParticleGenerator(mode, particleSprite, numParticles);
-		
-		generator.loadBase(data);
-		
-		generator.minBound = data.get("minCircleBound", 0.0f);
-		generator.maxBound = data.get("maxCircleBound", 0.0f);
-		
-		return generator;
-	}
-	
-	public CircleParticleGenerator(Mode mode, String sprite, float numParticles) {
-		super(mode, sprite, numParticles);
-	}
-	
-	public CircleParticleGenerator(CircleParticleGenerator other) {
-		super(other);
+    private static final float twoPi = 2.0f * (float) Math.PI;
+    private float minBound, maxBound;
+
+    public CircleParticleGenerator(Mode mode, String sprite, float numParticles) {
+        super(mode, sprite, numParticles);
+    }
+
+    public CircleParticleGenerator(CircleParticleGenerator other) {
+        super(other);
 
         minBound = other.minBound;
         maxBound = other.maxBound;
-	}
-	
-	public void setCircleBounds(float min, float max) {
+    }
+
+    public static ParticleGenerator load(SimpleJSONObject data) throws LoadGameException {
+        Mode mode = Mode.valueOf(data.get("generatorMode", null));
+        String particleSprite = data.get("sprite", null);
+        float numParticles = data.get("numParticles", 0.0f);
+
+        CircleParticleGenerator generator = new CircleParticleGenerator(mode, particleSprite, numParticles);
+
+        generator.loadBase(data);
+
+        generator.minBound = data.get("minCircleBound", 0.0f);
+        generator.maxBound = data.get("maxCircleBound", 0.0f);
+
+        return generator;
+    }
+
+    @Override
+    public JSONOrderedObject save() {
+        JSONOrderedObject data = super.save();
+
+        data.put("minCircleBound", minBound);
+        data.put("maxCircleBound", maxBound);
+
+        return data;
+    }
+
+    public void setCircleBounds(float min, float max) {
         minBound = min;
         maxBound = max;
-	}
-	
-	@Override public void offsetPosition(float x, float y) {
-		super.offsetPosition(x, y);
-	}
-	
-	@Override public boolean initialize() {
-		if (!super.initialize()) return false;
-		
-		return true;
-	}
-	
-	@Override protected void setParticlePosition(Particle particle) {
-		float angle = Game.dice.rand(0.0f, twoPi);
-		float magnitude = Game.dice.rand(minBound, maxBound);
-		
-		particle.setPosition((float)Math.cos(angle) * magnitude + getX(), (float)Math.sin(angle) * magnitude + getY());
-	}
-	
-	@Override public Animated getCopy() {
-		return new CircleParticleGenerator(this);
-	}
+    }
+
+    @Override
+    public void offsetPosition(float x, float y) {
+        super.offsetPosition(x, y);
+    }
+
+    @Override
+    public boolean initialize() {
+        if (!super.initialize()) return false;
+
+        return true;
+    }
+
+    @Override
+    protected void setParticlePosition(Particle particle) {
+        float angle = Game.dice.rand(0.0f, twoPi);
+        float magnitude = Game.dice.rand(minBound, maxBound);
+
+        particle.setPosition((float) Math.cos(angle) * magnitude + getX(), (float) Math.sin(angle) * magnitude + getY());
+    }
+
+    @Override
+    public Animated getCopy() {
+        return new CircleParticleGenerator(this);
+    }
 }

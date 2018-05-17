@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -19,43 +19,46 @@
 
 package net.sf.hale.bonus;
 
-import net.sf.hale.bonus.Bonus.StackType;
-import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class ArmorProficiency extends Bonus {
-	private final String armorType;
-	
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("armorProficiency", armorType);
-		
-		return data;
-	}
-	
-	public static ArmorProficiency load(SimpleJSONObject data) {
-		return new ArmorProficiency(data.get("armorProficiency", null));
-	}
-	
-	public ArmorProficiency(String armorType) {
-		super(Type.ArmorProficiency, StackType.GenericBonus);
-		
-		this.armorType = armorType;
-	}
-	
-	public String getArmorType() { return armorType; }
-	
-	@Override public ArmorProficiency cloneWithReduction(int reduction) {
-		return new ArmorProficiency(armorType);
-	}
-	
-	@Override public void appendDescription(StringBuilder sb) {
-		sb.append("<span style=\"font-family: blue;\">");
-		sb.append(armorType);
-		sb.append("</span> ");
-		super.appendDescription(sb);
-	}
+    private final String armorType;
+
+    public ArmorProficiency(String armorType) {
+        super(Type.ArmorProficiency, StackType.GenericBonus);
+
+        this.armorType = armorType;
+    }
+
+    public static ArmorProficiency load(SimpleJSONObject data) {
+        return new ArmorProficiency(data.get("armorProficiency", null));
+    }
+
+    @Override
+    public JSONOrderedObject save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("armorProficiency", armorType);
+
+        return data;
+    }
+
+    public String getArmorType() {
+        return armorType;
+    }
+
+    @Override
+    public ArmorProficiency cloneWithReduction(int reduction) {
+        return new ArmorProficiency(armorType);
+    }
+
+    @Override
+    public void appendDescription(StringBuilder sb) {
+        sb.append("<span style=\"font-family: blue;\">");
+        sb.append(armorType);
+        sb.append("</span> ");
+        super.appendDescription(sb);
+    }
 }

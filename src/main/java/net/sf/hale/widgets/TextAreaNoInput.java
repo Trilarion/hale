@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,22 +25,22 @@ import de.matthiasmann.twl.textarea.TextAreaModel;
 
 /**
  * A text area that does not grab any events
- * @author Jared
  *
+ * @author Jared
  */
-
 public class TextAreaNoInput extends TextArea {
-	/**
-	 * Creates a new TextArea
-	 * @param model the text model to use
-	 */
-	
-	public TextAreaNoInput(TextAreaModel model) {
-		super(model);
-		setTheme("textarea");
-	}
-	
-	@Override protected boolean handleEvent(Event evt) {
-		return false;
-	}
+    /**
+     * Creates a new TextArea
+     *
+     * @param model the text model to use
+     */
+    public TextAreaNoInput(TextAreaModel model) {
+        super(model);
+        setTheme("textarea");
+    }
+
+    @Override
+    protected boolean handleEvent(Event evt) {
+        return false;
+    }
 }

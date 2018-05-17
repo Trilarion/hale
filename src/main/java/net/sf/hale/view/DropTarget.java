@@ -21,29 +21,28 @@ package net.sf.hale.view;
 
 /**
  * An interface for any widget that wants to recieve a drag from another widget
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public interface DropTarget {
-	/**
-	 * Called when this widget is being hovered over by a drag target
-	 * @param target the drag target
-	 */
-
+    /**
+     * Called when this widget is being hovered over by a drag target
+     *
+     * @param target the drag target
+     */
     void dragAndDropStartHover(DragTarget target);
-	
-	/**
-	 * Called when this widget has stopped being hovered over by a drag target
-	 * @param target the drag target
-	 */
 
+    /**
+     * Called when this widget has stopped being hovered over by a drag target
+     *
+     * @param target the drag target
+     */
     void dragAndDropStopHover(DragTarget target);
-	
-	/**
-	 * Called when a drag target has been dropped on this drop target
-	 * @param target the target that has been dropped
-	 */
 
+    /**
+     * Called when a drag target has been dropped on this drop target
+     *
+     * @param target the target that has been dropped
+     */
     void dropDragTarget(DragTarget target);
 }

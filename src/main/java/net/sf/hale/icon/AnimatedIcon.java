@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -19,96 +19,101 @@
 
 package net.sf.hale.icon;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONArray;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
-import de.matthiasmann.twl.Color;
 
 /**
  * An icon that consists of one or more frames, each played with a set duration,
  * looped endlessly
- * @author Jared
  *
+ * @author Jared
  */
-
 public class AnimatedIcon implements Icon {
 
-	private final int frameDuration;
-	private final SimpleIcon[] frames;
-	
-	private final int totalDuration;
-	
-	/**
-	 * Constructs an AnimatedIcon by parsing the specified JSON
-	 * @param data
-	 */
-	
-	public AnimatedIcon(SimpleJSONObject data) {
+    private final int frameDuration;
+    private final SimpleIcon[] frames;
+
+    private final int totalDuration;
+
+    /**
+     * Constructs an AnimatedIcon by parsing the specified JSON
+     *
+     * @param data
+     */
+    public AnimatedIcon(SimpleJSONObject data) {
         frameDuration = data.get("frameDuration", 0);
-		
-		SimpleJSONArray framesIn = data.getArray("frames");
-		
-		int index = 0;
+
+        SimpleJSONArray framesIn = data.getArray("frames");
+
+        int index = 0;
         frames = new SimpleIcon[framesIn.size()];
-		for (SimpleJSONArrayEntry entry : framesIn) {
-			SimpleIcon frame = new SimpleIcon(entry.getObject());
+        for (SimpleJSONArrayEntry entry : framesIn) {
+            SimpleIcon frame = new SimpleIcon(entry.getObject());
             frames[index] = frame;
-			index++;
-		}
+            index++;
+        }
 
         totalDuration = frames.length * frameDuration;
-	}
-	
-	private AnimatedIcon(int frameDuration, SimpleIcon[] frames) {
-		this.frameDuration = frameDuration;
-		this.frames = frames;
+    }
+
+    private AnimatedIcon(int frameDuration, SimpleIcon[] frames) {
+        this.frameDuration = frameDuration;
+        this.frames = frames;
         totalDuration = frameDuration * frames.length;
-	}
-	
-	@Override public void draw(int x, int y) {
-		int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
+    }
+
+    @Override
+    public void draw(int x, int y) {
+        int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
 
         frames[index].draw(x, y);
-	}
+    }
 
-	@Override public void drawCentered(int x, int y, int width, int height) {
-		int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
+    @Override
+    public void drawCentered(int x, int y, int width, int height) {
+        int index = (int) (Game.mainViewer.getFrameTime() % totalDuration) / frameDuration;
 
         frames[index].drawCentered(x, y, width, height);
-	}
+    }
 
-	@Override public int getWidth() {
-		return frames[0].getWidth();
-	}
+    @Override
+    public int getWidth() {
+        return frames[0].getWidth();
+    }
 
-	@Override public int getHeight() {
-		return frames[0].getHeight();
-	}
+    @Override
+    public int getHeight() {
+        return frames[0].getHeight();
+    }
 
-	@Override public AnimatedIcon multiplyByColor(Color color) {
-		SimpleIcon[] frames = new SimpleIcon[this.frames.length];
-		
-		for (int i = 0; i < frames.length; i++) {
-			frames[i] = this.frames[i].multiplyByColor(color);
-		}
-		
-		return new AnimatedIcon(frameDuration, frames);
-	}
+    @Override
+    public AnimatedIcon multiplyByColor(Color color) {
+        SimpleIcon[] frames = new SimpleIcon[this.frames.length];
 
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject out = new JSONOrderedObject();
-		
-		out.put("frameDuration", frameDuration);
-		
-		JSONOrderedObject[] framesOut = new JSONOrderedObject[frames.length];
-		for (int i = 0; i < frames.length; i++) {
-			framesOut[i] = frames[i].save();
-		}
-		out.put("frames", framesOut);
-		
-		return out;
-	}
+        for (int i = 0; i < frames.length; i++) {
+            frames[i] = this.frames[i].multiplyByColor(color);
+        }
+
+        return new AnimatedIcon(frameDuration, frames);
+    }
+
+    @Override
+    public JSONOrderedObject save() {
+        JSONOrderedObject out = new JSONOrderedObject();
+
+        out.put("frameDuration", frameDuration);
+
+        JSONOrderedObject[] framesOut = new JSONOrderedObject[frames.length];
+        for (int i = 0; i < frames.length; i++) {
+            framesOut[i] = frames[i].save();
+        }
+        out.put("frames", framesOut);
+
+        return out;
+    }
 
 }

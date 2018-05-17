@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -29,92 +29,93 @@ import net.sf.hale.entity.PC;
 /**
  * The window showing the detailed statistics about a Character.  Includes tabs for an
  * overview, skills, and abilities
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class CharacterWindow extends GameSubWindow implements EntityListener {
-	private final Content content;
-	
-	private final Button exportButton;
-	
-	private final TabbedPane tabbedPane;
-	
-	private final CharacterSheet characterSheet;
-	private final SkillSetViewer skillSetViewer;
-	private final AbilitiesSheet abilitiesSheet;
-	
-	/**
-	 * Creates a new CharacterWindow.  You must call {@link #updateContent(PC)}
-	 * to specify the Creature being viewed.
-	 */
-	
-	public CharacterWindow() {
-		content = new Content();
-		add(content);
-		
-		exportButton = new Button();
-		exportButton.addCallback(new Runnable() {
-			@Override public void run() {
-				new ExportPopup(getParent()).openPopupCentered();
-			}
-		});
-		exportButton.setTheme("exportbutton");
-		content.add(exportButton);
-		
-		tabbedPane = new TabbedPane();
-		tabbedPane.setTheme("content");
-		content.add(tabbedPane);
-		
-		characterSheet = new CharacterSheet();
-		skillSetViewer = new SkillSetViewer();
-		abilitiesSheet = new AbilitiesSheet();
-		
-		tabbedPane.addTab("Overview", characterSheet);
-		tabbedPane.addTab("Skills", skillSetViewer);
-		tabbedPane.addTab("Abilities", abilitiesSheet);
-	}
-	
-	/**
-	 * Updates the content of this CharacterWindow for the specified Creature.
-	 * @param creature the Player Character Creature to view
-	 */
-	
-	public void updateContent(PC creature) {
+    private final Content content;
+
+    private final Button exportButton;
+
+    private final TabbedPane tabbedPane;
+
+    private final CharacterSheet characterSheet;
+    private final SkillSetViewer skillSetViewer;
+    private final AbilitiesSheet abilitiesSheet;
+
+    /**
+     * Creates a new CharacterWindow.  You must call {@link #updateContent(PC)}
+     * to specify the Creature being viewed.
+     */
+    public CharacterWindow() {
+        content = new Content();
+        add(content);
+
+        exportButton = new Button();
+        exportButton.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                new ExportPopup(getParent()).openPopupCentered();
+            }
+        });
+        exportButton.setTheme("exportbutton");
+        content.add(exportButton);
+
+        tabbedPane = new TabbedPane();
+        tabbedPane.setTheme("content");
+        content.add(tabbedPane);
+
+        characterSheet = new CharacterSheet();
+        skillSetViewer = new SkillSetViewer();
+        abilitiesSheet = new AbilitiesSheet();
+
+        tabbedPane.addTab("Overview", characterSheet);
+        tabbedPane.addTab("Skills", skillSetViewer);
+        tabbedPane.addTab("Abilities", abilitiesSheet);
+    }
+
+    /**
+     * Updates the content of this CharacterWindow for the specified Creature.
+     *
+     * @param creature the Player Character Creature to view
+     */
+    public void updateContent(PC creature) {
         setTitle("Character Record for " + creature.getTemplate().getName());
-		
-		characterSheet.updateContent(creature);
-		skillSetViewer.updateContent(creature);
-		abilitiesSheet.updateContent(creature);
-	}
-	
-	/**
-	 * Sets the "export" button to be invisible, disabling the export option
-	 */
-	
-	protected void hideExportButton() {
-		exportButton.setVisible(false);
-	}
-	
-	private class Content extends Widget {
-		private Content() {
-			setTheme("");
-		}
-		
-		@Override protected void layout() {
-			tabbedPane.setSize(getInnerWidth(), getInnerHeight());
-			tabbedPane.setPosition(getInnerX(), getInnerY());
-			
-			exportButton.setSize(exportButton.getPreferredWidth(), exportButton.getPreferredHeight());
-			exportButton.setPosition(getInnerRight() - exportButton.getWidth(), getInnerY());
-		}
-	}
 
-	@Override public void entityUpdated(Entity entity) {
-		// TODO implement
-	}
+        characterSheet.updateContent(creature);
+        skillSetViewer.updateContent(creature);
+        abilitiesSheet.updateContent(creature);
+    }
 
-	@Override public void removeListener() {
-		getParent().removeChild(this);
-	}
+    /**
+     * Sets the "export" button to be invisible, disabling the export option
+     */
+    protected void hideExportButton() {
+        exportButton.setVisible(false);
+    }
+
+    @Override
+    public void entityUpdated(Entity entity) {
+        // TODO implement
+    }
+
+    @Override
+    public void removeListener() {
+        getParent().removeChild(this);
+    }
+
+    private class Content extends Widget {
+        private Content() {
+            setTheme("");
+        }
+
+        @Override
+        protected void layout() {
+            tabbedPane.setSize(getInnerWidth(), getInnerHeight());
+            tabbedPane.setPosition(getInnerX(), getInnerY());
+
+            exportButton.setSize(exportButton.getPreferredWidth(), exportButton.getPreferredHeight());
+            exportButton.setPosition(getInnerRight() - exportButton.getWidth(), getInnerY());
+        }
+    }
 }

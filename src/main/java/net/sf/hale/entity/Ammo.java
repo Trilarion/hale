@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -27,61 +27,63 @@ import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * An item that can be equipped as ammunition for a ranged weapon
- * @author Jared
  *
+ * @author Jared
  */
-
 public class Ammo extends EquippableItem {
 
-	private final AmmoTemplate template;
-	
-	@Override public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
-		super.load(data, area, refHandler);
-	}
-	
-	@Override public JSONOrderedObject save() {
-		return super.save();
-	}
-	
-	/**
-	 * Creates a new Ammo item
-	 * @param template
-	 */
-	
-	protected Ammo(AmmoTemplate template) {
-		super(template);
-		
-		this.template = template;
-		
-	}
-	
-	@Override public AmmoTemplate getTemplate() {
-		return template;
-	}
-	
-	/**
-	 * Returns the bonus to attack caused by this item's quality, or 0 if this item
-	 * has no quality
-	 * @return the quality based bonus to attack
-	 */
-	
-	public int getQualityAttackBonus() {
-		if (getQuality() == null)
-			return 0;
-		else
-			return getQuality().getAttackBonus();
-	}
-	
-	/**
-	 * Returns the bonus to damage caused by this item's quality, or 0 if this item has no quality
-	 * @return the quality based bonus to damage
-	 */
-	
-	public int getQualityDamageBonus() {
-		if (getQuality() == null)
-			return 0;
-		else
-			return getQuality().getDamageBonus();
-	}
-	
+    private final AmmoTemplate template;
+
+    /**
+     * Creates a new Ammo item
+     *
+     * @param template
+     */
+    protected Ammo(AmmoTemplate template) {
+        super(template);
+
+        this.template = template;
+
+    }
+
+    @Override
+    public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
+        super.load(data, area, refHandler);
+    }
+
+    @Override
+    public JSONOrderedObject save() {
+        return super.save();
+    }
+
+    @Override
+    public AmmoTemplate getTemplate() {
+        return template;
+    }
+
+    /**
+     * Returns the bonus to attack caused by this item's quality, or 0 if this item
+     * has no quality
+     *
+     * @return the quality based bonus to attack
+     */
+    public int getQualityAttackBonus() {
+        if (getQuality() == null)
+            return 0;
+        else
+            return getQuality().getAttackBonus();
+    }
+
+    /**
+     * Returns the bonus to damage caused by this item's quality, or 0 if this item has no quality
+     *
+     * @return the quality based bonus to damage
+     */
+    public int getQualityDamageBonus() {
+        if (getQuality() == null)
+            return 0;
+        else
+            return getQuality().getDamageBonus();
+    }
+
 }

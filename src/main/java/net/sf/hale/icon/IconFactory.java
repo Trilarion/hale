@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,71 +25,81 @@ import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * Class for creating the right type of Icon based on JSON data
- * @author Jared
  *
+ * @author Jared
  */
-
 public class IconFactory {
-	/**
-	 * An empty Icon that draws nothing and does nothing when caching sprites
-	 */
-	
-	public static Icon emptyIcon = new EmptyIcon();
-	
-	/**
-	 * Creates an Icon of the correct type based on the specified JSON
-	 * @param data the JSON to parse
-	 * @return a newly created Icon
-	 */
-	
-	public static Icon createIcon(SimpleJSONObject data) {
-		if (data.containsKey("frames")) {
-			return new AnimatedIcon(data);
-		} else if (data.containsKey("subIcons")) {
-			return new ComposedCreatureIcon(data);
-		} else if (data.containsKey("composed")) {
-			return new ComposedIcon(data);
-		} else {
-			return new SimpleIcon(data);
-		}
-	}
-	
-	/**
-	 * Creates an Icon displaying the sprite with the specified resource location
-	 * @param spriteID
-	 * @return a newly created Icon displaying the Sprite
-	 */
-	
-	public static Icon createIcon(String spriteID) {
-		return new SimpleIcon(spriteID);
-	}
-	
-	/**
-	 * Creates an Icon displaying the sprite with the specified resource location
-	 * @param spriteID
-	 * @param color
-	 * @return a newly created Icon displaying the Sprite
-	 */
-	
-	public static Icon createIcon(String spriteID, Color color) {
-		return new SimpleIcon(spriteID, color);
-	}
-	
-	private static class EmptyIcon implements Icon {
-		@Override public void drawCentered(int x, int y, int width, int height) { }
-		
-		@Override public void draw(int x, int y) { }
+    /**
+     * An empty Icon that draws nothing and does nothing when caching sprites
+     */
+    public static Icon emptyIcon = new EmptyIcon();
 
-		@Override public int getWidth() { return 0; }
+    /**
+     * Creates an Icon of the correct type based on the specified JSON
+     *
+     * @param data the JSON to parse
+     * @return a newly created Icon
+     */
+    public static Icon createIcon(SimpleJSONObject data) {
+        if (data.containsKey("frames")) {
+            return new AnimatedIcon(data);
+        } else if (data.containsKey("subIcons")) {
+            return new ComposedCreatureIcon(data);
+        } else if (data.containsKey("composed")) {
+            return new ComposedIcon(data);
+        } else {
+            return new SimpleIcon(data);
+        }
+    }
 
-		@Override public int getHeight() { return 0; }
+    /**
+     * Creates an Icon displaying the sprite with the specified resource location
+     *
+     * @param spriteID
+     * @return a newly created Icon displaying the Sprite
+     */
+    public static Icon createIcon(String spriteID) {
+        return new SimpleIcon(spriteID);
+    }
 
-		@Override public JSONOrderedObject save() {
-			return new JSONOrderedObject();
-		}
+    /**
+     * Creates an Icon displaying the sprite with the specified resource location
+     *
+     * @param spriteID
+     * @param color
+     * @return a newly created Icon displaying the Sprite
+     */
+    public static Icon createIcon(String spriteID, Color color) {
+        return new SimpleIcon(spriteID, color);
+    }
 
-		@Override public EmptyIcon multiplyByColor(Color color) {
-			return this;
-		}
-	}
+    private static class EmptyIcon implements Icon {
+        @Override
+        public void drawCentered(int x, int y, int width, int height) {
+        }
+
+        @Override
+        public void draw(int x, int y) {
+        }
+
+        @Override
+        public int getWidth() {
+            return 0;
+        }
+
+        @Override
+        public int getHeight() {
+            return 0;
+        }
+
+        @Override
+        public JSONOrderedObject save() {
+            return new JSONOrderedObject();
+        }
+
+        @Override
+        public EmptyIcon multiplyByColor(Color color) {
+            return this;
+        }
+    }
 }

@@ -26,46 +26,48 @@ import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class UniformDistributionWithBase implements DistributionOneValue {
-	private final DistributionBase base;
-	private final float plusOrMinusFraction;
-	private final float multiplier;
-	private final float offset;
-	
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("plusOrMinusFraction", plusOrMinusFraction);
-		data.put("multiplier", multiplier);
-		data.put("offset", offset);
-		data.put("base", base.save());
-		
-		return data;
-	}
-	
-	public static UniformDistributionWithBase load(SimpleJSONObject data) throws LoadGameException {
-		float multiplier = data.get("multiplier", 0.0f);
-		float offset = data.get("offset", 0.0f);
-		float plusOrMinusFraction = data.get("plusOrMinusFraction", 0.0f);
-		DistributionBase base = (DistributionBase)SaveGameUtil.loadObject(data.getObject("base"));
-		
-		return new UniformDistributionWithBase(base, multiplier, offset, plusOrMinusFraction);
-	}
-	
-	public UniformDistributionWithBase(DistributionBase base, float multiplier, float offset, float plusOrMinusFraction) {
-		this.base = base;
-		this.plusOrMinusFraction = plusOrMinusFraction;
-		this.multiplier = multiplier;
-		this.offset = offset;
-	}
-	
-	public float generate(Particle particle) {
-		float avg = base.getBase(particle) * multiplier + offset;
-		
-		return Game.dice.rand(avg - avg * plusOrMinusFraction, avg + avg * plusOrMinusFraction);
-	}
-	
-	@Override public DistributionOneValue getCopyIfHasState() {
-		return this;
-	}
+    private final DistributionBase base;
+    private final float plusOrMinusFraction;
+    private final float multiplier;
+    private final float offset;
+
+    public UniformDistributionWithBase(DistributionBase base, float multiplier, float offset, float plusOrMinusFraction) {
+        this.base = base;
+        this.plusOrMinusFraction = plusOrMinusFraction;
+        this.multiplier = multiplier;
+        this.offset = offset;
+    }
+
+    public static UniformDistributionWithBase load(SimpleJSONObject data) throws LoadGameException {
+        float multiplier = data.get("multiplier", 0.0f);
+        float offset = data.get("offset", 0.0f);
+        float plusOrMinusFraction = data.get("plusOrMinusFraction", 0.0f);
+        DistributionBase base = (DistributionBase) SaveGameUtil.loadObject(data.getObject("base"));
+
+        return new UniformDistributionWithBase(base, multiplier, offset, plusOrMinusFraction);
+    }
+
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("plusOrMinusFraction", plusOrMinusFraction);
+        data.put("multiplier", multiplier);
+        data.put("offset", offset);
+        data.put("base", base.save());
+
+        return data;
+    }
+
+    public float generate(Particle particle) {
+        float avg = base.getBase(particle) * multiplier + offset;
+
+        return Game.dice.rand(avg - avg * plusOrMinusFraction, avg + avg * plusOrMinusFraction);
+    }
+
+    @Override
+    public DistributionOneValue getCopyIfHasState() {
+        return this;
+    }
 }

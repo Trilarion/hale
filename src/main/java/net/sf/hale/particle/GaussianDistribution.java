@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -24,35 +24,37 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class GaussianDistribution implements DistributionOneValue {
-	private final float mean, stddev;
-	
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("mean", mean);
-		data.put("stddev", stddev);
-		
-		return data;
-	}
-	
-	public static GaussianDistribution load(SimpleJSONObject data) {
-		float mean = data.get("mean", 0.0f);
-		float stddev = data.get("stddev", 0.0f);
-		
-		return new GaussianDistribution(mean, stddev);
-	}
-	
-	public GaussianDistribution(float mean, float stddev) {
-		this.mean = mean;
-		this.stddev = stddev;
-	}
-	
-	public float generate(Particle particle) {
-		return Game.dice.gaussian(mean, stddev);
-	}
-	
-	@Override public DistributionOneValue getCopyIfHasState() {
-		return this;
-	}
+    private final float mean, stddev;
+
+    public GaussianDistribution(float mean, float stddev) {
+        this.mean = mean;
+        this.stddev = stddev;
+    }
+
+    public static GaussianDistribution load(SimpleJSONObject data) {
+        float mean = data.get("mean", 0.0f);
+        float stddev = data.get("stddev", 0.0f);
+
+        return new GaussianDistribution(mean, stddev);
+    }
+
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("mean", mean);
+        data.put("stddev", stddev);
+
+        return data;
+    }
+
+    public float generate(Particle particle) {
+        return Game.dice.gaussian(mean, stddev);
+    }
+
+    @Override
+    public DistributionOneValue getCopyIfHasState() {
+        return this;
+    }
 }

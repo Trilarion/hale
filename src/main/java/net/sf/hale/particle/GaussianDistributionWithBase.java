@@ -26,47 +26,49 @@ import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class GaussianDistributionWithBase implements DistributionOneValue {
-	private final DistributionBase base;
-	private final float stddevFraction;
-	private final float multiplier;
-	private final float offset;
-	
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("stddevFraction", stddevFraction);
-		data.put("multiplier", multiplier);
-		data.put("offset", offset);
-		data.put("base", base.save());
-		
-		return data;
-	}
-	
-	public static GaussianDistributionWithBase load(SimpleJSONObject data) throws LoadGameException {
-		float multiplier = data.get("multiplier", 0.0f);
-		float offset = data.get("offset", 0.0f);
-		float stddevFraction = data.get("stddevFraction", 0.0f);
-		
-		DistributionBase base = (DistributionBase)SaveGameUtil.loadObject(data.getObject("base"));
-		
-		return new GaussianDistributionWithBase(base, multiplier, offset, stddevFraction);
-	}
-	
-	public GaussianDistributionWithBase(DistributionBase base, float multiplier, float offset, float stddevFraction) {
-		this.base = base;
-		this.stddevFraction = stddevFraction;
-		this.multiplier = multiplier;
-		this.offset = offset;
-	}
-	
-	public float generate(Particle particle) {
-		float avg = base.getBase(particle) * multiplier + offset;
-		
-		return Game.dice.gaussian(avg, avg * stddevFraction);
-	}
-	
-	@Override public DistributionOneValue getCopyIfHasState() {
-		return this;
-	}
+    private final DistributionBase base;
+    private final float stddevFraction;
+    private final float multiplier;
+    private final float offset;
+
+    public GaussianDistributionWithBase(DistributionBase base, float multiplier, float offset, float stddevFraction) {
+        this.base = base;
+        this.stddevFraction = stddevFraction;
+        this.multiplier = multiplier;
+        this.offset = offset;
+    }
+
+    public static GaussianDistributionWithBase load(SimpleJSONObject data) throws LoadGameException {
+        float multiplier = data.get("multiplier", 0.0f);
+        float offset = data.get("offset", 0.0f);
+        float stddevFraction = data.get("stddevFraction", 0.0f);
+
+        DistributionBase base = (DistributionBase) SaveGameUtil.loadObject(data.getObject("base"));
+
+        return new GaussianDistributionWithBase(base, multiplier, offset, stddevFraction);
+    }
+
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("stddevFraction", stddevFraction);
+        data.put("multiplier", multiplier);
+        data.put("offset", offset);
+        data.put("base", base.save());
+
+        return data;
+    }
+
+    public float generate(Particle particle) {
+        float avg = base.getBase(particle) * multiplier + offset;
+
+        return Game.dice.gaussian(avg, avg * stddevFraction);
+    }
+
+    @Override
+    public DistributionOneValue getCopyIfHasState() {
+        return this;
+    }
 }

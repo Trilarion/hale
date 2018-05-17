@@ -7,19 +7,19 @@ import java.net.URLStreamHandler;
 
 /**
  * A URL stream handler for opening streams to resources within resource packages
- * @author Jared
  *
+ * @author Jared
  */
-
 public class URLResourceStreamHandler extends URLStreamHandler {
 
-	@Override protected URLConnection openConnection(URL url) throws IOException {
-		if (!"resource".equals(url.getProtocol()))
-			throw new IllegalArgumentException("May only use resource URLs");
-		
-		String resourcePath = url.getPath();
-		
-		return new URLResourceConnection(url, resourcePath);
-	}
+    @Override
+    protected URLConnection openConnection(URL url) throws IOException {
+        if (!"resource".equals(url.getProtocol()))
+            throw new IllegalArgumentException("May only use resource URLs");
+
+        String resourcePath = url.getPath();
+
+        return new URLResourceConnection(url, resourcePath);
+    }
 
 }

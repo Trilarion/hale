@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -23,38 +23,38 @@ import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * The template for a Door
- * @author Jared
  *
+ * @author Jared
  */
-
 public class DoorTemplate extends OpenableTemplate {
 
-	private final boolean isTransparent;
-	
-	/**
-	 * Creates a new DoorTemplate
-	 * @param id the Entity ID for the Door
-	 * @param data the JSON data to parse
-	 */
-	
-	public DoorTemplate(String id, SimpleJSONObject data) {
-		super(id, data);
-		
-		isTransparent = data.get("isTransparent", false);
-	}
-	
-	@Override public Door createInstance() {
-		return new Door(this);
-	}
-	
-	/**
-	 * Returns true if creatures can see through this door when it is closed, false otherwise.
-	 * Creatures can always see through open doors
-	 * @return whether creatures can see through this door when closed
-	 */
-	
-	public boolean isTransparent() {
-		return isTransparent;
-	}
+    private final boolean isTransparent;
+
+    /**
+     * Creates a new DoorTemplate
+     *
+     * @param id   the Entity ID for the Door
+     * @param data the JSON data to parse
+     */
+    public DoorTemplate(String id, SimpleJSONObject data) {
+        super(id, data);
+
+        isTransparent = data.get("isTransparent", false);
+    }
+
+    @Override
+    public Door createInstance() {
+        return new Door(this);
+    }
+
+    /**
+     * Returns true if creatures can see through this door when it is closed, false otherwise.
+     * Creatures can always see through open doors
+     *
+     * @return whether creatures can see through this door when closed
+     */
+    public boolean isTransparent() {
+        return isTransparent;
+    }
 
 }

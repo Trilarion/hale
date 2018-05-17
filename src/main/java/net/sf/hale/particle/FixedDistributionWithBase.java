@@ -25,41 +25,43 @@ import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class FixedDistributionWithBase implements DistributionOneValue {
-	private final DistributionBase base;
-	private final float multiplier;
-	private final float offset;
-	
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("multiplier", multiplier);
-		data.put("offset", offset);
-		data.put("base", base.save());
-		
-		return data;
-	}
-	
-	public static DistributionOneValue load(SimpleJSONObject data) throws LoadGameException {
-		float multiplier = data.get("multiplier", 0.0f);
-		float offset = data.get("offset", 0.0f);
-		
-		DistributionBase base = (DistributionBase)SaveGameUtil.loadObject(data.getObject("base"));
-		
-		return new FixedDistributionWithBase(base, multiplier, offset);
-	}
-	
-	public FixedDistributionWithBase(DistributionBase base, float multiplier, float offset) {
-		this.base = base;
-		this.multiplier = multiplier;
-		this.offset = offset;
-	}
-	
-	public float generate(Particle particle) {
-		return base.getBase(particle) * multiplier + offset;
-	}
-	
-	@Override public DistributionOneValue getCopyIfHasState() {
-		return this;
-	}
+    private final DistributionBase base;
+    private final float multiplier;
+    private final float offset;
+
+    public FixedDistributionWithBase(DistributionBase base, float multiplier, float offset) {
+        this.base = base;
+        this.multiplier = multiplier;
+        this.offset = offset;
+    }
+
+    public static DistributionOneValue load(SimpleJSONObject data) throws LoadGameException {
+        float multiplier = data.get("multiplier", 0.0f);
+        float offset = data.get("offset", 0.0f);
+
+        DistributionBase base = (DistributionBase) SaveGameUtil.loadObject(data.getObject("base"));
+
+        return new FixedDistributionWithBase(base, multiplier, offset);
+    }
+
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("multiplier", multiplier);
+        data.put("offset", offset);
+        data.put("base", base.save());
+
+        return data;
+    }
+
+    public float generate(Particle particle) {
+        return base.getBase(particle) * multiplier + offset;
+    }
+
+    @Override
+    public DistributionOneValue getCopyIfHasState() {
+        return this;
+    }
 }

@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -21,66 +21,65 @@ package net.sf.hale.entity;
 
 import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Race;
-import net.sf.hale.rules.Ruleset;
 import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * The class containing the immutable parts of a player character creature
- * @author Jared
  *
+ * @author Jared
  */
-
 public class PCTemplate extends CreatureTemplate {
 
-	// whether this character is one of the defaults in the character directory
-	private final boolean isPregenerated;
-	
-	/**
-	 * Creates a new PC template with the specified parameters.  All non-specified parameters
-	 * are set to default (null or false) values
-	 * @param id
-	 * @param name
-	 * @param icon the icon to use for both UI and Area icons
-	 * @param gender
-	 * @param race
-	 * @param portrait
-	 */
-	
-	public PCTemplate(String id, String name, Icon icon, Gender gender, Race race, String portrait) {
-		super(id, name, icon, gender, race, portrait);
+    // whether this character is one of the defaults in the character directory
+    private final boolean isPregenerated;
+
+    /**
+     * Creates a new PC template with the specified parameters.  All non-specified parameters
+     * are set to default (null or false) values
+     *
+     * @param id
+     * @param name
+     * @param icon     the icon to use for both UI and Area icons
+     * @param gender
+     * @param race
+     * @param portrait
+     */
+    public PCTemplate(String id, String name, Icon icon, Gender gender, Race race, String portrait) {
+        super(id, name, icon, gender, race, portrait);
 
         isPregenerated = false;
-	}
-	
-	/**
-	 * Creates a new Player Character template
-	 * @param id the entity ID
-	 * @param data the JSON data to parse
-	 */
-	
-	public PCTemplate(String id, SimpleJSONObject data) {
-		super(id, data);
-		
-		data.setWarnOnMissingKeys(false);
+    }
+
+    /**
+     * Creates a new Player Character template
+     *
+     * @param id   the entity ID
+     * @param data the JSON data to parse
+     */
+    public PCTemplate(String id, SimpleJSONObject data) {
+        super(id, data);
+
+        data.setWarnOnMissingKeys(false);
 
         isPregenerated = data.get("isPregenerated", false);
-		
-		data.setWarnOnMissingKeys(true);
-	}
-	
-	@Override public PC createInstance() {
-		throw new IllegalStateException("Instances of PCs cannot be created directly");
-	}
-	
-	/**
-	 * Returns true if this is one of the default characters in the character directory
-	 * false otherwise
-	 * @return whether this is a default character
-	 */
-	
-	public boolean isPregenerated() {
-		return isPregenerated;
-	}
+
+        data.setWarnOnMissingKeys(true);
+    }
+
+    @Override
+    public PC createInstance() {
+        throw new IllegalStateException("Instances of PCs cannot be created directly");
+    }
+
+    /**
+     * Returns true if this is one of the default characters in the character directory
+     * false otherwise
+     *
+     * @return whether this is a default character
+     */
+    public boolean isPregenerated() {
+        return isPregenerated;
+    }
 
 }

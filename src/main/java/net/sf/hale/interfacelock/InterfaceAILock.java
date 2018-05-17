@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -26,36 +26,39 @@ import net.sf.hale.entity.Creature;
 /**
  * An interface lock that will remain active until a specified AsyncScriptable
  * finishes executing.
- * @author Jared Stephen
  *
+ * @author Jared Stephen
  */
-
 public class InterfaceAILock extends InterfaceLock {
-	private AsyncScriptable runner;
-	private boolean finishing = false;
-	
-	/**
-	 * Creates a new InterfaceAILock with the specified locker and AsyncScriptable
-	 * @param locker the parent Creature for this InterfaceLock
-	 * @param runner the AsyncScriptable that is already started.  This InterfaceLock
-	 * will remain active until the AsyncScriptable finishes executing
-	 */
-	
-	public InterfaceAILock(Creature locker, AsyncScriptable runner) {
-		super(locker, Game.config.getCombatDelay() * 5);
-		
-		this.runner = runner;
-	}
-	
-	@Override public void setCurrentTime(long curTime) {
-		super.setCurrentTime(curTime);
-		
-		if (!finishing) {
-			setUnlockTime(curTime + 800);
-			
-			if (!runner.isAlive()) finishing = true;
-		}
-	}
-	
-	@Override public int getPriority() { return 75; }
+    private AsyncScriptable runner;
+    private boolean finishing = false;
+
+    /**
+     * Creates a new InterfaceAILock with the specified locker and AsyncScriptable
+     *
+     * @param locker the parent Creature for this InterfaceLock
+     * @param runner the AsyncScriptable that is already started.  This InterfaceLock
+     *               will remain active until the AsyncScriptable finishes executing
+     */
+    public InterfaceAILock(Creature locker, AsyncScriptable runner) {
+        super(locker, Game.config.getCombatDelay() * 5);
+
+        this.runner = runner;
+    }
+
+    @Override
+    public void setCurrentTime(long curTime) {
+        super.setCurrentTime(curTime);
+
+        if (!finishing) {
+            setUnlockTime(curTime + 800);
+
+            if (!runner.isAlive()) finishing = true;
+        }
+    }
+
+    @Override
+    public int getPriority() {
+        return 75;
+    }
 }

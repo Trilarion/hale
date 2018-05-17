@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -19,60 +19,57 @@
 
 package net.sf.hale.util;
 
+import javax.script.ScriptEngineManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.script.ScriptEngineManager;
-
 /**
  * A class for managing a pool of available JavaScript interpreters
- * @author Jared
  *
+ * @author Jared
  */
-
 public class JSEngineManager {
-	private final ScriptEngineManager manager;
-	
-	private final List<JSEngine> engines;
-	
-	/**
-	 * Creates a new empty manager
-	 */
-	
-	public JSEngineManager() {
+    private final ScriptEngineManager manager;
+
+    private final List<JSEngine> engines;
+
+    /**
+     * Creates a new empty manager
+     */
+    public JSEngineManager() {
         manager = new ScriptEngineManager();
         engines = new ArrayList<>();
-	}
-	
-	/**
-	 * Gets an available javascript engine.  If one is not available, a new one is
-	 * created
-	 * @return the available JavaScript engine
-	 */
-	
-	public synchronized JSEngine getEngine() {
-		for (JSEngine engine : engines) {
-			if (!engine.inUse()) {
-				engine.setInUse(true);
-				return engine;
-			}
-		}
-		
-		JSEngine engine = new JSEngine(manager);
-		engine.setInUse(true);
-		engines.add(engine);
-		return engine;
-	}
-	
-	/**
-	 * Gets a javascript engine but does not add it to the list of available engines
-	 * The returned engine will thus never be released and added back to the engine pool
-	 * @return a newly created javascript engine
-	 */
-	
-	public JSEngine getPermanentEngine() {
-		JSEngine engine = new JSEngine(manager);
-		engine.setInUse(true);
-		return engine;
-	}
+    }
+
+    /**
+     * Gets an available javascript engine.  If one is not available, a new one is
+     * created
+     *
+     * @return the available JavaScript engine
+     */
+    public synchronized JSEngine getEngine() {
+        for (JSEngine engine : engines) {
+            if (!engine.inUse()) {
+                engine.setInUse(true);
+                return engine;
+            }
+        }
+
+        JSEngine engine = new JSEngine(manager);
+        engine.setInUse(true);
+        engines.add(engine);
+        return engine;
+    }
+
+    /**
+     * Gets a javascript engine but does not add it to the list of available engines
+     * The returned engine will thus never be released and added back to the engine pool
+     *
+     * @return a newly created javascript engine
+     */
+    public JSEngine getPermanentEngine() {
+        JSEngine engine = new JSEngine(manager);
+        engine.setInUse(true);
+        return engine;
+    }
 }

@@ -24,48 +24,51 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class UniformAngleDistribution implements DistributionTwoValue {
-	private static final float twoPi = 2.0f * (float)Math.PI;
+    private static final float twoPi = 2.0f * (float) Math.PI;
 
-	private final float magnitudeMin, magnitudeMax;
+    private final float magnitudeMin, magnitudeMax;
 
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("magnitudeMin", magnitudeMin);
-		data.put("magnitudeMax", magnitudeMax);
-		
-		return data;
-	}
-	
-	public static UniformAngleDistribution load(SimpleJSONObject data) {
-		float magMin = data.get("magnitudeMin", 0.0f);
-		float magMax = data.get("magnitudeMax", 0.0f);
-		
-		return new UniformAngleDistribution(magMin, magMax);
-	}
-	
-	public UniformAngleDistribution(float magnitudeMin, float magnitudeMax) {
-		this.magnitudeMin = magnitudeMin;
-		this.magnitudeMax = magnitudeMax;
-	}
+    public UniformAngleDistribution(float magnitudeMin, float magnitudeMax) {
+        this.magnitudeMin = magnitudeMin;
+        this.magnitudeMax = magnitudeMax;
+    }
 
-	@Override public float[] generate(Particle particle) {
-		final float angle = Game.dice.rand(0.0f, twoPi);
+    public static UniformAngleDistribution load(SimpleJSONObject data) {
+        float magMin = data.get("magnitudeMin", 0.0f);
+        float magMax = data.get("magnitudeMax", 0.0f);
 
-		final float magnitude = Game.dice.rand(magnitudeMin, magnitudeMax);
+        return new UniformAngleDistribution(magMin, magMax);
+    }
 
-		final float[] vector = new float[4];
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
 
-		vector[0] = (float)Math.cos(angle) * magnitude;
-		vector[1] = (float)Math.sin(angle) * magnitude;
-		vector[2] = magnitude;
-		vector[3] = angle;
+        data.put("class", getClass().getName());
+        data.put("magnitudeMin", magnitudeMin);
+        data.put("magnitudeMax", magnitudeMax);
 
-		return vector;
-	}
-	
-	@Override public DistributionTwoValue getCopyIfHasState() {
-		return this;
-	}
+        return data;
+    }
+
+    @Override
+    public float[] generate(Particle particle) {
+        final float angle = Game.dice.rand(0.0f, twoPi);
+
+        final float magnitude = Game.dice.rand(magnitudeMin, magnitudeMax);
+
+        final float[] vector = new float[4];
+
+        vector[0] = (float) Math.cos(angle) * magnitude;
+        vector[1] = (float) Math.sin(angle) * magnitude;
+        vector[2] = magnitude;
+        vector[3] = angle;
+
+        return vector;
+    }
+
+    @Override
+    public DistributionTwoValue getCopyIfHasState() {
+        return this;
+    }
 }

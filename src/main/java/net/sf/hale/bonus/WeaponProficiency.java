@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -20,54 +20,57 @@
 package net.sf.hale.bonus;
 
 import net.sf.hale.Game;
-import net.sf.hale.bonus.Bonus.StackType;
-import net.sf.hale.bonus.Bonus.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.rules.BaseWeapon;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class WeaponProficiency extends Bonus {
-	private final String baseWeapon;
-	
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("weaponProficiency", baseWeapon);
-		
-		return data;
-	}
-	
-	public static WeaponProficiency load(SimpleJSONObject data) {
-		return new WeaponProficiency(data.get("weaponProficiency", null));
-	}
-	
-	public WeaponProficiency(String baseWeapon) {
-		super(Type.WeaponProficiency, StackType.GenericBonus);
-		
-		this.baseWeapon = baseWeapon;
-	}
-	
-	public String getBaseWeapon() { return baseWeapon; }
-	
-	public static BaseWeapon parseBaseWeapon(String baseWeaponString) {
-		BaseWeapon baseWeapon = Game.ruleset.getBaseWeapon(baseWeaponString);
-		if (baseWeapon == null) {
-			Logger.appendToErrorLog("Base Weapon type " + baseWeaponString + " not found.");
-		}
-		
-		return baseWeapon;
-	}
-	
-	@Override public WeaponProficiency cloneWithReduction(int reduction) {
-		return new WeaponProficiency(baseWeapon);
-	}
-	
-	@Override public void appendDescription(StringBuilder sb) {
-		sb.append("<span style=\"font-family: blue;\">");
-		sb.append(baseWeapon);
-		sb.append("</span> ");
-		super.appendDescription(sb);
-	}
+    private final String baseWeapon;
+
+    public WeaponProficiency(String baseWeapon) {
+        super(Type.WeaponProficiency, StackType.GenericBonus);
+
+        this.baseWeapon = baseWeapon;
+    }
+
+    public static WeaponProficiency load(SimpleJSONObject data) {
+        return new WeaponProficiency(data.get("weaponProficiency", null));
+    }
+
+    public static BaseWeapon parseBaseWeapon(String baseWeaponString) {
+        BaseWeapon baseWeapon = Game.ruleset.getBaseWeapon(baseWeaponString);
+        if (baseWeapon == null) {
+            Logger.appendToErrorLog("Base Weapon type " + baseWeaponString + " not found.");
+        }
+
+        return baseWeapon;
+    }
+
+    @Override
+    public JSONOrderedObject save() {
+        JSONOrderedObject data = new JSONOrderedObject();
+
+        data.put("class", getClass().getName());
+        data.put("weaponProficiency", baseWeapon);
+
+        return data;
+    }
+
+    public String getBaseWeapon() {
+        return baseWeapon;
+    }
+
+    @Override
+    public WeaponProficiency cloneWithReduction(int reduction) {
+        return new WeaponProficiency(baseWeapon);
+    }
+
+    @Override
+    public void appendDescription(StringBuilder sb) {
+        sb.append("<span style=\"font-family: blue;\">");
+        sb.append(baseWeapon);
+        sb.append("</span> ");
+        super.appendDescription(sb);
+    }
 }

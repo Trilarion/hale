@@ -24,48 +24,51 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class GaussianAngleDistribution implements DistributionTwoValue {
-	private static final float twoPi = 2.0f * (float)Math.PI;
+    private static final float twoPi = 2.0f * (float) Math.PI;
 
-	private final float mean, stddev;
+    private final float mean, stddev;
 
-	@Override public Object save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("class", getClass().getName());
-		data.put("mean", mean);
-		data.put("stddev", stddev);
+    public GaussianAngleDistribution(float mean, float stddev) {
+        this.mean = mean;
+        this.stddev = stddev;
+    }
 
-		return data;
-	}
-	
-	public static GaussianAngleDistribution load(SimpleJSONObject data) {
-		float mean = data.get("mean", 0.0f);
-		float stddev = data.get("stddev", 0.0f);
-		
-		return new GaussianAngleDistribution(mean, stddev);
-	}
-	
-	public GaussianAngleDistribution(float mean, float stddev) {
-		this.mean = mean;
-		this.stddev = stddev;
-	}
+    public static GaussianAngleDistribution load(SimpleJSONObject data) {
+        float mean = data.get("mean", 0.0f);
+        float stddev = data.get("stddev", 0.0f);
 
-	@Override public float[] generate(Particle particle) {
-		final float angle = Game.dice.rand(0.0f, twoPi);
+        return new GaussianAngleDistribution(mean, stddev);
+    }
 
-		final float magnitude = Game.dice.gaussian(mean, stddev);
+    @Override
+    public Object save() {
+        JSONOrderedObject data = new JSONOrderedObject();
 
-		final float[] vector = new float[4];
+        data.put("class", getClass().getName());
+        data.put("mean", mean);
+        data.put("stddev", stddev);
 
-		vector[0] = (float)Math.cos(angle) * magnitude;
-		vector[1] = (float)Math.sin(angle) * magnitude;
-		vector[2] = magnitude;
-		vector[3] = angle;
+        return data;
+    }
 
-		return vector;
-	}
-	
-	@Override public DistributionTwoValue getCopyIfHasState() {
-		return this;
-	}
+    @Override
+    public float[] generate(Particle particle) {
+        final float angle = Game.dice.rand(0.0f, twoPi);
+
+        final float magnitude = Game.dice.gaussian(mean, stddev);
+
+        final float[] vector = new float[4];
+
+        vector[0] = (float) Math.cos(angle) * magnitude;
+        vector[1] = (float) Math.sin(angle) * magnitude;
+        vector[2] = magnitude;
+        vector[3] = angle;
+
+        return vector;
+    }
+
+    @Override
+    public DistributionTwoValue getCopyIfHasState() {
+        return this;
+    }
 }

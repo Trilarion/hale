@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -21,24 +21,23 @@ package net.sf.hale;
 
 /**
  * interface to be implemented by any class with a script state
- * @author Jared
  *
+ * @author Jared
  */
-
 public interface HasScriptState {
-	/**
-	 * Gets the value stored by the specified key
-	 * @param key the key to get the value for
-	 * @return the value for the specified key
-	 */
-
+    /**
+     * Gets the value stored by the specified key
+     *
+     * @param key the key to get the value for
+     * @return the value for the specified key
+     */
     Object get(String key);
-	
-	/**
-	 * Puts the specified key value pair in the script state
-	 * @param key the key to associated with the value
-	 * @param value the value to put
-	 */
 
+    /**
+     * Puts the specified key value pair in the script state
+     *
+     * @param key   the key to associated with the value
+     * @param value the value to put
+     */
     void put(String key, Object value);
 }

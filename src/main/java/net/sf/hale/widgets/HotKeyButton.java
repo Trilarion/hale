@@ -19,44 +19,43 @@
 
 package net.sf.hale.widgets;
 
-import net.sf.hale.Game;
-import net.sf.hale.Keybindings;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ThemeInfo;
+import net.sf.hale.Game;
 import net.sf.hale.Keybindings.Binding;
 
 /**
  * A button with an associated hot key binding callback
- * @author Jared
  *
+ * @author Jared
  */
-
 public class HotKeyButton extends Button {
-	private Binding binding;
-	
-	/**
-	 * Sets the hot key binding that is used for this button's tooltip and
-	 * click action
-	 * @param binding
-	 */
-	
-	public void setHotKeyBinding(Binding binding) {
-		this.binding = binding;
-		addCallback(binding);
-	}
-	
-	@Override protected void applyTheme(ThemeInfo themeInfo) {
-		super.applyTheme(themeInfo);
-		
-		String tooltip = themeInfo.getParameter("tooltip", (String)null);
-		
-		String actionName = binding.getActionName();
-		int key = Game.config.getKeyForAction(actionName);
-		if (key != -1) {
-			String keyChar = Event.getKeyNameForCode(key);
-		
-			setTooltipContent("[" + keyChar + "] " + tooltip);
-		}
-	}
+    private Binding binding;
+
+    /**
+     * Sets the hot key binding that is used for this button's tooltip and
+     * click action
+     *
+     * @param binding
+     */
+    public void setHotKeyBinding(Binding binding) {
+        this.binding = binding;
+        addCallback(binding);
+    }
+
+    @Override
+    protected void applyTheme(ThemeInfo themeInfo) {
+        super.applyTheme(themeInfo);
+
+        String tooltip = themeInfo.getParameter("tooltip", (String) null);
+
+        String actionName = binding.getActionName();
+        int key = Game.config.getKeyForAction(actionName);
+        if (key != -1) {
+            String keyChar = Event.getKeyNameForCode(key);
+
+            setTooltipContent("[" + keyChar + "] " + tooltip);
+        }
+    }
 }

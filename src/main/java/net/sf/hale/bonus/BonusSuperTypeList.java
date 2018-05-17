@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,47 +25,47 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BonusSuperTypeList {
-	private Map<Type, BonusTypeList> bonuses;
-	
-	public BonusSuperTypeList() {
-		bonuses = new HashMap<>();
-	}
-	
-	public BonusSuperTypeList(BonusSuperTypeList other) {
+    private Map<Type, BonusTypeList> bonuses;
+
+    public BonusSuperTypeList() {
         bonuses = new HashMap<>();
-		
-		for (Type key : other.bonuses.keySet()) {
-			BonusTypeList list = new BonusTypeList(other.bonuses.get(key));
+    }
+
+    public BonusSuperTypeList(BonusSuperTypeList other) {
+        bonuses = new HashMap<>();
+
+        for (Type key : other.bonuses.keySet()) {
+            BonusTypeList list = new BonusTypeList(other.bonuses.get(key));
             bonuses.put(key, list);
-		}
-	}
-	
-	public void remove(Bonus bonus) {
-		Type type = bonus.getType();
-		
-		if (bonuses.containsKey(type)) {
-			bonuses.get(type).remove(bonus);
-			
-			if (bonuses.get(type).isEmpty()) {
-				bonuses.remove(type);
-			}
-		}
-	}
-	
-	public void add(Bonus bonus) {
-		Type type = bonus.getType();
-		
-		if (bonuses.containsKey(type)) {
-			bonuses.get(type).add(bonus);
-		} else {
-			BonusTypeList list = new BonusTypeList();
-			list.add(bonus);
-			bonuses.put(type, list);
-		}
-	}
-	
-	public int getCurrentTotal(Type type) {
-		if (bonuses.containsKey(type)) return bonuses.get(type).getCurrentTotal();
-		else return 0;
-	}
+        }
+    }
+
+    public void remove(Bonus bonus) {
+        Type type = bonus.getType();
+
+        if (bonuses.containsKey(type)) {
+            bonuses.get(type).remove(bonus);
+
+            if (bonuses.get(type).isEmpty()) {
+                bonuses.remove(type);
+            }
+        }
+    }
+
+    public void add(Bonus bonus) {
+        Type type = bonus.getType();
+
+        if (bonuses.containsKey(type)) {
+            bonuses.get(type).add(bonus);
+        } else {
+            BonusTypeList list = new BonusTypeList();
+            list.add(bonus);
+            bonuses.put(type, list);
+        }
+    }
+
+    public int getCurrentTotal(Type type) {
+        if (bonuses.containsKey(type)) return bonuses.get(type).getCurrentTotal();
+        else return 0;
+    }
 }

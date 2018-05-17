@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -26,42 +26,41 @@ import net.sf.hale.util.SimpleJSONObject;
 /**
  * A template for any openable object that can be locked, such as doors
  * and chests
- * @author Jared
  *
+ * @author Jared
  */
-
 public abstract class OpenableTemplate extends EntityTemplate {
 
-	private final Icon openIcon;
-	private final Icon closedIcon;
-	
-	private final boolean isDefaultLocked;
-	private final int lockDifficulty;
-	
-	private final String keyID;
-	private final boolean isKeyRequiredToUnlock;
-	private final boolean isRemoveKeyOnUnlock;
-	
-	/**
-	 * Creates an OpenableTemplate
-	 * @param id the entity ID
-	 * @param data the JSON data to parse
-	 */
-	
-	public OpenableTemplate(String id, SimpleJSONObject data) {
-		super(id, data);
-		
-		if (data.containsKey("openIcon")) {
+    private final Icon openIcon;
+    private final Icon closedIcon;
+
+    private final boolean isDefaultLocked;
+    private final int lockDifficulty;
+
+    private final String keyID;
+    private final boolean isKeyRequiredToUnlock;
+    private final boolean isRemoveKeyOnUnlock;
+
+    /**
+     * Creates an OpenableTemplate
+     *
+     * @param id   the entity ID
+     * @param data the JSON data to parse
+     */
+    public OpenableTemplate(String id, SimpleJSONObject data) {
+        super(id, data);
+
+        if (data.containsKey("openIcon")) {
             openIcon = IconFactory.createIcon(data.getObject("openIcon"));
-		} else {
+        } else {
             openIcon = IconFactory.emptyIcon;
-		}
-		
-		if (data.containsKey("closedIcon")) {
+        }
+
+        if (data.containsKey("closedIcon")) {
             closedIcon = IconFactory.createIcon(data.getObject("closedIcon"));
-		} else {
+        } else {
             closedIcon = IconFactory.emptyIcon;
-		}
+        }
 
         isDefaultLocked = data.get("isLocked", false);
         lockDifficulty = data.get("lockDifficulty", 0);
@@ -70,68 +69,84 @@ public abstract class OpenableTemplate extends EntityTemplate {
 
         isKeyRequiredToUnlock = data.get("keyRequired", false);
         isRemoveKeyOnUnlock = data.get("removeKeyOnUnlock", false);
-	}
-	
-	/**
-	 * Returns the icon used to display this openable when it is open
-	 * @return the open icon
-	 */
-	
-	public Icon getOpenIcon() { return openIcon; }
-	
-	/**
-	 * Returns the icon used to display this openable when it is closed
-	 * @return the closed icon
-	 */
-	
-	public Icon getClosedIcon() { return closedIcon; }
-	
-	/**
-	 * Returns true if this openable will be locked by default (until it is unlocked, generally
-	 * by a player), false otherwise
-	 * @return whether this openable will be locked by default
-	 */
-	
-	public boolean isDefaultLocked() { return isDefaultLocked; }
-	
-	/**
-	 * Returns the Locks skill difficulty of opening the lock associated with this openable,
-	 * or 0 if there is no lock
-	 * @return the lock difficulty
-	 */
-	
-	public int getLockDifficulty() { return lockDifficulty; }
-	
-	/**
-	 * Returns true if this Openable has a key, false otherwise
-	 * @return whether this openable has a key
-	 */
-	
-	public boolean hasKey() { return keyID != null; }
-	
-	/**
-	 * Returns the Entity ID of the key for this openable, or null if there is no key
-	 * @return the ID of the key
-	 */
-	
-	public String getKeyID() { return keyID; }
-	
-	/**
-	 * Returns true if the specific key from {@link #getKeyID()} is required to unlock this
-	 * door, false if the openable is not default locked or the lock can be picked.  Note that
-	 * with the keyID set to null and a key required to unlock, the lock will not be openable
-	 * by the player
-	 * @return whether a specific key is required to open this openable
-	 */
-	
-	public boolean isKeyRequiredToUnlock() { return isKeyRequiredToUnlock; }
-	
-	/**
-	 * Returns true if the key to unlock this openable is removed from the player's inventory
-	 * when used, false if it not
-	 * @return whether the key is removed from the player's inventory when used
-	 */
-	
-	public boolean isRemoveKeyOnUnlock() { return isRemoveKeyOnUnlock; }
+    }
+
+    /**
+     * Returns the icon used to display this openable when it is open
+     *
+     * @return the open icon
+     */
+    public Icon getOpenIcon() {
+        return openIcon;
+    }
+
+    /**
+     * Returns the icon used to display this openable when it is closed
+     *
+     * @return the closed icon
+     */
+    public Icon getClosedIcon() {
+        return closedIcon;
+    }
+
+    /**
+     * Returns true if this openable will be locked by default (until it is unlocked, generally
+     * by a player), false otherwise
+     *
+     * @return whether this openable will be locked by default
+     */
+    public boolean isDefaultLocked() {
+        return isDefaultLocked;
+    }
+
+    /**
+     * Returns the Locks skill difficulty of opening the lock associated with this openable,
+     * or 0 if there is no lock
+     *
+     * @return the lock difficulty
+     */
+    public int getLockDifficulty() {
+        return lockDifficulty;
+    }
+
+    /**
+     * Returns true if this Openable has a key, false otherwise
+     *
+     * @return whether this openable has a key
+     */
+    public boolean hasKey() {
+        return keyID != null;
+    }
+
+    /**
+     * Returns the Entity ID of the key for this openable, or null if there is no key
+     *
+     * @return the ID of the key
+     */
+    public String getKeyID() {
+        return keyID;
+    }
+
+    /**
+     * Returns true if the specific key from {@link #getKeyID()} is required to unlock this
+     * door, false if the openable is not default locked or the lock can be picked.  Note that
+     * with the keyID set to null and a key required to unlock, the lock will not be openable
+     * by the player
+     *
+     * @return whether a specific key is required to open this openable
+     */
+    public boolean isKeyRequiredToUnlock() {
+        return isKeyRequiredToUnlock;
+    }
+
+    /**
+     * Returns true if the key to unlock this openable is removed from the player's inventory
+     * when used, false if it not
+     *
+     * @return whether the key is removed from the player's inventory when used
+     */
+    public boolean isRemoveKeyOnUnlock() {
+        return isRemoveKeyOnUnlock;
+    }
 
 }
