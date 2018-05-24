@@ -23,6 +23,7 @@ import de.matthiasmann.twl.*;
 import net.sf.hale.Config;
 import net.sf.hale.Game;
 import net.sf.hale.Game.OSType;
+import net.sf.hale.Version;
 import net.sf.hale.loading.CampaignLoadingTaskList;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
@@ -78,7 +79,6 @@ public class MainMenu extends DesktopArea implements Callback {
     private boolean exitOnLoad = false;
     private String loadGame = null;
     private int buttonGap, titleOffset;
-    private String version;
 
     /**
      * Create a new MainMenu, with buttons for choosing campaign, loading games,
@@ -95,12 +95,6 @@ public class MainMenu extends DesktopArea implements Callback {
         campaignLabel = new Label();
         campaignLabel.setTheme("campaignlabel");
         add(campaignLabel);
-
-        try {
-            version = FileUtil.readFileAsString("docs/version.txt");
-        } catch (IOException e) {
-            Logger.appendToErrorLog("Error reading version information", e);
-        }
 
         campaignButton = new Button();
         campaignButton.setTheme("campaignbutton");
@@ -205,17 +199,8 @@ public class MainMenu extends DesktopArea implements Callback {
         if (campaignID != null) loadCampaign(campaignID);
 
 
-        switch (version) {
-            case "svn":
-                versionLabel = new Label("Build ID: " + Game.config.getVersionID());
-                break;
-            case "disabled":
-                versionLabel = new Label("Version Disabled");
-                break;
-            default:
-                versionLabel = new Label("Version: " + version);
-
-                File updateAvailable = new File(Game.getConfigBaseDirectory() + "updateAvailable.txt");
+        versionLabel = new Label(Version.VERSION + ' ' + Version.GIT_REVISION + ' ' + Version.CREATION_DATE);
+        File updateAvailable = new File(Game.getConfigBaseDirectory() + "updateAvailable.txt");
                 if (updateAvailable.isFile()) {
                     updateButton.setVisible(true);
                 } else if (Game.osType == OSType.Windows) {
@@ -234,8 +219,6 @@ public class MainMenu extends DesktopArea implements Callback {
 
                     Config.writeCheckForUpdatesTime(curTime);
                 }
-                break;
-        }
         versionLabel.setTheme("versionlabel");
         add(versionLabel);
 
@@ -294,15 +277,6 @@ public class MainMenu extends DesktopArea implements Callback {
      */
     public void enableUpdate() {
         updateButton.setVisible(true);
-    }
-
-    /**
-     * Returns the version string of this current version
-     *
-     * @return the version string
-     */
-    public String getVersion() {
-        return version;
     }
 
     /**

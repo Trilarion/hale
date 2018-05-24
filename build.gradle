@@ -5,26 +5,110 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
+mainClassName = 'net.sf.hale.Game'
+
+project.ext {
+    // get operating system (org.gradle.nativeplatform is still incubating)
+    osName = org.gradle.internal.os.OperatingSystem.current().getFamilyName()
+    // assets path
+    assetsPath = "$projectDir/assets"
+    // distribution path
+    distributionPath = "$buildDir/dist"
+
+    // desired lwjgl 2.x version
+    lwjglVersion = '2.9.1'
+    // lwjgl plattform name
+    lwjglPlatformJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
+    // lwjgl native path
+    lwjglNativePath = "${distributionPath}/lib/native"
+
+    // gets the short SHA of the last commit and the information if there are uncommitted changes (-M indicating that there is a modification)
+    gitRevision = 'git rev-parse --short HEAD'.execute().text.trim() + ('git diff-index --quiet HEAD --'.execute().waitFor() == 1 ? '-M' : '')
+    // get current time and date in a fixed format
+    def dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+    creationDate = dateFormat.format(new Date())
+
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile files('lib/lwjgl.jar', 'lib/twl.jar', 'lib/xpp3-1.1.4c.jar', 'lib/json-smart-1.0.9.jar')
+    compile files('lib/twl.jar')
+    compile "org.lwjgl.lwjgl:lwjgl:$lwjglVersion"
+    compile 'net.minidev:json-smart:1.0.9'
+    compile 'xpp3:xpp3:1.1.4c'
     compile 'org.jetbrains:annotations:16.0.1'
     testCompile 'junit:junit:4.12'
 }
 
-mainClassName = 'net.sf.hale.Game'
-
+// include dependent libraries in jar file
 jar {
     manifest {
         attributes(
-                 'Main-Class': mainClassName
+            'Main-Class': mainClassName
         )
     }
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+// TODO task for distribution should include the lwjglNativePath as well as the campaigns, characters, core folders in the project directory
+
+// generate Version.java
+task generateVersionInfo {
+    description = 'Generates a Version.java file in the src/main/java folder containing project version, git version, current date'
+    ext.srcFile = file("$projectDir/src/main/java/net/sf/hale/Version.java")
+    doLast {
+        srcFile.write("""
+package net.sf.hale;
+
+public final class Version {
+    public static final String VERSION = "$project.version";
+    public static final String GIT_REVISION = "$gitRevision";
+    public static final String CREATION_DATE = "$creationDate";
+}
+""")
     }
 }
+
+task extractLwjglNativeBinaries(type: Copy) {
+    description = 'Extracts the native binaries of LWJGL for the OS.'
+    from configurations.compile.filter { it.name == lwjglPlatformJar }.collect { zipTree(it) }
+    into lwjglNativePath
+}
+
+compileJava {
+    dependsOn generateVersionInfo, extractLwjglNativeBinaries
+    source sourceSets.main.java, generateVersionInfo.srcFile
+}
+
+// set library path and project dir for tests
+test {
+    systemProperty 'java.library.path', lwjglNativePath
+    workingDir assetsPath
+}
+
+// set library paths and project dir for run
+run {
+    systemProperty 'java.library.path', lwjglNativePath
+    workingDir assetsPath
+}
+
+task copyDependencies(type: Copy) {
+    group = 'distribution'
+    description = 'Copies all compile dependencies except the lwjgl-platform-natives.jar into distribution/lib folder'
+    from configurations.compile.filter {
+        !it.name.startsWith('lwjgl-platform')
+    }
+    into "$distributionPath/lib"
+}
+
+task assembleAll(type: Copy) {
+    group = 'distribution'
+    description = 'Copies all assets, the jar file and the start scripts into distribution folder'
+    dependsOn jar, copyDependencies
+    from assetsPath
+    from jar.outputs.files
+    into distributionPath
+}
+

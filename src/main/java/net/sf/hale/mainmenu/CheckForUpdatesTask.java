@@ -20,11 +20,13 @@
 package net.sf.hale.mainmenu;
 
 import net.sf.hale.Game;
+import net.sf.hale.Version;
 import net.sf.hale.util.Logger;
 
 import java.io.*;
 import java.net.URL;
 
+// TODO notification about new version is fine, but no automatic update
 /**
  * The class that checks to see if an update is available
  *
@@ -47,12 +49,13 @@ public class CheckForUpdatesTask extends Thread {
     @Override
     public void run() {
         try {
+            // TODO use a github blob url instead?
             in = new URL("http://www.halegame.com/version.txt").openStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String serverVersion = reader.readLine();
 
-            if (!serverVersion.equals(mainMenu.getVersion())) {
+            if (!serverVersion.equals(Version.VERSION)) {
                 mainMenu.enableUpdate();
 
                 new File(Game.getConfigBaseDirectory() + "updateAvailable.txt").createNewFile();
