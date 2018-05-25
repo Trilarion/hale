@@ -1,5 +1,5 @@
 group 'hale'
-version '0.7.0'
+version '0.7.1'
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -15,19 +15,23 @@ project.ext {
     // distribution path
     distributionPath = "$buildDir/dist"
 
-    // desired lwjgl 2.x version
+    // desired LWJGL 2.x version
     lwjglVersion = '2.9.1'
-    // lwjgl plattform name
+    // LWJGL platform binary name
     lwjglPlatformJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
-    // lwjgl native path
-    lwjglNativePath = "${distributionPath}/lib/native"
+    // JInput platform binary name (version number may need to be adapted if version of LWJGL is changed)
+    jinputPlatformJar = "jinput-platform-2.0.5-natives-${osName}.jar"
+
+    // native library path
+    nativePath = "${distributionPath}/lib/native"
 
     // gets the short SHA of the last commit and the information if there are uncommitted changes (-M indicating that there is a modification)
     gitRevision = 'git rev-parse --short HEAD'.execute().text.trim() + ('git diff-index --quiet HEAD --'.execute().waitFor() == 1 ? '-M' : '')
     // get current time and date in a fixed format
-    def dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+    def dateFormat = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss Z')
     creationDate = dateFormat.format(new Date())
 
+    isRelease = false
 }
 
 repositories {
@@ -35,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    compile files('lib/twl.jar')
+    compile files('lib/twl.jar') // TWL not available on Maven Central
     compile "org.lwjgl.lwjgl:lwjgl:$lwjglVersion"
     compile 'net.minidev:json-smart:1.0.9'
     compile 'xpp3:xpp3:1.1.4c'
@@ -43,7 +47,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-// include dependent libraries in jar file
 jar {
     manifest {
         attributes(
@@ -52,12 +55,10 @@ jar {
     }
 }
 
-// TODO task for distribution should include the lwjglNativePath as well as the campaigns, characters, core folders in the project directory
-
-// generate Version.java
 task generateVersionInfo {
-    description = 'Generates a Version.java file in the src/main/java folder containing project version, git version, current date'
-    ext.srcFile = file("$projectDir/src/main/java/net/sf/hale/Version.java")
+    description = 'Updates Version.java file in the src/main/java folder containing project version, git version, current date'
+    onlyIf { isRelease }
+    ext.srcFile = file("${projectDir}/src/main/java/net/sf/hale/Version.java")
     doLast {
         srcFile.write("""
 package net.sf.hale;
@@ -71,44 +72,45 @@ public final class Version {
     }
 }
 
-task extractLwjglNativeBinaries(type: Copy) {
+task extractNativeBinaries(type: Copy) {
     description = 'Extracts the native binaries of LWJGL for the OS.'
     from configurations.compile.filter { it.name == lwjglPlatformJar }.collect { zipTree(it) }
-    into lwjglNativePath
+    from configurations.compile.filter { it.name == jinputPlatformJar }.collect { zipTree(it) }
+    into nativePath
+    exclude '**/META-INF/**'
 }
 
-compileJava {
-    dependsOn generateVersionInfo, extractLwjglNativeBinaries
-    source sourceSets.main.java, generateVersionInfo.srcFile
+configure( compileJava ) {
+    dependsOn generateVersionInfo
 }
 
-// set library path and project dir for tests
-test {
-    systemProperty 'java.library.path', lwjglNativePath
-    workingDir assetsPath
-}
-
-// set library paths and project dir for run
-run {
-    systemProperty 'java.library.path', lwjglNativePath
+// set library path and project dir for tasks run and test
+configure([test, run]) {
+    dependsOn extractNativeBinaries
+    systemProperty 'java.library.path', nativePath
     workingDir assetsPath
 }
 
 task copyDependencies(type: Copy) {
     group = 'distribution'
-    description = 'Copies all compile dependencies except the lwjgl-platform-natives.jar into distribution/lib folder'
+    description = 'Copies all compile dependencies except the ..-platform-..natives.jar into distribution/lib folder'
     from configurations.compile.filter {
-        !it.name.startsWith('lwjgl-platform')
+        !it.name.contains('-platform-')
     }
     into "$distributionPath/lib"
 }
 
-task assembleAll(type: Copy) {
+task release(type: Copy) {
     group = 'distribution'
     description = 'Copies all assets, the jar file and the start scripts into distribution folder'
-    dependsOn jar, copyDependencies
+    dependsOn clean, jar, copyDependencies, extractNativeBinaries
     from assetsPath
     from jar.outputs.files
+    from "${projectDir}/dist/start.bat"
     into distributionPath
 }
 
+// only update Version.java if we make a release
+gradle.taskGraph.whenReady {taskGraph ->
+    isRelease = taskGraph.hasTask(release)
+}
