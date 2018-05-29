@@ -563,7 +563,7 @@ public class Config {
 
     private void createConfigFile(String fileName) {
         try {
-            FileUtil.copyFile(new File("docs/defaultConfig.json"), new File(fileName));
+            FileUtil.copyFile(new File("defaultConfig.json"), new File(fileName));
         } catch (IOException e) {
             Logger.appendToErrorLog("Error creating configuration file.", e);
         }

@@ -11,19 +11,28 @@ project.ext {
     // get operating system (org.gradle.nativeplatform is still incubating)
     osName = org.gradle.internal.os.OperatingSystem.current().getFamilyName()
     // assets path
-    assetsPath = "$projectDir/assets"
+    assetsDir = "${projectDir}/assets"
     // distribution path
-    distributionPath = "$buildDir/dist"
+    distributionDir = "${buildDir}/hale-${version}"
 
     // desired LWJGL 2.x version
     lwjglVersion = '2.9.1'
     // LWJGL platform binary name
-    lwjglPlatformJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
-    // JInput platform binary name (version number may need to be adapted if version of LWJGL is changed)
-    jinputPlatformJar = "jinput-platform-2.0.5-natives-${osName}.jar"
+    lwjglCurrentPlatformJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
+    lwjglWindowsJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
+    lwjglLinuxJar = "lwjgl-platform-${lwjglVersion}-natives-${osName}.jar"
 
-    // native library path
-    nativePath = "${distributionPath}/lib/native"
+    // corresponding JInput version for the desired LWJGL 2.x version
+    jinputVersion = '2.0.5'
+    // JInput platform binary name (version number may need to be adapted if version of LWJGL is changed)
+    jinputCurrentPlatformJar = "jinput-platform-${jinputVersion}-natives-${osName}.jar"
+    jinputWindowsJar = "jinput-platform-${jinputVersion}-natives-windows.jar"
+    jinputLinuxJar = "jinput-platform-${jinputVersion}-natives-linux.jar"
+
+    // library paths
+    currentPlatformBinariesDir = "${buildDir}/native"
+    distributionLibDir = "${distributionDir}/lib"
+    distributionPlatformLibDir = "${distributionLibDir}/native"
 
     // gets the short SHA of the last commit and the information if there are uncommitted changes (-M indicating that there is a modification)
     gitRevision = 'git rev-parse --short HEAD'.execute().text.trim() + ('git diff-index --quiet HEAD --'.execute().waitFor() == 1 ? '-M' : '')
@@ -39,8 +48,8 @@ repositories {
 }
 
 dependencies {
-    compile files('lib/twl.jar') // TWL not available on Maven Central
-    compile "org.lwjgl.lwjgl:lwjgl:$lwjglVersion"
+    compile files('lib/TWL.jar') // TWL not available on Maven Central
+    compile "org.lwjgl.lwjgl:lwjgl:${lwjglVersion}"
     compile 'net.minidev:json-smart:1.0.9'
     compile 'xpp3:xpp3:1.1.4c'
     compile 'org.jetbrains:annotations:16.0.1'
@@ -72,11 +81,28 @@ public final class Version {
     }
 }
 
-task extractNativeBinaries(type: Copy) {
+// TODO code duplication ahead, remove
+task extractCurrentPlatformBinaries(type: Copy) {
     description = 'Extracts the native binaries of LWJGL for the OS.'
-    from configurations.compile.filter { it.name == lwjglPlatformJar }.collect { zipTree(it) }
-    from configurations.compile.filter { it.name == jinputPlatformJar }.collect { zipTree(it) }
-    into nativePath
+    from configurations.compile.filter { it.name == lwjglCurrentPlatformJar }.collect { zipTree(it) }
+    from configurations.compile.filter { it.name == jinputCurrentPlatformJar }.collect { zipTree(it) }
+    into currentPlatformBinariesDir
+    exclude '**/META-INF/**'
+}
+
+task extractWindowsBinaries(type: Copy) {
+    description = 'Extracts the native binaries of LWJGL for Windows.'
+    from configurations.compile.filter { it.name == lwjglWindowsJar }.collect { zipTree(it) }
+    from configurations.compile.filter { it.name == jinputWindowsJar }.collect { zipTree(it) }
+    into distributionPlatformLibDir
+    exclude '**/META-INF/**'
+}
+
+task extractLinuxBinaries(type: Copy) {
+    description = 'Extracts the native binaries of LWJGL for Windows.'
+    from configurations.compile.filter { it.name == lwjglLinuxJar }.collect { zipTree(it) }
+    from configurations.compile.filter { it.name == jinputLinuxJar }.collect { zipTree(it) }
+    into distributionPlatformLibDir
     exclude '**/META-INF/**'
 }
 
@@ -86,9 +112,9 @@ configure( compileJava ) {
 
 // set library path and project dir for tasks run and test
 configure([test, run]) {
-    dependsOn extractNativeBinaries
-    systemProperty 'java.library.path', nativePath
-    workingDir assetsPath
+    dependsOn extractCurrentPlatformBinaries
+    systemProperty 'java.library.path', currentPlatformBinariesDir
+    workingDir assetsDir
 }
 
 task copyDependencies(type: Copy) {
@@ -97,20 +123,52 @@ task copyDependencies(type: Copy) {
     from configurations.compile.filter {
         !it.name.contains('-platform-')
     }
-    into "$distributionPath/lib"
+    into "$distributionDir/lib"
 }
 
-task release(type: Copy) {
+task copyAssetsAndJar(type: Copy) {
     group = 'distribution'
-    description = 'Copies all assets, the jar file and the start scripts into distribution folder'
-    dependsOn clean, jar, copyDependencies, extractNativeBinaries
-    from assetsPath
+    description = 'Copies assets and the jar file into distribution folder.'
+    dependsOn jar
+    from assetsDir
     from jar.outputs.files
-    from "${projectDir}/dist/start.bat"
-    into distributionPath
+    into distributionDir
 }
+
+task releaseWindows(type: Copy) {
+    group = 'distribution'
+    description = 'Copies Windows specific files into distribution folder.'
+    dependsOn clean, copyAssetsAndJar, copyDependencies, extractWindowsBinaries
+    from "${projectDir}/dist/start.bat"
+    into distributionDir
+}
+
+task packageWindows(type: Zip) {
+    group = 'distribution'
+    dependsOn releaseWindows
+    from distributionDir
+    archiveName = "hale-${version}-win.zip"
+    destinationDir = file(buildDir)
+}
+
+task releaseLinux(type: Copy) {
+    group = 'distribution'
+    description = 'Copies Linux specific files into distribution folder.'
+    dependsOn clean, copyAssetsAndJar, copyDependencies, extractLinuxBinaries
+    from "${projectDir}/dist/start.sh"
+    into distributionDir
+}
+
+task packageLinux(type: Tar) {
+    group = 'distribution'
+    dependsOn releaseLinux
+    from distributionDir
+    archiveName = "hale-${version}-linux.tar"
+    destinationDir = file(buildDir)
+}
+
 
 // only update Version.java if we make a release
 gradle.taskGraph.whenReady {taskGraph ->
-    isRelease = taskGraph.hasTask(release)
+    isRelease = taskGraph.hasTask(releaseWindows) || taskGraph.hasTask(releaseLinux)
 }

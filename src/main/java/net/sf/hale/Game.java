@@ -434,7 +434,7 @@ public class Game {
     public static void initializeOSSpecific(OSType osType) {
         switch (osType) {
             case Windows:
-                String baseDir = System.getProperty("user.home") + "\\My Documents\\My Games\\hale\\";
+                String baseDir = System.getProperty("user.home") + "\\hale\\";
 
                 configBaseDirectory = baseDir + "\\config\\";
                 charactersBaseDirectory = baseDir + "\\characters\\";
