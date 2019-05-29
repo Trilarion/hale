@@ -53,11 +53,11 @@ public class Procedural {
         PointImmutable[] adjacent = new PointImmutable[6];
 
         adjacent[0] = new PointImmutable(gridX, gridY - 1); // North
-        adjacent[1] = new PointImmutable(gridX + 1, gridY - ((gridX + 1) % 2)); // North-East
-        adjacent[2] = new PointImmutable(gridX + 1, gridY + (gridX % 2)); // South-East
+        adjacent[1] = new PointImmutable(gridX + 1, gridY - (gridX + 1) % 2); // North-East
+        adjacent[2] = new PointImmutable(gridX + 1, gridY + gridX % 2); // South-East
         adjacent[3] = new PointImmutable(gridX, gridY + 1); // South
-        adjacent[4] = new PointImmutable(gridX - 1, gridY + (gridX % 2)); // South-West
-        adjacent[5] = new PointImmutable(gridX - 1, gridY - ((gridX + 1) % 2)); // North-West
+        adjacent[4] = new PointImmutable(gridX - 1, gridY + gridX % 2); // South-West
+        adjacent[5] = new PointImmutable(gridX - 1, gridY - (gridX + 1) % 2); // North-West
 
         return adjacent;
     }

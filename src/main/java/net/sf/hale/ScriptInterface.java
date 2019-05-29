@@ -742,10 +742,12 @@ public class ScriptInterface implements HasScriptState {
         return new FixedDistributionWithBase(base, mult, offset);
     }
 
+    @Override
     public void put(String ref, Object data) {
         Game.curCampaign.scriptState.put(ref, data);
     }
 
+    @Override
     public Object get(String ref) {
         return Game.curCampaign.scriptState.get(ref);
     }

@@ -157,7 +157,7 @@ public class BuilderPaneSkills extends BuilderPane implements Listener {
         int intelligence = getCharacter().getCurrentIntelligence();
 
         int totalPoints = getCharacter().getSelectedRole().getSkillPointsPerLevel();
-        totalPoints += (intelligence - 10);
+        totalPoints += intelligence - 10;
         totalPoints += getCharacter().getUnspentSkillPoints();
 
         points.setPointsRemaining(totalPoints);

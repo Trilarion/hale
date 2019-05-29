@@ -69,7 +69,7 @@ public class PointImmutable {
 
     @Override
     public int hashCode() {
-        return x + (((int) y) << 16);
+        return x + ((int) y << 16);
     }
 
     @Override

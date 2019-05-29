@@ -320,7 +320,7 @@ public class BuildablePropertySelector extends DialogLayout implements Listener 
         AnimationState animationState = getAnimationState();
 
         if (evt.isMouseEvent()) {
-            boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
+            boolean hover = evt.getType() != Type.MOUSE_EXITED && isMouseInside(evt);
 
             if (animationState.getAnimationState(Button.STATE_HOVER) != hover) {
                 if (hover) onMouseHover();

@@ -419,13 +419,13 @@ public class StatManager {
             addToStat(Stat.LevelDamageBonus, level * role.getDamageBonusPerLevel());
 
             if (role == parent.roles.getBaseRole()) {
-                addToStat(Stat.MaxHP, role.getHPAtLevelOne() + ((level - 1) * role.getHPPerLevel()));
+                addToStat(Stat.MaxHP, role.getHPAtLevelOne() + (level - 1) * role.getHPPerLevel());
             } else {
                 addToStat(Stat.MaxHP, level * role.getHPPerLevel());
             }
         }
 
-        addToStat(Stat.MaxHP, ((getCon() - 10) * get(Stat.CreatureLevel)) / 3);
+        addToStat(Stat.MaxHP, (getCon() - 10) * get(Stat.CreatureLevel) / 3);
 
         recomputeMentalResistance();
         recomputePhysicalResistance();
@@ -456,7 +456,7 @@ public class StatManager {
         float itemsShieldAC = 0.0f;
 
         EquippableItem offItem = parent.inventory.getEquippedItem(Slot.OffHand);
-        Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
+        Weapon offWeapon = offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon ?
                 (Weapon) offItem : null;
 
         List<Armor> armorItems = new ArrayList<>(5);
@@ -540,7 +540,7 @@ public class StatManager {
         Weapon mainWeapon = parent.getMainHandWeapon();
 
         EquippableItem offItem = parent.inventory.getEquippedItem(Slot.OffHand);
-        Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
+        Weapon offWeapon = offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon ?
                 (Weapon) offItem : null;
 
         zeroStats(Stat.MainHandAttackBonus, Stat.MainHandDamageBonus, Stat.OffHandAttackBonus, Stat.OffHandDamageBonus);

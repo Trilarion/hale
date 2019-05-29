@@ -657,7 +657,7 @@ public class CombatRunner {
             }
 
             Creature c = creatures.get(curIndex);
-            if ((!c.isDead() && c.isAIActive()) || c.isPlayerFaction()) activePlacesLeft--;
+            if (!c.isDead() && c.isAIActive() || c.isPlayerFaction()) activePlacesLeft--;
 
             placesForward++;
             curIndex++;
@@ -668,7 +668,7 @@ public class CombatRunner {
         int newActiveCreatureIndex = activeCreatureIndex - 1;
 
         if (newIndex >= creatures.size()) {
-            newIndex -= (creatures.size() - 1);
+            newIndex -= creatures.size() - 1;
             newActiveCreatureIndex = activeCreatureIndex;
         }
 

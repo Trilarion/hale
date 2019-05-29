@@ -198,7 +198,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
         } else if (pc.isDying()) {
             apBar.setText("Dying");
         } else {
-            apBar.setText("AP: " + (pc.timer.getAP() / 100));
+            apBar.setText("AP: " + pc.timer.getAP() / 100);
         }
 
         int charLevel = pc.stats.get(Stat.CreatureLevel);
@@ -209,8 +209,8 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
             levelUp.setVisible(false);
         }
 
-        float healthWidth = Math.min(((float) pc.getCurrentHitPoints()) / ((float) pc.stats.get(Stat.MaxHP)), 1.0f);
-        float apWidth = Math.min(((float) pc.timer.getAP()) / (Math.max(10000, pc.timer.getMaxAP())), 1.0f);
+        float healthWidth = Math.min((float) pc.getCurrentHitPoints() / (float) pc.stats.get(Stat.MaxHP), 1.0f);
+        float apWidth = Math.min((float) pc.timer.getAP() / Math.max(10000, pc.timer.getMaxAP()), 1.0f);
 
         hpBar.setValue(healthWidth);
         apBar.setValue(apWidth);

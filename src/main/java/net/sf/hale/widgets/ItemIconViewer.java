@@ -185,7 +185,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
     @Override
     protected boolean handleEvent(Event evt) {
         if (evt.isMouseEvent()) {
-            boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
+            boolean hover = evt.getType() != Type.MOUSE_EXITED && isMouseInside(evt);
             if (hover && !isHovering) {
                 if (callback != null) callback.hoverStarted(this);
                 isHovering = true;

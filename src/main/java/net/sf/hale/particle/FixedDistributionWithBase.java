@@ -56,6 +56,7 @@ public class FixedDistributionWithBase implements DistributionOneValue {
         return data;
     }
 
+    @Override
     public float generate(Particle particle) {
         return base.getBase(particle) * multiplier + offset;
     }

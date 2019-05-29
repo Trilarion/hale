@@ -884,7 +884,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 
         @Override
         public int getPreferredHeight() {
-            return colorButtons.get(0).getPreferredHeight() * ((colorButtons.size() / numColumns) + 1);
+            return colorButtons.get(0).getPreferredHeight() * (colorButtons.size() / numColumns + 1);
         }
     }
 }

@@ -372,7 +372,7 @@ public class Encounter implements Iterable<Creature> {
         aiActive = false;
         knownHostiles.clear();
 
-        if ((template.randomizesCreatures() && Game.scriptInterface.SpawnRandomEncounters) ||
+        if (template.randomizesCreatures() && Game.scriptInterface.SpawnRandomEncounters ||
                 !template.randomizesCreatures()) {
 
             Map<PointImmutable, NPC> spawnedCreatures = template.spawnCreatures(location);
@@ -401,7 +401,7 @@ public class Encounter implements Iterable<Creature> {
 
             double averageLevel = 0.0;
             for (Creature creature : creaturesInArea) {
-                averageLevel += (creature.roles.getTotalLevel() / ((float) creaturesInArea.size()));
+                averageLevel += creature.roles.getTotalLevel() / (float) creaturesInArea.size();
             }
 
             double groupScaleFactor = Game.ruleset.getValue("EncounterGroupChallengeScaleFactor") / 1000.0;

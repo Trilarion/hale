@@ -61,6 +61,7 @@ public class GaussianDistributionWithBase implements DistributionOneValue {
         return data;
     }
 
+    @Override
     public float generate(Particle particle) {
         float avg = base.getBase(particle) * multiplier + offset;
 

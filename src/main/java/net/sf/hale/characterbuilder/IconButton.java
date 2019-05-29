@@ -116,7 +116,7 @@ public class IconButton extends Button {
         AnimationState animationState = getAnimationState();
 
         if (evt.isMouseEvent()) {
-            boolean hover = (evt.getType() != Type.MOUSE_EXITED) && isMouseInside(evt);
+            boolean hover = evt.getType() != Type.MOUSE_EXITED && isMouseInside(evt);
 
             if (hover && !animationState.getAnimationState(Button.STATE_HOVER)) {
                 for (Callback callback : callbacks) {

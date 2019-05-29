@@ -97,16 +97,16 @@ public class Date {
         rounds = roundNumber % ROUNDS_PER_MINUTE;
         roundNumber -= rounds;
 
-        minutes = (roundNumber % ROUNDS_PER_HOUR) / ROUNDS_PER_MINUTE;
+        minutes = roundNumber % ROUNDS_PER_HOUR / ROUNDS_PER_MINUTE;
         roundNumber -= minutes * ROUNDS_PER_MINUTE;
 
-        hours = (roundNumber % ROUNDS_PER_DAY) / ROUNDS_PER_HOUR;
+        hours = roundNumber % ROUNDS_PER_DAY / ROUNDS_PER_HOUR;
         roundNumber -= hours * ROUNDS_PER_HOUR;
 
-        days = (roundNumber % ROUNDS_PER_MONTH) / ROUNDS_PER_DAY;
+        days = roundNumber % ROUNDS_PER_MONTH / ROUNDS_PER_DAY;
         roundNumber -= days * ROUNDS_PER_DAY;
 
-        months = (roundNumber / ROUNDS_PER_MONTH);
+        months = roundNumber / ROUNDS_PER_MONTH;
 
         return shortString(months, days, hours, minutes, rounds);
     }
@@ -117,16 +117,16 @@ public class Date {
         rounds = roundNumber % ROUNDS_PER_MINUTE;
         roundCounter -= rounds;
 
-        minutes = (roundCounter % ROUNDS_PER_HOUR) / ROUNDS_PER_MINUTE;
+        minutes = roundCounter % ROUNDS_PER_HOUR / ROUNDS_PER_MINUTE;
         roundCounter -= minutes * ROUNDS_PER_MINUTE;
 
-        hours = (roundCounter % ROUNDS_PER_DAY) / ROUNDS_PER_HOUR;
+        hours = roundCounter % ROUNDS_PER_DAY / ROUNDS_PER_HOUR;
         roundCounter -= hours * ROUNDS_PER_HOUR;
 
-        days = (roundCounter % ROUNDS_PER_MONTH) / ROUNDS_PER_DAY;
+        days = roundCounter % ROUNDS_PER_MONTH / ROUNDS_PER_DAY;
         roundCounter -= days * ROUNDS_PER_DAY;
 
-        months = (roundCounter / ROUNDS_PER_MONTH);
+        months = roundCounter / ROUNDS_PER_MONTH;
 
         Game.curCampaign.checkEncounterRespawns();
     }

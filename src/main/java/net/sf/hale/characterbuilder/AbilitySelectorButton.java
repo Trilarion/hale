@@ -152,7 +152,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 
     private void handleHover(Event evt) {
         if (evt.isMouseEvent()) {
-            boolean hover = (evt.getType() != Type.MOUSE_EXITED) &&
+            boolean hover = evt.getType() != Type.MOUSE_EXITED &&
                     (isMouseInside(evt) || abilityHoverDetails.isInside(evt.getMouseX(), evt.getMouseY()));
 
             if (hover && !isHovering) {
@@ -293,7 +293,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
                     getInnerY() + abilityNameLabel.getHeight());
 
             Widget parent = AbilitySelectorButton.this;
-            int x = parent.getX() + (parent.getWidth()) / 2 - getWidth() / 2;
+            int x = parent.getX() + parent.getWidth() / 2 - getWidth() / 2;
             setPosition(x, parent.getInnerY() - getHeight());
         }
     }
@@ -330,7 +330,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
             setSize(getPreferredWidth(), getPreferredHeight());
 
             Widget parent = AbilitySelectorButton.this;
-            int x = parent.getX() + (parent.getWidth()) / 2 - getWidth() / 2;
+            int x = parent.getX() + parent.getWidth() / 2 - getWidth() / 2;
             setPosition(x, parent.getInnerBottom());
         }
 

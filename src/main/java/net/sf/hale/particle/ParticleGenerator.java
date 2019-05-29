@@ -337,6 +337,7 @@ public class ParticleGenerator implements Animated {
         return numParticles > 0.0f && particleSprite != null;
     }
 
+    @Override
     public void cacheSprite() {
     }
 
@@ -390,11 +391,13 @@ public class ParticleGenerator implements Animated {
         setPosition(screenPoint.x, screenPoint.y);
     }
 
+    @Override
     public void offsetPosition(float x, float y) {
         positionX += x;
         positionY += y;
     }
 
+    @Override
     public void setPosition(float x, float y) {
         positionX = x;
         positionY = y;
@@ -407,10 +410,12 @@ public class ParticleGenerator implements Animated {
         speed = (float) Math.sqrt(x * x + y * y);
     }
 
+    @Override
     public void setDurationInfinite() {
         timeLeft = 1.0e12f;
     }
 
+    @Override
     public void setDuration(float durationInSeconds) {
         timeLeft = durationInSeconds;
     }
@@ -526,6 +531,7 @@ public class ParticleGenerator implements Animated {
         velocityDistribution = distribution;
     }
 
+    @Override
     public boolean elapseTime(float seconds) {
         timeLeft -= seconds;
 
@@ -570,10 +576,11 @@ public class ParticleGenerator implements Animated {
             }
         }
 
-        return (timeLeft < 0.0f && particles.isEmpty());
+        return timeLeft < 0.0f && particles.isEmpty();
     }
 
     // sub classes can override to do any needed startup
+    @Override
     public boolean initialize() {
         boolean alreadyInitialized = initialized;
 
@@ -625,6 +632,7 @@ public class ParticleGenerator implements Animated {
         }
     }
 
+    @Override
     public void draw() {
         // it is a big performance improvement to bind the texture only once
         // this assumes that all particles in this generator use a texture from the same spritesheet

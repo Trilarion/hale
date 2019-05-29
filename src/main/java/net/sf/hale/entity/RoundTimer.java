@@ -69,7 +69,7 @@ public class RoundTimer {
      * @return whether the creature has used AP
      */
     public boolean hasTakenAnAction() {
-        return (AP < maxAP);
+        return AP < maxAP;
     }
 
     /**

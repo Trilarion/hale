@@ -172,7 +172,7 @@ public class AreaViewer extends Widget implements AreaRenderer {
         AnimationState as = getAnimationState();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef((-scroll.x + getX()), (-scroll.y + getY()), 0.0f);
+        GL11.glTranslatef(-scroll.x + getX(), -scroll.y + getY(), 0.0f);
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -263,7 +263,7 @@ public class AreaViewer extends Widget implements AreaRenderer {
         } else if (curTime > screenShake.lastTime + 110) {
             screenShake.lastTime = curTime;
 
-            int newShakeX = -1 * ((int) Math.signum(screenShake.lastShakeX)) * Game.dice.rand(20, 35);
+            int newShakeX = -1 * (int) Math.signum(screenShake.lastShakeX) * Game.dice.rand(20, 35);
             int newShakeY = Game.dice.rand(-2, 2);
 
             scroll(newShakeX - screenShake.lastShakeX, newShakeY - screenShake.lastShakeY, true);

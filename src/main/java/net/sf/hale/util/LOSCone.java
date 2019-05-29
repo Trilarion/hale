@@ -89,7 +89,7 @@ public class LOSCone {
 
         //System.out.println("          Polar: (" + (r) + ", " + endI + ") Grid: " + gridI + " Screen: " + screenI);
 
-        int side = ((startI + 1) % (r * 6)) / r;
+        int side = (startI + 1) % (r * 6) / r;
 
         //System.out.println("          Choosing side: " + side);
 

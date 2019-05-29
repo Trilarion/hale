@@ -49,6 +49,7 @@ public class UniformDistribution implements DistributionOneValue {
         return data;
     }
 
+    @Override
     public float generate(Particle particle) {
         return Game.dice.rand(min, max);
     }

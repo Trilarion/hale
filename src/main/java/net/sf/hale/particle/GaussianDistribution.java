@@ -49,6 +49,7 @@ public class GaussianDistribution implements DistributionOneValue {
         return data;
     }
 
+    @Override
     public float generate(Particle particle) {
         return Game.dice.gaussian(mean, stddev);
     }

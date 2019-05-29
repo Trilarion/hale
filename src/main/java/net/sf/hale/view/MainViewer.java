@@ -589,7 +589,7 @@ public class MainViewer extends DesktopArea {
      * @return whether movement is blocked due to open windows
      */
     public boolean isMoveDisabledDueToOpenWindows() {
-        return (merchantWindow.isVisible() || containerWindow.isVisible() || craftingWindow.isVisible());
+        return merchantWindow.isVisible() || containerWindow.isVisible() || craftingWindow.isVisible();
     }
 
     /**

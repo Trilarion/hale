@@ -125,7 +125,7 @@ public class Skill implements Comparable<Skill> {
 
         Role role = Game.ruleset.getRole(restrictToRole);
 
-        return (creature.roles.contains(role));
+        return creature.roles.contains(role);
     }
 
     /**

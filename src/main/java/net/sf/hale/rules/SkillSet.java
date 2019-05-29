@@ -188,7 +188,7 @@ public class SkillSet implements Saveable {
         Integer ranks = skills.get(skillID);
         if (ranks == null) return false;
 
-        return (ranks != 0);
+        return ranks != 0;
     }
 
     /**
@@ -322,7 +322,7 @@ public class SkillSet implements Saveable {
             return 0;
 
         int modifier = getTotalModifier(skill);
-        int roll = (!Game.isInTurnMode() && skill.alwaysRolls100OutsideOfCombat()) ? 100 : Game.dice.d100();
+        int roll = !Game.isInTurnMode() && skill.alwaysRolls100OutsideOfCombat() ? 100 : Game.dice.d100();
         int total = modifier + roll;
 
         if (sb != null) {

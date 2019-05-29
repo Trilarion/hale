@@ -820,7 +820,7 @@ public class CreatureAbilitySet implements Saveable {
             }
         }
 
-        return hasActiveEffects || (!tempAbilitySlots.isEmpty());
+        return hasActiveEffects || !tempAbilitySlots.isEmpty();
     }
 
     /**

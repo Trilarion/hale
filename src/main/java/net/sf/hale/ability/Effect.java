@@ -589,10 +589,12 @@ public class Effect extends Scriptable implements Saveable, HasScriptState {
         sb.append("</div>");
     }
 
+    @Override
     public void put(String ref, Object data) {
         scriptState.put(ref, data);
     }
 
+    @Override
     public Object get(String ref) {
         return scriptState.get(ref);
     }

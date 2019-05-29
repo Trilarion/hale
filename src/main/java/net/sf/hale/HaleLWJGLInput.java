@@ -14,6 +14,7 @@ import org.lwjgl.opengl.Display;
 public class HaleLWJGLInput implements Input {
     private boolean wasActive;
 
+    @Override
     public boolean pollInput(GUI gui) {
         boolean active = Display.isActive();
         if (wasActive && !active) {

@@ -165,7 +165,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
         }
 
         int mouseX = Mouse.getX() + scrollX;
-        int mouseY = (canvas.getHeight() - Mouse.getY()) + scrollY;
+        int mouseY = canvas.getHeight() - Mouse.getY() + scrollY;
         mouseGrid = AreaUtil.convertScreenToGrid(mouseX, mouseY);
         mouseScreen = AreaUtil.convertGridToScreen(mouseGrid);
 
@@ -174,8 +174,8 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
             int mouseDY = Mouse.getDY();
 
             if (Mouse.isGrabbed()) {
-                scrollX -= (mouseDX);
-                scrollY += (mouseDY);
+                scrollX -= mouseDX;
+                scrollY += mouseDY;
 
                 Point viewGrid = AreaUtil.convertScreenToGrid(new Point(scrollX, scrollY));
                 viewHandler.viewMoved(viewGrid.x, viewGrid.y);

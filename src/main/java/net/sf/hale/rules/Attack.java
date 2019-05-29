@@ -158,7 +158,7 @@ public class Attack {
             int weaponRangePenalty = weapon.getTemplate().getRangePenalty() * (100 - attacker.stats.get(Type.RangePenalty)) / 100;
 
             int distance = attacker.getLocation().getDistance(defender.getLocation());
-            rangePenalty += (distance * weaponRangePenalty) / 20;
+            rangePenalty += distance * weaponRangePenalty / 20;
 
             if (weapon.getTemplate().getWeaponType() != WeaponTemplate.Type.Thrown) {
                 quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Type.WeaponAttack);
@@ -169,9 +169,9 @@ public class Attack {
         attackRoll = Game.dice.d100();
         damageRoll = Game.dice.rand(weapon.getTemplate().getMinDamage(), weapon.getTemplate().getMaxDamage());
 
-        damageBonus += ((float) attacker.stats.get(Stat.LevelDamageBonus)) / 100.0f;
+        damageBonus += (float) attacker.stats.get(Stat.LevelDamageBonus) / 100.0f;
         damageBonus += (float) (weapon.getQualityDamageBonus() + weapon.bonuses.get(Type.WeaponDamage)) / 100.0f;
-        damageBonus += (float) (quiverDamageBonus) / 100.0f;
+        damageBonus += (float) quiverDamageBonus / 100.0f;
 
         attackBonus += baseAttackBonus - rangePenalty;
         attackBonus += weapon.bonuses.get(Type.WeaponAttack) + weapon.getQualityAttackBonus() + quiverAttackBonus;
@@ -180,10 +180,10 @@ public class Attack {
         attackBonus += attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Type.AttackForWeaponType);
 
         totalAttack = attackRoll + attackBonus;
-        totalDamage = Math.round(((float) damageRoll * damageBonus));
+        totalDamage = Math.round((float) damageRoll * damageBonus);
 
-        damageMin = Math.round(((float) weapon.getTemplate().getMinDamage() * damageBonus));
-        damageMax = Math.round(((float) weapon.getTemplate().getMaxDamage() * damageBonus));
+        damageMin = Math.round((float) weapon.getTemplate().getMinDamage() * damageBonus);
+        damageMax = Math.round((float) weapon.getTemplate().getMaxDamage() * damageBonus);
 
         damage = new Damage(defender, weapon.getTemplate().getDamageType(), totalDamage);
 
@@ -406,7 +406,7 @@ public class Attack {
                 defender.getTemplate().getName() + ": ");
         message.append(attackRoll + " + " + attackBonus + " = " + totalAttack + " vs " + defenderAC + ".  ");
 
-        if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
+        if (attackRoll > 95 || attackRoll > 5 && totalAttack >= defenderAC) {
             message.append("Succeeds.");
             hit = true;
         } else {
@@ -422,7 +422,7 @@ public class Attack {
         message.append(attacker.getTemplate().getName() + " attempts melee touch attack on " + defender.getTemplate().getName() + ": ");
         message.append(attackRoll + " + " + attackBonus + " = " + totalAttack + " vs " + defenderAC + ".  ");
 
-        if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
+        if (attackRoll > 95 || attackRoll > 5 && totalAttack >= defenderAC) {
             message.append("Succeeds.");
             hit = true;
         } else {
@@ -476,7 +476,7 @@ public class Attack {
         message.append(attacker.getTemplate().getName() + " attacks " + defender.getTemplate().getName() + ": " +
                 attackToString() + " vs AC " + defenderAC);
 
-        if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
+        if (attackRoll > 95 || attackRoll > 5 && totalAttack >= defenderAC) {
             hit = true;
 
             int threatRange = weapon.getTemplate().getCriticalThreat() -
@@ -545,21 +545,21 @@ public class Attack {
     }
 
     public String threatToString() {
-        return (threatRoll + " + " + attackBonus + " = " + (threatRoll + attackBonus));
+        return threatRoll + " + " + attackBonus + " = " + (threatRoll + attackBonus);
     }
 
     public String attackToString() {
-        return (attackRoll + " + " + attackBonus + " = " + totalAttack);
+        return attackRoll + " + " + attackBonus + " = " + totalAttack;
     }
 
     public String damageToString() {
-        String damageString = (damageRoll + " * " + Game.numberFormat(3).format(damageBonus));
+        String damageString = damageRoll + " * " + Game.numberFormat(3).format(damageBonus);
         if (extraDamage != 0) damageString = damageString + " + " + extraDamage;
         return damageString + " = " + totalDamage;
     }
 
     @Override
     public String toString() {
-        return ("Rolled " + attackToString() + " for " + damageToString() + " Damage");
+        return "Rolled " + attackToString() + " for " + damageToString() + " Damage";
     }
 }

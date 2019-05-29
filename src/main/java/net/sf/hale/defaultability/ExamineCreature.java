@@ -42,7 +42,7 @@ public class ExamineCreature implements DefaultAbility {
     public boolean canActivate(PC parent, Location targetPosition) {
         target = targetPosition.getCreature();
 
-        return (target != null && parent.hasVisibility(targetPosition));
+        return target != null && parent.hasVisibility(targetPosition);
     }
 
     @Override

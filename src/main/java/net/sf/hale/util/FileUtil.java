@@ -206,7 +206,7 @@ public class FileUtil {
         int i = from.size() - 1;
         int j = to.size() - 1;
 
-        while ((i >= 0) && (j >= 0) && (from.get(i).equals(to.get(j)))) {
+        while (i >= 0 && j >= 0 && from.get(i).equals(to.get(j))) {
             i--;
             j--;
         }
@@ -312,7 +312,7 @@ public class FileUtil {
 
         for (byte b : raw) {
             hex.append(HEXES.charAt((b & 0xF0) >> 4));
-            hex.append(HEXES.charAt((b & 0x0F)));
+            hex.append(HEXES.charAt(b & 0x0F));
         }
 
         return hex.toString();

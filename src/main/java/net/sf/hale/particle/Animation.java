@@ -171,6 +171,7 @@ public class Animation extends AnimationBase implements Animated {
         return data;
     }
 
+    @Override
     public void cacheSprite() {
         Sprite sprite = SpriteManager.getSprite(textureSprite);
         texture = sprite.getTextureReference();
@@ -206,6 +207,7 @@ public class Animation extends AnimationBase implements Animated {
         numLoops = (int) loops + 1;
     }
 
+    @Override
     public void setDurationInfinite() {
         super.setDuration(Float.MAX_VALUE);
 
@@ -317,6 +319,7 @@ public class Animation extends AnimationBase implements Animated {
         return super.elapseTime(seconds);
     }
 
+    @Override
     public final void draw() {
         GL11.glColor4f(getR(), getG(), getB(), getA());
         GL14.glSecondaryColor3f(getR2(), getG2(), getB2());

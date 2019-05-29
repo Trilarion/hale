@@ -89,7 +89,7 @@ public class DragAndDropHandler {
 
         DropTarget newTarget;
 
-        if ((widget instanceof DropTarget) && (widget != dragTarget)) {
+        if (widget instanceof DropTarget && widget != dragTarget) {
             newTarget = (DropTarget) widget;
         } else {
             newTarget = null;

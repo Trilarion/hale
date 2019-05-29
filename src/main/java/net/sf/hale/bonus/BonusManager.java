@@ -267,6 +267,6 @@ public class BonusManager {
 
         int percentageAmount = (damage - reduction) * immunity / 100;
 
-        return (damage - reduction - percentageAmount);
+        return damage - reduction - percentageAmount;
     }
 }

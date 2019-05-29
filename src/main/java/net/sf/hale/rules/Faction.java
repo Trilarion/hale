@@ -48,11 +48,11 @@ public class Faction {
     }
 
     public boolean isFriendly(Entity other) {
-        return (getRelationship(other) == Relationship.Friendly);
+        return getRelationship(other) == Relationship.Friendly;
     }
 
     public boolean isHostile(Entity other) {
-        return (getRelationship(other) == Relationship.Hostile);
+        return getRelationship(other) == Relationship.Hostile;
     }
 
     public Relationship getRelationship(Entity other) {

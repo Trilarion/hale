@@ -127,11 +127,11 @@ public class AreaUtil {
 
         // North East
         adjacent[1].x = gridX + 1;
-        adjacent[1].y = gridY - ((gridX + 1) % 2); // If x is even, subtract one, if x is odd, no change
+        adjacent[1].y = gridY - (gridX + 1) % 2; // If x is even, subtract one, if x is odd, no change
 
         // South East
         adjacent[2].x = gridX + 1;
-        adjacent[2].y = gridY + (gridX % 2); // If x is even, no change, if x is odd, add one
+        adjacent[2].y = gridY + gridX % 2; // If x is even, no change, if x is odd, add one
 
         // South
         adjacent[3].x = gridX;
@@ -139,11 +139,11 @@ public class AreaUtil {
 
         // South West
         adjacent[4].x = gridX - 1;
-        adjacent[4].y = gridY + (gridX % 2); // If x is even, no change, if x is odd, add one
+        adjacent[4].y = gridY + gridX % 2; // If x is even, no change, if x is odd, add one
 
         // North West
         adjacent[5].x = gridX - 1;
-        adjacent[5].y = gridY - ((gridX + 1) % 2); // If x is even, subtract one, if x is odd, no change
+        adjacent[5].y = gridY - (gridX + 1) % 2; // If x is even, subtract one, if x is odd, no change
 
         return adjacent;
     }
@@ -206,7 +206,7 @@ public class AreaUtil {
             if (xMod * 2 - (yMod - Game.TILE_SIZE / 2) < 0) {
                 xOffset = -1;
                 yOffset = 0;
-            } else if (xMod * 2 + (yMod - Game.TILE_SIZE / 2) < Game.TILE_SIZE * 2) {
+            } else if (xMod * 2 + yMod - Game.TILE_SIZE / 2 < Game.TILE_SIZE * 2) {
                 xOffset = 0;
                 yOffset = 0;
             } else {
@@ -223,7 +223,7 @@ public class AreaUtil {
 
         if (i >= 6 * r) i -= 6 * r;
 
-        int d = (i / r);
+        int d = i / r;
         int e = i % r;
 
         int px = 0;
@@ -243,7 +243,7 @@ public class AreaUtil {
             px += 0;
         } else if (d == 2) {
             px = 0 + r;
-            py = 0 + (r) / 2;
+            py = 0 + r / 2;
 
             py += (e + Math.abs(px % 2)) / 2;
             px -= e;
@@ -255,7 +255,7 @@ public class AreaUtil {
             px -= e;
         } else if (d == 4) {
             px = 0 - r;
-            py = 0 + (r) / 2;
+            py = 0 + r / 2;
 
             py -= e;
             px += 0;
@@ -291,7 +291,7 @@ public class AreaUtil {
         } else {
             if (gridY > centerY) i += dist;
             else {
-                i += (6 * r - dist);
+                i += 6 * r - dist;
             }
         }
 
@@ -308,7 +308,7 @@ public class AreaUtil {
 
         if (i >= 6 * r) i -= 6 * r;
 
-        int d = (i / r);
+        int d = i / r;
         int e = i % r;
 
         int px = 0;
@@ -322,13 +322,13 @@ public class AreaUtil {
             px += e;
         } else if (d == 1) {
             px = centerX + r;
-            py = centerY - (r + 1 - (centerX % 2)) / 2;
+            py = centerY - (r + 1 - centerX % 2) / 2;
 
             py += e;
             px += 0;
         } else if (d == 2) {
             px = centerX + r;
-            py = centerY + (r + (centerX % 2)) / 2;
+            py = centerY + (r + centerX % 2) / 2;
 
             py += (e + Math.abs(px % 2)) / 2;
             px -= e;
@@ -340,13 +340,13 @@ public class AreaUtil {
             px -= e;
         } else if (d == 4) {
             px = centerX - r;
-            py = centerY + (r + (centerX % 2)) / 2;
+            py = centerY + (r + centerX % 2) / 2;
 
             py -= e;
             px += 0;
         } else if (d == 5) {
             px = centerX - r;
-            py = centerY - (r + 1 - (centerX % 2)) / 2;
+            py = centerY - (r + 1 - centerX % 2) / 2;
 
             py -= (e + 1 - Math.abs(px % 2)) / 2;
             px += e;
@@ -384,12 +384,12 @@ public class AreaUtil {
             } else if (previousSide == 1) {
                 // North East
                 current.x = previous.x + 1;
-                current.y = previous.y - ((previous.x + 1) % 2); // If x is even, subtract one, if x is odd, no change
+                current.y = previous.y - (previous.x + 1) % 2; // If x is even, subtract one, if x is odd, no change
 
             } else if (previousSide == 2) {
                 // South East
                 current.x = previous.x + 1;
-                current.y = previous.y + (previous.x % 2); // If x is even, no change, if x is odd, add one
+                current.y = previous.y + previous.x % 2; // If x is even, no change, if x is odd, add one
 
             } else if (previousSide == 3) {
                 // South
@@ -399,12 +399,12 @@ public class AreaUtil {
             } else if (previousSide == 4) {
                 // South West
                 current.x = previous.x - 1;
-                current.y = previous.y + (previous.x % 2); // If x is even, no change, if x is odd, add one
+                current.y = previous.y + previous.x % 2; // If x is even, no change, if x is odd, add one
 
             } else if (previousSide == 5) {
                 // North West
                 current.x = previous.x - 1;
-                current.y = previous.y - ((previous.x + 1) % 2); // If x is even, subtract one, if x is odd, no change
+                current.y = previous.y - (previous.x + 1) % 2; // If x is even, subtract one, if x is odd, no change
             }
 
             hexes.add(new Point(current));
@@ -435,7 +435,7 @@ public class AreaUtil {
     public static final Turn turns(int x0, int y0, int x1, int y1, int x2, int y2) {
         int cross = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
 
-        return ((cross > 0) ? Turn.LEFT : ((cross == 0) ? Turn.STRAIGHT : Turn.RIGHT));
+        return cross > 0 ? Turn.LEFT : cross == 0 ? Turn.STRAIGHT : Turn.RIGHT;
     }
 
     private static final int getLineIntersectSide(int previousSide, int hexX, int hexY, int x3, int y3, int x4, int y4) {
@@ -540,15 +540,15 @@ public class AreaUtil {
     }
 
     public static final int euclideanDistance2(int x1, int y1, int x2, int y2) {
-        return ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     }
 
     public static final int Floor2(int x) {
-        return ((x >= 0) ? (x >> 1) : (x - 1) / 2);
+        return x >= 0 ? x >> 1 : (x - 1) / 2;
     }
 
     public static final int Ceil2(int x) {
-        return ((x >= 0) ? (x + 1) >> 1 : x / 2);
+        return x >= 0 ? x + 1 >> 1 : x / 2;
     }
 
     public static final double angle(int x1, int y1, int x2, int y2) {

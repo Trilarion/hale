@@ -100,7 +100,7 @@ public class SaveWriter {
 
             if (c.isPrimitive()) {
                 if (c == int.class) {
-                    for (int b : ((int[]) value)) {
+                    for (int b : (int[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -108,7 +108,7 @@ public class SaveWriter {
                         out.append(Integer.toString(b));
                     }
                 } else if (c == short.class) {
-                    for (short b : ((short[]) value)) {
+                    for (short b : (short[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -116,7 +116,7 @@ public class SaveWriter {
                         out.append(Short.toString(b));
                     }
                 } else if (c == byte.class) {
-                    for (byte b : ((byte[]) value)) {
+                    for (byte b : (byte[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -124,7 +124,7 @@ public class SaveWriter {
                         out.append(Byte.toString(b));
                     }
                 } else if (c == long.class) {
-                    for (long b : ((long[]) value)) {
+                    for (long b : (long[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -132,7 +132,7 @@ public class SaveWriter {
                         out.append(Long.toString(b));
                     }
                 } else if (c == float.class) {
-                    for (float b : ((float[]) value)) {
+                    for (float b : (float[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -140,7 +140,7 @@ public class SaveWriter {
                         out.append(Float.toString(b));
                     }
                 } else if (c == double.class) {
-                    for (double b : ((double[]) value)) {
+                    for (double b : (double[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -148,7 +148,7 @@ public class SaveWriter {
                         out.append(Double.toString(b));
                     }
                 } else if (c == boolean.class) {
-                    for (boolean b : ((boolean[]) value)) {
+                    for (boolean b : (boolean[]) value) {
                         if (needSep)
                             out.append(", ");
                         else
@@ -160,7 +160,7 @@ public class SaveWriter {
                     }
                 }
             } else {
-                for (Object o : ((Object[]) value)) {
+                for (Object o : (Object[]) value) {
                     if (needSep)
                         out.append(", ");
                     else
@@ -270,8 +270,8 @@ public class SaveWriter {
                     default:
                         // Reference:
                         // http://www.unicode.org/versions/Unicode5.1.0/
-                        if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
-                                || (ch >= '\u2000' && ch <= '\u20FF')) {
+                        if (ch >= '\u0000' && ch <= '\u001F' || ch >= '\u007F' && ch <= '\u009F'
+                                || ch >= '\u2000' && ch <= '\u20FF') {
                             out.append("\\u");
                             String hex = "0123456789ABCDEF";
                             out.append(hex.charAt(ch >> 12 & 0x000F));

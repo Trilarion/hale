@@ -43,7 +43,7 @@ public class XP {
     public static void initXPTable() {
         int levelMultFactor = Game.ruleset.getValue("XPLevelMultFactor");
         int levelExpBaseInv = Game.ruleset.getValue("XPLevelExpBaseInv");
-        double levelExpBase = 1.0 + 1.0 / ((double) levelExpBaseInv);
+        double levelExpBase = 1.0 + 1.0 / (double) levelExpBaseInv;
 
         pointsForLevel = new int[MAX_LEVEL + 2];
 

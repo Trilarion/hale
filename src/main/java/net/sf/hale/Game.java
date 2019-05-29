@@ -402,8 +402,8 @@ public class Game {
             for (int j = 0; j < image.getWidth(); j++) {
                 int pixel = image.getRGB(j, i);
                 for (int k = 0; k < 3; k++) // red, green, blue
-                    imageBytes[(i * image.getWidth() + j) * 4 + k] = (byte) (((pixel >> (2 - k) * 8)) & 255);
-                imageBytes[(i * image.getWidth() + j) * 4 + 3] = (byte) (((pixel >> (3) * 8)) & 255); // alpha
+                    imageBytes[(i * image.getWidth() + j) * 4 + k] = (byte) (pixel >> (2 - k) * 8 & 255);
+                imageBytes[(i * image.getWidth() + j) * 4 + 3] = (byte) (pixel >> 3 * 8 & 255); // alpha
             }
         }
 
@@ -484,6 +484,7 @@ public class Game {
         // if we are in Windows OS, start a thread and make it sleep
         // this will ensure reasonable timer accuracy from the OS
         Thread timerAccuracyThread = new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     Thread.sleep(Long.MAX_VALUE);

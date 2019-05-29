@@ -130,10 +130,10 @@ public class WeaponTemplate extends EquippableItemTemplate {
 
     private double computeAverageDamagePerAP() {
         double avgDamageBase = (minDamage + maxDamage) / 2.0;
-        double critChance = ((100 - criticalThreat) + 1) / 100.0;
+        double critChance = (100 - criticalThreat + 1) / 100.0;
         double avgDamage = avgDamageBase * (1 - critChance) + avgDamageBase * criticalMultiplier * critChance;
 
-        return avgDamage / ((double) attackCost);
+        return avgDamage / (double) attackCost;
     }
 
     @Override

@@ -615,7 +615,7 @@ public abstract class Targeter {
         String line1 = "Select Target for " + menuTitle;
 
         String line2 = null;
-        if (abilitySlot != null && (abilitySlot.getAbility() instanceof Spell)) {
+        if (abilitySlot != null && abilitySlot.getAbility() instanceof Spell) {
             Spell spell = (Spell) abilitySlot.getAbility();
 
             int failure = spell.getSpellFailurePercentage(parent);

@@ -242,7 +242,7 @@ public class Config {
      */
     public static int getMatchingDisplayMode(boolean scale2x, int resX, int resY) {
         int i = 0;
-        for (DisplayMode mode : (scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes)) {
+        for (DisplayMode mode : scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes) {
             if (mode.getWidth() == resX && mode.getHeight() == resY) return i;
 
             i++;

@@ -149,7 +149,7 @@ public class Area implements EffectTarget, Saveable {
             x = 0;
             for (SimpleJSONArrayEntry rowEntry : rowIn) {
                 int value = rowEntry.getInt(0);
-                transparency[x][y] = (value == 0 ? true : false);
+                transparency[x][y] = value == 0 ? true : false;
                 x++;
             }
 
@@ -165,7 +165,7 @@ public class Area implements EffectTarget, Saveable {
             x = 0;
             for (SimpleJSONArrayEntry rowEntry : rowIn) {
                 int value = rowEntry.getInt(0);
-                passable[x][y] = (value == 1 ? true : false);
+                passable[x][y] = value == 1 ? true : false;
                 x++;
             }
 
@@ -234,7 +234,7 @@ public class Area implements EffectTarget, Saveable {
         transitions = new ArrayList<>();
         for (Transition transition : Game.curCampaign.getAreaTransitions()) {
             if (transition.isFromArea(this) ||
-                    (transition.isTwoWay() && transition.isToArea(this))) {
+                    transition.isTwoWay() && transition.isToArea(this)) {
                 transitions.add(transition.getID());
             }
         }
@@ -817,9 +817,9 @@ public class Area implements EffectTarget, Saveable {
 
         obstructionsInPathConcealment = Math.min(obstructionsInPathConcealment, 30);
 
-        float areaPathConcealmentAverage = ((float) areaPathConcealment) / ((float) minPath.size());
+        float areaPathConcealmentAverage = (float) areaPathConcealment / (float) minPath.size();
 
-        concealment += (areaPathConcealmentAverage * attacker.getLocation().getDistance(x, y));
+        concealment += areaPathConcealmentAverage * attacker.getLocation().getDistance(x, y);
 
         // now compute the amount of concealment based on defender and attacker stats
 

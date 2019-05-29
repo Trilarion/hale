@@ -295,7 +295,7 @@ public class Spell extends Ability {
         int spellDamageMult = parent.stats.get(Type.SpellDamage) +
                 parent.stats.get(damageType, Type.DamageForSpellType);
 
-        damage = (damage * (100 + spellDamageMult)) / 100;
+        damage = damage * (100 + spellDamageMult) / 100;
 
         // determine spell resistance factor
         int spellResistance = Math.max(0, spellResistanceApplies ? target.stats.get(Type.SpellResistance) : 0);
@@ -308,7 +308,7 @@ public class Spell extends Ability {
         int damageMult = 100 - spellResistance;
         if (damageMult < 0) damageMult = 0;
 
-        damage = (damage * damageMult) / 100;
+        damage = damage * damageMult / 100;
         target.takeDamage(damage, damageType);
 
         // check to add the parent as a hostile to the target
@@ -329,7 +329,7 @@ public class Spell extends Ability {
     public void applyHealing(Creature parent, Creature target, int damage) {
         int bonusHealingFactor = parent.stats.get(Type.SpellHealing);
 
-        damage = (damage * (100 + bonusHealingFactor)) / 100;
+        damage = damage * (100 + bonusHealingFactor) / 100;
 
         int spellResistance = Math.max(0, spellResistanceApplies ? target.stats.get(Type.SpellResistance) : 0);
 

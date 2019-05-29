@@ -245,7 +245,7 @@ public class PrereqList {
         if (!rolePrereqs.isEmpty()) return false;
         if (!statPrereqs.isEmpty()) return false;
 
-        return (skillPrereqs.isEmpty());
+        return skillPrereqs.isEmpty();
     }
 
     private void appendMetOrNotMet(Creature c, boolean isMet, StringBuilder sb) {

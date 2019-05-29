@@ -249,7 +249,7 @@ public class PathFinder {
     }
 
     private static final boolean checkCoordinates(Point p, Data data) {
-        return (p.x >= 0 && p.x < data.width && p.y >= 0 && p.y < data.height);
+        return p.x >= 0 && p.x < data.width && p.y >= 0 && p.y < data.height;
     }
 
     /*

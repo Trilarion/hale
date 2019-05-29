@@ -102,11 +102,11 @@ public class Armor extends EquippableItem {
 
         if (template.hasQuality()) {
             qualityArmorPenalty = template.getArmorPenalty() *
-                    (1.0f - ((float) getQuality().getArmorPenaltyBonus()) / 100.0f);
+                    (1.0f - (float) getQuality().getArmorPenaltyBonus() / 100.0f);
             qualityArmorClass = template.getArmorClass() *
-                    (1.0f + ((float) getQuality().getArmorClassBonus()) / 100.0f);
+                    (1.0f + (float) getQuality().getArmorClassBonus() / 100.0f);
             qualityMovementPenalty = template.getMovementPenalty() *
-                    (1.0f - ((float) getQuality().getMovementPenaltyBonus()) / 100.0f);
+                    (1.0f - (float) getQuality().getMovementPenaltyBonus() / 100.0f);
         } else {
             qualityArmorPenalty = template.getArmorPenalty();
             qualityArmorClass = template.getArmorClass();

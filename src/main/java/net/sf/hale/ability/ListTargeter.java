@@ -209,6 +209,7 @@ public class ListTargeter extends Targeter {
      * (non-Javadoc)
      * @see net.sf.hale.effect.Targeter#showMenu()
      */
+    @Override
     public void showMenu(int x, int y) {
         RightClickMenu menu = Game.mainViewer.getMenu();
 
@@ -259,6 +260,7 @@ public class ListTargeter extends Targeter {
      * (non-Javadoc)
      * @see net.sf.hale.effect.Targeter#performLeftClickAction()
      */
+    @Override
     public void performLeftClickAction() {
         if (!canSelectPoint(getMouseGridPosition())) return;
 

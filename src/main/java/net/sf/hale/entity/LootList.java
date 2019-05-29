@@ -109,7 +109,7 @@ public class LootList {
     private void addRandomQuantityEntry(ItemList.Entry entry, ItemList loot,
                                         int enchantmentChance, int enchantmentSkillModifier) {
         // randomize quantity unless it is infinite
-        int quantity = (entry.getQuantity() == Integer.MAX_VALUE) ?
+        int quantity = entry.getQuantity() == Integer.MAX_VALUE ?
                 Integer.MAX_VALUE : Game.dice.rand(1, entry.getQuantity());
 
         String itemID = entry.getID();

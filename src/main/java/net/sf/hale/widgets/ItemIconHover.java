@@ -190,8 +190,8 @@ public class ItemIconHover extends TextArea {
             sb.append("<div>Base Damage: ");
 
             float damageMult = 1.0f + (weapon.getQualityDamageBonus() + weapon.bonuses.get(Type.WeaponDamage)) / 100.0f;
-            float damageMin = ((float) weapon.getTemplate().getMinDamage() * damageMult);
-            float damageMax = ((float) weapon.getTemplate().getMaxDamage() * damageMult);
+            float damageMin = (float) weapon.getTemplate().getMinDamage() * damageMult;
+            float damageMax = (float) weapon.getTemplate().getMaxDamage() * damageMult;
 
             sb.append("<span style=\"font-family: red;\">");
             sb.append(Game.numberFormat(1).format(damageMin));

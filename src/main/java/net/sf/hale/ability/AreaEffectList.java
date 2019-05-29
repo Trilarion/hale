@@ -62,6 +62,7 @@ public class AreaEffectList implements Saveable {
         effectsAtPosition = new EffectList[area.getWidth()][area.getHeight()];
     }
 
+    @Override
     public Object save() {
         JSONOrderedObject[] effectsData = new JSONOrderedObject[effects.size()];
         int i = 0;

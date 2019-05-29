@@ -564,7 +564,7 @@ public class PartyFormationWindow extends Widget {
             for (int i = 0; i < getNumChildren(); i++) {
                 height += getChild(i).getPreferredHeight();
             }
-            height += Math.max((getNumChildren() - 1), 0) * selectorGap;
+            height += Math.max(getNumChildren() - 1, 0) * selectorGap;
 
             return height + getBorderVertical();
         }

@@ -277,7 +277,7 @@ public class CreatedItemModel implements Saveable {
      * @return the modified value
      */
     public int getModifiedValue(int baseValue) {
-        return valueModifier * 100 + (baseValue * valueModifier / 100);
+        return valueModifier * 100 + baseValue * valueModifier / 100;
     }
 
     /**

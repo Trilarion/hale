@@ -497,7 +497,7 @@ public class ItemListViewer extends Widget implements Listener, DropTarget {
             case All:
                 return true;
             case Weapons:
-                return (template instanceof WeaponTemplate) || (template instanceof AmmoTemplate);
+                return template instanceof WeaponTemplate || template instanceof AmmoTemplate;
             case Armor:
                 if (!(template instanceof EquippableItemTemplate)) {
                     return false;

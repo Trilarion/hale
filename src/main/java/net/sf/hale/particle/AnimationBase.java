@@ -134,10 +134,10 @@ public abstract class AnimationBase implements Saveable {
     }
 
     public boolean elapseTime(float seconds) {
-        rotation += (rotationSpeed * seconds);
+        rotation += rotationSpeed * seconds;
 
-        positionX += (velocityX * seconds);
-        positionY += (velocityY * seconds);
+        positionX += velocityX * seconds;
+        positionY += velocityY * seconds;
 
         r += vr * seconds;
         g += vg * seconds;

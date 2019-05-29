@@ -54,7 +54,7 @@ public class Dice {
     }
 
     public float gaussian(float mean, float stddev) {
-        return ((float) generator.nextGaussian()) * stddev + mean;
+        return (float) generator.nextGaussian() * stddev + mean;
     }
 
     /**
@@ -92,7 +92,7 @@ public class Dice {
     public int d(int base, int multiple) {
         int total = 0;
         for (int i = 0; i < multiple; i++) {
-            total += (generator.nextInt(base) + 1);
+            total += generator.nextInt(base) + 1;
         }
 
         return total;

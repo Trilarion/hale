@@ -402,8 +402,8 @@ public class Move implements DefaultAbility {
     }
 
     private final boolean checkCoordinates(Point p) {
-        return (p.x >= 0 && p.x < Game.curCampaign.curArea.getWidth() &&
-                p.y >= 0 && p.y < Game.curCampaign.curArea.getHeight());
+        return p.x >= 0 && p.x < Game.curCampaign.curArea.getWidth() &&
+                p.y >= 0 && p.y < Game.curCampaign.curArea.getHeight();
     }
 
     // computes the index of the direction from the destination of the computed path to the

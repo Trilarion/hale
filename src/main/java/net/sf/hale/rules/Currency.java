@@ -72,7 +72,7 @@ public class Currency {
 
         StringBuilder builder = new StringBuilder();
 
-        int pp = (value / 100000);
+        int pp = value / 100000;
         int gp = (value / 10000) % 10;
         int sp = (value / 1000) % 10;
         int cp = (value / 100) % 10;
@@ -214,7 +214,7 @@ public class Currency {
     }
 
     private final int getPP() {
-        return (value / 100000);
+        return value / 100000;
     }
 
     /**
@@ -317,6 +317,6 @@ public class Currency {
         int cost = item.getQualityValue() * markup / 100;
         if (cost == 0) return Integer.MAX_VALUE;
 
-        return (value / cost);
+        return value / cost;
     }
 }

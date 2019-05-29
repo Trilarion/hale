@@ -135,7 +135,7 @@ public class Merchant implements Saveable {
 
     public void setPartySpeech(int partySpeech) {
         if (usesSpeechSkill) {
-            double gapExponent = -1.0 * ((double) partySpeech) / ((double) Game.ruleset.getValue("BuySellGapSpeechExpFactor"));
+            double gapExponent = -1.0 * (double) partySpeech / (double) Game.ruleset.getValue("BuySellGapSpeechExpFactor");
             double gapPercentage = Math.exp(gapExponent);
 
             double base = (double) (sellValuePercentage - buyValuePercentage) / 2.0;

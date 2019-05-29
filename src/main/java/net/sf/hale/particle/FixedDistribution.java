@@ -43,6 +43,7 @@ public class FixedDistribution implements DistributionOneValue {
         return data;
     }
 
+    @Override
     public float generate(Particle particle) {
         return value;
     }

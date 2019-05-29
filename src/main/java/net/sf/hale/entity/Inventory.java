@@ -1287,7 +1287,7 @@ public class Inventory implements Listener, Saveable {
                 case Shield:
                     return true;
                 case Weapon:
-                    return (((Weapon) item).getTemplate().getHanded() != Handed.TwoHanded);
+                    return ((Weapon) item).getTemplate().getHanded() != Handed.TwoHanded;
                 default:
                     return false;
             }
@@ -1303,7 +1303,7 @@ public class Inventory implements Listener, Saveable {
 
         @Override
         public boolean matchesItemType(EquippableItem item) {
-            return (item.getTemplate().getType() == type);
+            return item.getTemplate().getType() == type;
         }
     }
 

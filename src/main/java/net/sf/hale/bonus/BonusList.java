@@ -324,7 +324,7 @@ public class BonusList implements Iterable<Bonus>, Saveable {
 
         @Override
         public boolean hasNext() {
-            return (numLeft > 0);
+            return numLeft > 0;
         }
 
         @Override

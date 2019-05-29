@@ -101,7 +101,7 @@ public class CharacterSheet extends ScrollPane {
         int curLevel = XP.getPointsForLevel(parent.stats.get(Stat.CreatureLevel));
 
         xpBar.setText(parent.getExperiencePoints() + " / " + nextLevel + " XP");
-        float frac = (parent.getExperiencePoints() - curLevel) / ((float) (nextLevel - curLevel));
+        float frac = (parent.getExperiencePoints() - curLevel) / (float) (nextLevel - curLevel);
         xpBar.setValue(frac);
 
         sb.append("<table style=\"vertical-align: top\">");
@@ -164,8 +164,8 @@ public class CharacterSheet extends ScrollPane {
                     parent.stats.get(Stat.MainHandDamageBonus) + mainHand.getQualityDamageBonus() +
                     parent.stats.get(mainHand.getTemplate().getDamageType().getName(), Type.DamageForWeaponType) +
                     mainHand.bonuses.get(Type.WeaponDamage) + quiverDamageBonus) / 100.0f;
-            float damageMin = ((float) mainHand.getTemplate().getMinDamage() * damageMult);
-            float damageMax = ((float) mainHand.getTemplate().getMaxDamage() * damageMult);
+            float damageMin = (float) mainHand.getTemplate().getMinDamage() * damageMult;
+            float damageMax = (float) mainHand.getTemplate().getMaxDamage() * damageMult;
 
             int threatRange = mainHand.getTemplate().getCriticalThreat() -
                     parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalChance) -
@@ -242,8 +242,8 @@ public class CharacterSheet extends ScrollPane {
                             parent.stats.get(Stat.OffHandDamageBonus) + offHandWeapon.getQualityDamageBonus() +
                             parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Type.DamageForWeaponType) +
                             offHand.bonuses.get(Type.WeaponDamage)) / 100.0f;
-                    float damageMin = ((float) offHandWeapon.getTemplate().getMinDamage() * damageMult);
-                    float damageMax = ((float) offHandWeapon.getTemplate().getMaxDamage() * damageMult);
+                    float damageMin = (float) offHandWeapon.getTemplate().getMinDamage() * damageMult;
+                    float damageMax = (float) offHandWeapon.getTemplate().getMaxDamage() * damageMult;
 
                     int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
                             parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Type.BaseWeaponCriticalChance) -

@@ -104,7 +104,7 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
             // for PCs, we need to manually add them to the EntityManager, as their
             // template was loaded directly from the save game data
             if (entity instanceof PC) {
-                EntityManager.addLoadedPC(new PC(((PC) entity)));
+                EntityManager.addLoadedPC(new PC((PC) entity));
             }
         }
     }

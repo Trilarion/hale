@@ -245,7 +245,7 @@ public abstract class AreaTargeter extends Targeter {
         if (allowOccupiedTile) return true;
 
         Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(gridPoint);
-        return (c == null);
+        return c == null;
     }
 
     private boolean affectedCreaturesEmptyConditionMet() {

@@ -138,7 +138,7 @@ public class Damage {
                 if (dr > 0) str.append(", " + dr + " Damage Reduction");
 
                 if (percent > 0) str.append(", " + percent + "% Immune");
-                else if (percent < 0) str.append(", " + (-percent) + "% Vulnerable");
+                else if (percent < 0) str.append(", " + -percent + "% Vulnerable");
                 str.append(")");
             }
         }

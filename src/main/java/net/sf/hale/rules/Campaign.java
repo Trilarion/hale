@@ -742,7 +742,7 @@ public class Campaign {
             for (PC pc : party) {
                 int pcXP = pc.getExperiencePoints();
 
-                pc.addExperiencePoints(Math.max((xp - pcXP), 0));
+                pc.addExperiencePoints(Math.max(xp - pcXP, 0));
             }
         }
     }

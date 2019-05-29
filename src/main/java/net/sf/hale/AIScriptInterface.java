@@ -205,7 +205,7 @@ public class AIScriptInterface {
     private boolean checkEmpty(Point grid) {
         if (!Game.curCampaign.curArea.isPassable(grid.x, grid.y)) return false;
 
-        return (Game.curCampaign.curArea.getCreatureAtGridPoint(grid) == null);
+        return Game.curCampaign.curArea.getCreatureAtGridPoint(grid) == null;
     }
 
     /**

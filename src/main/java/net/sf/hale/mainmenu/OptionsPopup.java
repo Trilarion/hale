@@ -149,6 +149,7 @@ public class OptionsPopup extends PopupWindow {
 
             scale2x = new ToggleButton();
             scale2x.addCallback(new Runnable() {
+                @Override
                 public void run() {
                     repopulateDisplayModes(Game.config, scale2x.isActive());
                 }
@@ -331,7 +332,7 @@ public class OptionsPopup extends PopupWindow {
 
         private void repopulateDisplayModes(Config config, boolean scale2x) {
             modesModel.clear();
-            for (DisplayMode mode : (scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes)) {
+            for (DisplayMode mode : scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes) {
                 modesModel.addElement(mode.getWidth() + " x " + mode.getHeight());
             }
 
@@ -343,7 +344,7 @@ public class OptionsPopup extends PopupWindow {
             fullscreen.setActive(config.getFullscreen());
             scale2x.setActive(config.scale2x());
             tooltipDelay.setValue(config.getTooltipDelay() / 100);
-            combatSpeed.setValue(6 - (config.getCombatDelay() / 50));
+            combatSpeed.setValue(6 - config.getCombatDelay() / 50);
             fpsCounter.setActive(config.showFPS());
             autoscrollToggle.setActive(config.autoScrollDuringCombat());
 

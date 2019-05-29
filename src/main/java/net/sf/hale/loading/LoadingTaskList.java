@@ -123,7 +123,7 @@ public class LoadingTaskList extends Thread {
 
                 while (task.hasNextTask()) {
                     completedWeight += task.executeNextTask();
-                    completedFraction = ((float) completedWeight) / ((float) totalWeight);
+                    completedFraction = (float) completedWeight / (float) totalWeight;
                 }
             }
 

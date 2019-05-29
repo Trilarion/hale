@@ -313,8 +313,8 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 
     private void appendWeaponString(Weapon item, StringBuilder sb) {
         float damageMult = 1.0f + (item.getQualityDamageBonus() + item.bonuses.get(Type.WeaponDamage)) / 100.0f;
-        String damageMin = Game.numberFormat(1).format(((float) item.getTemplate().getMinDamage() * damageMult));
-        String damageMax = Game.numberFormat(1).format(((float) item.getTemplate().getMaxDamage() * damageMult));
+        String damageMin = Game.numberFormat(1).format((float) item.getTemplate().getMinDamage() * damageMult);
+        String damageMax = Game.numberFormat(1).format((float) item.getTemplate().getMaxDamage() * damageMult);
 
         sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-bottom: 1em;\">");
 
@@ -389,7 +389,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
         }
 
         if (item.getTemplate().getRangePenalty() != 0) {
-            String rangePenalty = Game.numberFormat(1).format(((float) item.getTemplate().getRangePenalty() / 20.0f));
+            String rangePenalty = Game.numberFormat(1).format((float) item.getTemplate().getRangePenalty() / 20.0f);
 
             sb.append("<tr><td>");
             sb.append("Range Penalty");

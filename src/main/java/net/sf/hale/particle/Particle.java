@@ -72,8 +72,8 @@ public class Particle extends AnimationBase {
 
         if (!drawInOpaque) {
             // don't draw effects in opaque tiles regardless of whether the effect stops or not
-            if ((!area.isTransparent(pos1) || !area.isTransparent(pos2) ||
-                    !area.isTransparent(pos3) || !area.isTransparent(pos4))) {
+            if (!area.isTransparent(pos1) || !area.isTransparent(pos2) ||
+                    !area.isTransparent(pos3) || !area.isTransparent(pos4)) {
                 Point pos = AreaUtil.convertScreenToGrid(posX + getHalfWidth(), posY + getHalfHeight());
                 if (!area.isTransparent(pos) && stopAtOpaque) finish();
 
